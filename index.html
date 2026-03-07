@@ -240,6 +240,7 @@ footer { text-align: center; padding: 18px; color: var(--text-dim); font-size: 1
     <button class="nav-tab" onclick="showPage('yearly',this)">Yearly</button>
     <button class="nav-tab" onclick="showPage('projection',this)">Projection</button>
     <button class="nav-tab" onclick="showPage('holdings',this)">Holdings</button>
+    <button class="nav-tab" onclick="showPage('minisum',this)">Mini Sum</button>
   </div>
   <div class="ytd-pill">2026 · SMALL IRA</div>
 </nav>
@@ -486,6 +487,38 @@ footer { text-align: center; padding: 18px; color: var(--text-dim); font-size: 1
   </div>
 </div>
 
+
+<!-- MINI SUM -->
+<div id="page-minisum" class="page">
+  <div class="sh">
+    <div class="sh-title" style="background:linear-gradient(120deg,var(--neon-orange),var(--neon-yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Mini Sum</div>
+    <div class="sh-sub" id="minisum-sub">Trade log · minisum tab</div>
+  </div>
+  <div class="sg" style="grid-template-columns:repeat(4,1fr)" id="minisum-cards">
+    <div class="sc g"><div class="sc-label">Total Premium</div><div class="sc-val g" id="ms-total-prem">—</div><div class="sc-sub">Trade profit</div></div>
+    <div class="sc p"><div class="sc-label">Wheel P&L</div><div class="sc-val p" id="ms-wheel">—</div><div class="sc-sub">Net incl. cap gains</div></div>
+    <div class="sc b"><div class="sc-label">Avg Capital / Trade</div><div class="sc-val b" id="ms-avg-cap">—</div><div class="sc-sub">Per trade deployed</div></div>
+    <div class="sc y"><div class="sc-label">Weekly Income</div><div class="sc-val y" id="ms-weekly">—</div><div class="sc-sub" id="ms-weekly-sub">Avg weekly</div></div>
+  </div>
+  <div class="panel">
+    <div class="ph">
+      <div class="pt"><em>◈</em>All Trades</div>
+      <div class="filters" id="minisum-filters">
+        <button class="fb active" onclick="filterMiniSum('all',this)">All</button>
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table><thead><tr>
+        <th>Stock</th><th>Open</th><th>Exp</th><th class="r">Shares</th><th class="r">Strike</th>
+        <th>Type</th><th class="r">Premium</th><th class="r">Cost</th><th class="r">Profit</th>
+        <th class="r">Capital</th><th class="r">% Ret</th><th>Result</th>
+      </tr></thead>
+      <tbody id="minisum-body"></tbody>
+      <tfoot id="minisum-foot"></tfoot></table>
+    </div>
+  </div>
+</div>
+
 <footer>DIVIDEND EXECUTIVE · SMALL IRA · 2026 · PERSONAL TRACKING ONLY</footer>
 
 <script>
@@ -600,6 +633,12 @@ const lots = [
 ]; // [END:lots]
 
 // Monthly starting balances (Jan–Mar 2026)
+
+// [START:minisumTrades]
+const minisumTrades = [
+  {stock:'TSLL',open:'January 2',exp:'Jan 5',shares:100,strike:'$13.73',type:'Put',prem:17,cost:0,profit:17,capital:1373,ret:'1.2%',result:'Expired'},
+]; // [END:minisumTrades]
+
 // [START:monthlyBalances]
 const monthlyBalances = [24606, 25293, 20553]; // [END:monthlyBalances] 
 
@@ -1010,6 +1049,90 @@ function renderLots() {
   </tr>`;
 }
 
+
+// MINI SUM
+function renderMiniSum(filter) {
+  const tickers = [...new Set(minisumTrades.map(t=>t.stock))];
+
+  // Build filter buttons dynamically
+  const filtersEl = document.getElementById('minisum-filters');
+  if (filtersEl && filtersEl.children.length === 1) {
+    tickers.forEach(tk => {
+      const btn = document.createElement('button');
+      btn.className = 'fb';
+      btn.textContent = tk;
+      btn.onclick = function(){ filterMiniSum(tk, this); };
+      filtersEl.appendChild(btn);
+    });
+  }
+
+  const data = !filter || filter==='all' ? minisumTrades : minisumTrades.filter(t=>t.stock===filter);
+
+  // Update sub heading
+  const sub = document.getElementById('minisum-sub');
+  if (sub) sub.textContent = data.length + ' trades · minisum tab';
+
+  document.getElementById('minisum-body').innerHTML = data.map(t => `
+    <tr>
+      <td><strong>${t.stock}</strong></td>
+      <td class="dim">${t.open}</td><td class="dim">${t.exp}</td>
+      <td class="r">${t.shares.toLocaleString()}</td>
+      <td class="r">${t.strike}</td>
+      <td>${badge(t.type)}</td>
+      <td class="r pos">$${t.prem}</td>
+      <td class="r ${t.cost<0?'neg':'dim'}">${t.cost<0?'−$'+Math.abs(t.cost):'—'}</td>
+      <td class="r pos">$${t.profit}</td>
+      <td class="r dim">$${t.capital.toLocaleString()}</td>
+      <td class="r">${t.ret}</td>
+      <td>${badge(t.result)}</td>
+    </tr>`).join('');
+
+  // Totals footer
+  const totPrem   = data.reduce((s,t)=>s+t.prem,   0);
+  const totCost   = data.reduce((s,t)=>s+t.cost,   0);
+  const totProfit = data.reduce((s,t)=>s+t.profit,  0);
+  const totCap    = data.reduce((s,t)=>s+t.capital, 0);
+  const avgRet    = data.length ? (data.reduce((s,t)=>s+parseFloat(t.ret||0),0)/data.length).toFixed(1)+'%' : '—';
+  document.getElementById('minisum-foot').innerHTML = `
+    <tr style="border-top:2px solid var(--border);background:rgba(0,255,135,0.03)">
+      <td colspan="6" style="font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-dim);padding:10px 14px">
+        ${data.length} trade${data.length!==1?'s':''} · Total
+      </td>
+      <td class="r" style="color:var(--neon-green);font-weight:700">$${totPrem.toLocaleString()}</td>
+      <td class="r ${totCost<0?'neg':'dim'}" style="font-weight:700">${totCost<0?'−$'+Math.abs(totCost).toLocaleString():'—'}</td>
+      <td class="r" style="color:var(--neon-green);font-weight:700">$${totProfit.toLocaleString()}</td>
+      <td class="r dim" style="font-weight:700">$${totCap.toLocaleString()}</td>
+      <td class="r" style="color:var(--text-dim);font-weight:700">${avgRet}</td>
+      <td></td>
+    </tr>`;
+
+  // Stat cards
+  const allData = minisumTrades;
+  const totalPrem = allData.reduce((s,t)=>s+t.profit, 0);
+  const caps = allData.filter(t=>t.capital>0).map(t=>t.capital);
+  const avgCap = caps.length ? Math.round(caps.reduce((s,c)=>s+c,0)/caps.length) : 0;
+  const weekMap = {};
+  allData.forEach(t => {
+    if (t.result==='In Progress') return;
+    weekMap[t.exp] = (weekMap[t.exp]||0) + t.profit;
+  });
+  const weekVals = Object.values(weekMap);
+  const weeklyAvg = weekVals.length ? Math.round(weekVals.reduce((s,v)=>s+v,0)/weekVals.length) : 0;
+
+  const el = id => document.getElementById(id);
+  const fmtM = n => '$'+Math.abs(Math.round(n)).toLocaleString();
+  if (el('ms-total-prem')) el('ms-total-prem').textContent = fmtM(totalPrem);
+  if (el('ms-wheel'))      el('ms-wheel').textContent = '—';
+  if (el('ms-avg-cap'))    el('ms-avg-cap').textContent = fmtM(avgCap);
+  if (el('ms-weekly'))     el('ms-weekly').textContent = fmtM(weeklyAvg);
+  if (el('ms-weekly-sub')) el('ms-weekly-sub').textContent = 'Avg over '+weekVals.length+' weeks';
+}
+function filterMiniSum(v, btn) {
+  document.querySelectorAll('#page-minisum .fb').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMiniSum(v);
+}
+
 // PAGE NAV
 function showPage(id,btn) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -1092,6 +1215,7 @@ renderProj('2026');
 renderHoodBars();
 renderLots();
 computeAndInjectStats();
+renderMiniSum('all');
 </script>
 </body>
 </html>
