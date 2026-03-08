@@ -609,7 +609,7 @@ const minisumTrades = [
   {stock:'MARA',open:'November 18',exp:'Nov 22',shares:100,strike:'$16.50',type:'Put',prem:9,cost:0,profit:9,capital:1650,ret:'0.5%',result:'Expired',wheel:0,year:'2024',week:47},
   {stock:'MSTX',open:'November 25',exp:'Nov 29',shares:100,strike:'$65.00',type:'Put',prem:180,cost:0,profit:180,capital:6500,ret:'2.8%',result:'Expired',wheel:0,year:'2024',week:48},
   {stock:'TSLL',open:'November 25',exp:'Nov 29',shares:200,strike:'$18.50',type:'Put',prem:20,cost:0,profit:20,capital:3700,ret:'0.5%',result:'Expired',wheel:0,year:'2024',week:48},
-  {stock:'MARA',open:'December 2',exp:'Dec 6',shares:200,strike:'$20.00',type:'Put',prem:18,cost:0,profit:18,capital:4000,ret:'0.4%',result:'Expired',wheel:0,year:'2024',week:49},
+  {stock:'MARA',open:'December 2',exp:'Dec 6',shares:200,strike:'$20.00',type:'Put',prem:18,cost:0,profit:18,capital:4000,ret:'0.5%',result:'Expired',wheel:0,year:'2024',week:49},
   {stock:'MSTX',open:'December 2',exp:'Dec 6',shares:100,strike:'$65.00',type:'Put',prem:130,cost:0,profit:130,capital:6500,ret:'2.0%',result:'Expired',wheel:0,year:'2024',week:49},
   {stock:'MSTX',open:'December 9',exp:'Dec 13',shares:100,strike:'$65.00',type:'Put',prem:100,cost:-5,profit:95,capital:6500,ret:'1.5%',result:'Bought Back',wheel:0,year:'2024',week:50},
   {stock:'MARA',open:'December 9',exp:'Dec 13',shares:200,strike:'$20.50',type:'Put',prem:18,cost:-2,profit:16,capital:4100,ret:'0.4%',result:'Bought Back',wheel:0,year:'2024',week:50},
@@ -638,7 +638,7 @@ const minisumTrades = [
   {stock:'MSTU',open:'March 3',exp:'Mar 7',shares:100,strike:'$6.50',type:'Call',prem:40,cost:0,profit:40,capital:650,ret:'6.2%',result:'Expired',wheel:0,year:'2025',week:10},
   {stock:'MSTU',open:'March 7',exp:'Mar 7',shares:0,strike:'',type:'trade',prem:0,cost:0,profit:0,capital:0,ret:'#DIV/0!',result:'Assigned',wheel:31,year:'2025',week:10},
   {stock:'MSTX',open:'March 11',exp:'Mar 14',shares:400,strike:'$30.00',type:'Call',prem:80,cost:-11,profit:69,capital:12000,ret:'0.6%',result:'Bought Back',wheel:0,year:'2025',week:11},
-  {stock:'MSTU',open:'March 11',exp:'Mar 14',shares:100,strike:'$5.50',type:'Call',prem:10,cost:0,profit:10,capital:550,ret:'1.8%',result:'Assigned',wheel:-6,year:'2025',week:11},
+  {stock:'MSTU',open:'March 11',exp:'Mar 14',shares:100,strike:'$5.50',type:'Call',prem:10,cost:0,profit:10,capital:550,ret:'1.8%',result:'Assigned',wheel:6,year:'2025',week:11},
   {stock:'MSTX',open:'March 14',exp:'Mar 21',shares:400,strike:'$33.00',type:'Call',prem:123,cost:-12,profit:111,capital:13200,ret:'0.8%',result:'Rolled',wheel:0,year:'2025',week:12},
   {stock:'MSTU',open:'March 14',exp:'Mar 14',shares:0,strike:'',type:'trade',prem:0,cost:0,profit:0,capital:0,ret:'#DIV/0!',result:'Assigned',wheel:26,year:'2025',week:11},
   {stock:'MSTU',open:'March 17',exp:'Mar 21',shares:200,strike:'$4.70',type:'Put',prem:24,cost:0,profit:24,capital:940,ret:'2.6%',result:'Expired',wheel:0,year:'2025',week:12},
@@ -769,7 +769,7 @@ const minisumTrades = [
   {stock:'HOOD',open:'February 20',exp:'Feb 27',shares:200,strike:'$84.00',type:'Call',prem:94,cost:0,profit:94,capital:16800,ret:'0.6%',result:'Expired',wheel:0,year:'2026',week:9},
   {stock:'TSLL',open:'February 27',exp:'Mar 6',shares:300,strike:'$13.50',type:'Put',prem:57,cost:-3,profit:54,capital:4050,ret:'1.3%',result:'Bought Back',wheel:0,year:'2026',week:10},
   {stock:'HOOD',open:'March 2',exp:'Mar 6',shares:200,strike:'$83.00',type:'Call',prem:104,cost:0,profit:104,capital:16600,ret:'0.6%',result:'Expired',wheel:0,year:'2026',week:10},
-  {stock:'TSLL',open:'March 6',exp:'Mar 13',shares:300,strike:'$12.50',type:'Put',prem:48,cost:0,profit:48,capital:3750,ret:'1.3%',result:'In Progress',wheel:0,year:'2026',week:11}
+  {stock:'TSLL',open:'March 6',exp:'Mar 13',shares:300,strike:'$12.50',type:'Put',prem:48,cost:0,profit:48,capital:3750,ret:'1.3%',result:'In Progress',wheel:0,year:'2026',week:11},
 ]; // [END:minisumTrades]
 
 // ════════════════════════════════ HELPERS ════════════════════════════════
@@ -797,7 +797,15 @@ function tc(tk) { return TICKER_COLORS[tk] || NEON[Object.keys(TICKER_COLORS).le
 const $ = id => document.getElementById(id);
 const fmt  = n => '$' + Math.abs(Math.round(n)).toLocaleString();
 const fmtS = n => (n < 0 ? '−' : '') + '$' + Math.abs(Math.round(n)).toLocaleString();
-const mon  = e => e.split(' ')[0]; // "Jan 5" → "Jan"
+const MONTHS_NUM = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+const mon = e => {
+  if (!e) return '';
+  // "Jan 5" style → "Jan"
+  if (/^[A-Za-z]/.test(e)) return e.split(' ')[0];
+  // "1/5/2024" style → convert to short month
+  const m = String(e).match(/^(\d{1,2})\//);
+  return m ? MONTHS[parseInt(m[1]) - 1] : '';
+};
 
 function badge(type) {
   const map = {
@@ -1758,6 +1766,16 @@ function showPage(name, btn) {
 
 // ════════════════════════════════ SYNC FOOTER ════════════════════════════════
 function updateFooter(ts) {
-  $('footer-sync').textContent = ts ? 'Last synced: Mar 8 2026 · 1:09 PM MDT</script>
+  $('footer-sync').textContent = ts ? 'Last synced: '+ts : 'Local data';
+}
+
+// ════════════════════════════════ INIT ════════════════════════════════
+initYearFilters();
+renderTrades();
+pageRendered['trades'] = true;
+updateFooter('Mar 8 2026');
+
+// Validate script integrity
+</script>
 </body>
 </html>
