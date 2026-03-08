@@ -1082,6 +1082,7 @@ function renderTradeAnalytics(base) {
 
   // ── Return Distribution histogram ─────────────────────────────────────────
   const retBuckets = [
+    { label: '0%',    lo: 0,    hi: 0,   color: '#4a6080', exact: true },
     { label: '< 0%',  lo: -999, hi: 0,   color: '#ff2d87' },
     { label: '0–1%',  lo: 0,    hi: 1,   color: '#00d4ff' },
     { label: '1–2%',  lo: 1,    hi: 2,   color: '#00ff87' },
@@ -1090,9 +1091,9 @@ function renderTradeAnalytics(base) {
     { label: '5–10%', lo: 5,    hi: 10,  color: '#ff7b00' },
     { label: '10%+',  lo: 10,   hi: 999, color: '#ffaa00' },
   ];
-  const validRets = base.filter(t => t.ret !== 0 && Math.abs(t.ret) < 50);
+  const validRets = base.map(t => parseFloat(String(t.ret).replace('%',''))).filter(r => !isNaN(r) && Math.abs(r) < 50);
   retBuckets.forEach(b => {
-    b.count = validRets.filter(t => t.ret >= b.lo && t.ret < b.hi).length;
+    b.count = b.exact ? validRets.filter(r => r === 0).length : validRets.filter(r => r >= b.lo && r < b.hi).length;
     b.pct   = validRets.length ? b.count / validRets.length : 0;
   });
   const maxCount = Math.max(...retBuckets.map(b => b.count), 1);
