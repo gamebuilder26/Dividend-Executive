@@ -413,36 +413,64 @@ tr:hover td { background: rgba(0,212,255,.03); }
 <!-- ════════════════════════════════ PROJECTION ════════════════════════════════ -->
 <div id="page-projection" class="page">
   <div class="ph">
-    <div class="ph-title" style="background:linear-gradient(120deg,var(--g),var(--y));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Projection</div>
-    <div class="ph-sub">Forward-looking income model</div>
+    <div class="ph-row">
+      <div>
+        <div class="ph-title" style="background:linear-gradient(120deg,var(--g),var(--y));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Projection</div>
+        <div class="ph-sub">Income targets based on 2024–2026 trade history · 218 trades</div>
+      </div>
+    </div>
   </div>
 
-  <div class="cards cards-4">
-    <div class="card g"><div class="card-label">Monthly Target</div><div class="card-val g" id="proj-target">—</div><div class="card-sub">Based on trailing avg</div></div>
-    <div class="card b"><div class="card-label">Annual Run Rate</div><div class="card-val b" id="proj-annual">—</div><div class="card-sub">At current pace</div></div>
-    <div class="card y"><div class="card-label">12-Month Total</div><div class="card-val y" id="proj-12mo">—</div><div class="card-sub">Projected from now</div></div>
-    <div class="card pu"><div class="card-label">3-Month Outlook</div><div class="card-val pu" id="proj-3mo">—</div><div class="card-sub">Near-term forecast</div></div>
+  <!-- Context strip: where we've been -->
+  <div class="cards cards-4" style="margin-bottom:16px">
+    <div class="card b"><div class="card-label">2024 Full Year</div><div class="card-val b">$4,876</div><div class="card-sub">12 months · baseline year</div></div>
+    <div class="card g"><div class="card-label">2025 Full Year</div><div class="card-val g">$10,469</div><div class="card-sub">+115% YoY · best year</div></div>
+    <div class="card y"><div class="card-label">2026 YTD</div><div class="card-val y" id="proj-ytd">—</div><div class="card-sub" id="proj-ytd-sub">vs 2025 same period</div></div>
+    <div class="card pu"><div class="card-label">2025 Monthly Avg</div><div class="card-val pu">$872</div><div class="card-sub">Best full-year baseline</div></div>
   </div>
 
-  <div class="two-col">
+  <!-- Scenario cards -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px" id="scenario-cards">
+    <!-- filled by JS -->
+  </div>
+
+  <!-- Trajectory chart — all 3 scenarios -->
+  <div class="panel" style="margin-bottom:20px">
+    <div class="panel-head">
+      <div class="panel-title"><em>◈</em>Income Trajectory · Actual + 3 Scenarios</div>
+      <div style="display:flex;gap:16px;align-items:center" id="proj-chart-legend"></div>
+    </div>
+    <div style="padding:16px 20px 6px"><div id="proj-line" style="width:100%;height:280px"></div></div>
+  </div>
+
+  <!-- Milestone tracker + assumptions side by side -->
+  <div class="two-col" style="margin-bottom:20px">
     <div class="panel">
-      <div class="panel-head"><div class="panel-title"><em>◈</em>Income Trajectory</div></div>
-      <div style="padding:16px 20px 6px"><div id="proj-line" style="width:100%;height:240px"></div></div>
+      <div class="panel-head"><div class="panel-title"><em>◈</em>Monthly Income Milestones</div></div>
+      <div id="proj-milestones" style="padding:20px"></div>
     </div>
     <div class="panel">
-      <div class="panel-head"><div class="panel-title"><em>◈</em>Projection Assumptions</div></div>
+      <div class="panel-head"><div class="panel-title"><em>◈</em>Model Assumptions</div></div>
       <div id="proj-assumptions" style="padding:20px"></div>
     </div>
   </div>
 
+  <!-- Monthly breakdown table — all 3 scenarios -->
   <div class="panel">
-    <div class="panel-head"><div class="panel-title"><em>◈</em>12-Month Forward Projection</div></div>
+    <div class="panel-head"><div class="panel-title"><em>◈</em>2026 Monthly Targets by Scenario</div></div>
     <div class="tbl-wrap">
       <table>
         <thead><tr>
-          <th>Month</th><th class="r">Projected</th><th class="r">Low</th><th class="r">High</th><th>Basis</th>
+          <th>Month</th>
+          <th class="r">2025 Actual</th>
+          <th class="r" style="color:var(--dim)">Conservative</th>
+          <th class="r" style="color:var(--b)">Base</th>
+          <th class="r" style="color:var(--g)">Optimistic</th>
+          <th class="r">2026 Actual</th>
+          <th>Status</th>
         </tr></thead>
         <tbody id="proj-body"></tbody>
+        <tfoot id="proj-foot"></tfoot>
       </table>
     </div>
   </div>
@@ -1224,98 +1252,231 @@ function renderTickers() {
 
 // ════════════════════════════════ PAGE: PROJECTION ════════════════════════════════
 function renderProjection() {
-  const activeMons = MONTHS.filter(m => minisumTrades.some(t=>mon(t.exp)===m&&t.result!=='In Progress'));
-  const monTotals  = {};
-  activeMons.forEach(m=>{monTotals[m]=Math.round(minisumTrades.filter(t=>mon(t.exp)===m&&t.result!=='In Progress').reduce((s,t)=>s+t.profit,0));});
-  const vals = activeMons.map(m=>monTotals[m]);
-  const avg  = Math.round(vals.reduce((s,v)=>s+v,0)/vals.length);
-  const recent3 = vals.slice(-3);
-  const avg3 = Math.round(recent3.reduce((s,v)=>s+v,0)/recent3.length);
-  const annual = avg * 12;
-  const proj12 = avg3 * 12;
+  // ── Build monthly actuals by year ──────────────────────────────────────────
+  const byYM = {};
+  MONTHS.forEach(m => { byYM['2024_'+m]=0; byYM['2025_'+m]=0; byYM['2026_'+m]=0; });
+  minisumTrades.forEach(t => {
+    const k = t.year + '_' + mon(t.exp);
+    if (byYM[k] !== undefined) byYM[k] += t.profit;
+  });
 
-  $('proj-target').textContent = fmt(avg3);
-  $('proj-annual').textContent = fmt(annual);
-  $('proj-12mo').textContent   = fmt(proj12);
-  $('proj-3mo').textContent    = fmt(avg3*3);
+  // ── Year totals (hardcoded from full analysis — won't change unless new years added)
+  const y24total = 4876, y25total = 10469;
+  const y26actual = MONTHS.map(m => Math.round(byYM['2026_'+m]));
+  const y26ytd    = y26actual.reduce((s,v)=>s+v, 0);
+  const y26months = y26actual.filter(v=>v>0).length;
 
-  // Project 12 months forward
-  const lastMon = activeMons[activeMons.length-1];
-  const lastMonIdx = MONTHS.indexOf(lastMon);
-  const projMonths = [];
-  for (let i=1; i<=12; i++) {
-    const idx = (lastMonIdx+i)%12;
-    const yr  = lastMonIdx+i >= 12 ? '2027' : '2026';
-    projMonths.push({label:MONTHS[idx]+' '+yr, proj:avg3, lo:Math.round(avg3*0.7), hi:Math.round(avg3*1.3)});
-  }
+  // 2025 monthly rhythm — the seasonal baseline
+  const y25monthly = MONTHS.map(m => Math.round(byYM['2025_'+m]));
+  // [724, 642, 859, 805, 714, 560, 644, 807, 1030, 1843, 1031, 810]
 
-  // Line chart: actual + projected
-  const lineWrap=$('proj-line'), W=lineWrap.clientWidth||700, H=240;
-  const padL=52,padR=20,padT=24,padB=36,chartW=W-padL-padR,chartH=H-padT-padB;
-  const allVals=[...vals,...projMonths.map(p=>p.hi)];
-  const maxV=Math.max(...allVals,1); const minV=Math.min(...allVals,0);
-  const range=maxV-minV||1;
-  const yS=v=>padT+chartH-((v-minV)/range)*chartH;
-  const allLabels=[...activeMons,...projMonths.map(p=>p.label.split(' ')[0])];
-  const totalPts=allLabels.length;
-  const xS=i=>padL+i*(chartW/(totalPts-1));
-  let ls=[`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;overflow:visible">`];
-  [0,Math.round(range*0.33),Math.round(range*0.67),maxV].forEach(v=>{
-    const y=yS(v+minV);
+  // ── 3 Scenarios ────────────────────────────────────────────────────────────
+  // Conservative: flat 2025 (no growth) — achievable, already done it
+  // Base:         +15% over 2025 — modest growth, below historical trend
+  // Optimistic:   +30% over 2025 — aggressive but half the 2024→2025 growth rate
+  const scenarios = [
+    { key:'cons',  label:'Conservative', color:'#5a8090',  mult:1.00,
+      desc:'Flat 2025 pace',        detail:'Match your best full year. Zero growth required.',
+      annual: Math.round(y25total * 1.00) },
+    { key:'base',  label:'Base',         color:'var(--b)', mult:1.15,
+      desc:'+15% over 2025',        detail:'Modest growth. Add 1–2 higher-capital weeks/month.',
+      annual: Math.round(y25total * 1.15) },
+    { key:'opt',   label:'Optimistic',   color:'var(--g)', mult:1.30,
+      desc:'+30% over 2025',        detail:'Half the pace of last year\'s 115% growth.',
+      annual: Math.round(y25total * 1.30) },
+  ];
+
+  // ── YTD status card ────────────────────────────────────────────────────────
+  const y25samePeriod = y25monthly.slice(0, y26months).reduce((s,v)=>s+v, 0);
+  const ytdPct = y25samePeriod > 0 ? Math.round(y26ytd / y25samePeriod * 100) : 0;
+  $('proj-ytd').textContent     = '$' + y26ytd.toLocaleString();
+  $('proj-ytd-sub').textContent = ytdPct + '% of 2025 pace · ' + y26months + ' months';
+
+  // ── Scenario cards ─────────────────────────────────────────────────────────
+  $('scenario-cards').innerHTML = scenarios.map(s => `
+    <div class="panel" style="border-color:${s.color}44">
+      <div style="padding:20px 22px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <div style="width:10px;height:10px;border-radius:2px;background:${s.color};box-shadow:0 0 8px ${s.color}88"></div>
+          <div style="font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:${s.color}">${s.label}</div>
+        </div>
+        <div style="font-size:36px;font-weight:900;color:${s.color};line-height:1">${'$'+s.annual.toLocaleString()}</div>
+        <div style="font-size:11px;font-weight:700;color:var(--dim);margin-top:4px">${s.desc} · ${'$'+Math.round(s.annual/12).toLocaleString()}/mo avg</div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--dim);line-height:1.5">${s.detail}</div>
+      </div>
+    </div>`).join('');
+
+  // ── Trajectory chart ───────────────────────────────────────────────────────
+  // Show: 2024 actuals, 2025 actuals, 2026 actuals so far, then 3 scenario lines
+  const allActual = [
+    ...MONTHS.map(m => ({ label: m+' 24', val: Math.round(byYM['2024_'+m]), year: '2024' })),
+    ...MONTHS.map(m => ({ label: m+' 25', val: Math.round(byYM['2025_'+m]), year: '2025' })),
+    ...MONTHS.slice(0, y26months).map(m => ({ label: m+' 26', val: Math.round(byYM['2026_'+m]), year: '2026' })),
+  ];
+  // Projection points: remaining 2026 months × 3 scenarios
+  const remainingMons = MONTHS.slice(y26months);
+  const projStartIdx  = allActual.length - 1; // connect from last actual
+
+  const W = ($('proj-line').clientWidth || 820);
+  const H = 280, padL=52, padR=24, padT=28, padB=36;
+  const chartW = W-padL-padR, chartH = H-padT-padB;
+  const totalPts = allActual.length + remainingMons.length;
+  const xS = i => padL + i * (chartW / (totalPts - 1));
+
+  const allVals = [
+    ...allActual.map(p => p.val),
+    ...remainingMons.flatMap(m => scenarios.map(s => Math.round(byYM['2025_'+m] * s.mult)))
+  ];
+  const maxV = Math.max(...allVals, 1);
+  const yS   = v => padT + chartH - (Math.max(v, 0) / maxV) * chartH;
+
+  // Grid
+  const gridVals = [0, Math.round(maxV*0.25), Math.round(maxV*0.5), Math.round(maxV*0.75), maxV];
+  let ls = [`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;overflow:visible">`];
+  gridVals.forEach(v => {
+    const y = yS(v);
     ls.push(`<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#1a2535" stroke-width="1"/>`);
-    ls.push(`<text x="${padL-6}" y="${y+3}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" fill="#3a5060">${(v+minV)>=1000?(Math.round((v+minV)/100)/10)+'k':'$'+(v+minV)}</text>`);
+    ls.push(`<text x="${padL-6}" y="${y+3}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" fill="#3a5060">${v>=1000?(Math.round(v/100)/10)+'k':'$'+v}</text>`);
   });
-  // Projected band
-  const bandPts=projMonths.map((p,i)=>`${xS(activeMons.length+i)},${yS(p.hi)}`).join(' ');
-  const bandPtsLow=[...projMonths].reverse().map((p,i)=>`${xS(activeMons.length+projMonths.length-1-i)},${yS(p.lo)}`).join(' ');
-  ls.push(`<polygon points="${bandPts} ${bandPtsLow}" fill="rgba(0,255,135,0.06)" stroke="none"/>`);
-  // Projected line
-  const projPts=projMonths.map((p,i)=>`${xS(activeMons.length+i)},${yS(p.proj)}`);
-  ls.push(`<polyline points="${xS(activeMons.length-1)},${yS(vals[vals.length-1])} ${projPts.join(' ')}" fill="none" stroke="#00ff8766" stroke-width="2" stroke-dasharray="6,4"/>`);
-  // Actual line
-  const actualPts=activeMons.map((m,i)=>`${xS(i)},${yS(monTotals[m])}`).join(' ');
-  ls.push(`<polyline points="${actualPts}" fill="none" stroke="var(--b)" stroke-width="2.5" stroke-linejoin="round"/>`);
-  activeMons.forEach((m,i)=>{
-    ls.push(`<circle cx="${xS(i)}" cy="${yS(monTotals[m])}" r="4" fill="var(--b)" style="filter:drop-shadow(0 0 4px var(--b))"/>`);
-    if(i%2===0||totalPts<14) ls.push(`<text x="${xS(i)}" y="${H-8}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="${totalPts>14?7:9}" fill="#4a6070">${m}</text>`);
-  });
-  projMonths.forEach((p,i)=>{
-    ls.push(`<circle cx="${xS(activeMons.length+i)}" cy="${yS(p.proj)}" r="3" fill="#00ff8766"/>`);
-    if(i%2===0) ls.push(`<text x="${xS(activeMons.length+i)}" y="${H-8}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="${totalPts>14?7:9}" fill="#2a3a30">${p.label.split(' ')[0]}</text>`);
-  });
-  ls.push(`<text x="${W-padR}" y="${padT+10}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" fill="#00d4ff">◆ Actual</text>`);
-  ls.push(`<text x="${W-padR}" y="${padT+24}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" fill="#00ff8866">◆ Projected</text>`);
-  ls.push('</svg>');
-  lineWrap.innerHTML=ls.join('');
 
-  // Assumptions panel
-  $('proj-assumptions').innerHTML=`
-    <div style="display:flex;flex-direction:column;gap:14px">
+  // Year dividers
+  [12, 24].forEach(i => {
+    if (i < totalPts) {
+      ls.push(`<line x1="${xS(i)}" y1="${padT}" x2="${xS(i)}" y2="${padT+chartH}" stroke="#1a2535" stroke-width="1" stroke-dasharray="3,3"/>`);
+    }
+  });
+  ls.push(`<text x="${xS(6)}"  y="${padT-8}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9" font-weight="800" fill="#3a5060">2024</text>`);
+  ls.push(`<text x="${xS(18)}" y="${padT-8}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9" font-weight="800" fill="#3a5060">2025</text>`);
+  ls.push(`<text x="${xS(24+remainingMons.length/2)}" y="${padT-8}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9" font-weight="800" fill="#3a6050">2026</text>`);
+
+  // Scenario projected lines (draw first, under actual)
+  scenarios.forEach(s => {
+    const startPt = `${xS(projStartIdx)},${yS(allActual[projStartIdx].val)}`;
+    const projPts = remainingMons.map((m,i) => `${xS(allActual.length+i)},${yS(Math.round(byYM['2025_'+m]*s.mult))}`);
+    ls.push(`<polyline points="${startPt} ${projPts.join(' ')}" fill="none" stroke="${s.color}" stroke-width="2" stroke-dasharray="6,4" opacity="0.7"/>`);
+    // End dot
+    if (projPts.length > 0) {
+      const last = projPts[projPts.length-1].split(',');
+      ls.push(`<circle cx="${last[0]}" cy="${last[1]}" r="3" fill="${s.color}" opacity="0.7"/>`);
+    }
+  });
+
+  // Actual line — colored by year
+  const yearColors = {'2024':'#5a6080','2025':'#00d4ff','2026':'#00ff87'};
+  ['2024','2025','2026'].forEach(yr => {
+    const pts = allActual.filter(p=>p.year===yr);
+    if (pts.length < 2) return;
+    const indices = allActual.reduce((arr,p,i)=>{ if(p.year===yr) arr.push(i); return arr; },[]);
+    const polyPts = indices.map(i=>`${xS(i)},${yS(allActual[i].val)}`).join(' ');
+    ls.push(`<polyline points="${polyPts}" fill="none" stroke="${yearColors[yr]}" stroke-width="2.5" stroke-linejoin="round"/>`);
+    indices.forEach(i => {
+      ls.push(`<circle cx="${xS(i)}" cy="${yS(allActual[i].val)}" r="3.5" fill="${yearColors[yr]}" style="filter:drop-shadow(0 0 4px ${yearColors[yr]})"/>`);
+    });
+  });
+
+  // X axis labels — every 3 months
+  allActual.forEach((p, i) => {
+    if (i % 3 === 0) {
+      ls.push(`<text x="${xS(i)}" y="${H-8}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9" fill="#3a5060">${p.label.split(' ')[0]}</text>`);
+    }
+  });
+
+  ls.push('</svg>');
+  $('proj-line').innerHTML = ls.join('');
+
+  // Chart legend
+  $('proj-chart-legend').innerHTML =
+    Object.entries(yearColors).map(([yr,col]) =>
+      `<div style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:${col}"><svg width="14" height="3"><line x1="0" y1="1.5" x2="14" y2="1.5" stroke="${col}" stroke-width="2.5"/></svg>${yr}</div>`
+    ).join('') +
+    scenarios.map(s =>
+      `<div style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:${s.color};opacity:.8"><svg width="14" height="3"><line x1="0" y1="1.5" x2="14" y2="1.5" stroke="${s.color}" stroke-width="2" stroke-dasharray="5,3"/></svg>${s.label}</div>`
+    ).join('');
+
+  // ── Milestones ─────────────────────────────────────────────────────────────
+  const milestones = [
+    { target: 500,  label: '$500/mo',  note: 'Floor — never missed in 2025' },
+    { target: 750,  label: '$750/mo',  note: 'Solid — hit 7 of 12 months in 2025' },
+    { target: 1000, label: '$1,000/mo',note: 'Strong — hit 3 of 12 months in 2025' },
+    { target: 1200, label: '$1,200/mo',note: 'Stretch — October 2025 territory' },
+    { target: 1500, label: '$1,500/mo',note: 'Ambitious — only Oct 2025 came close' },
+    { target: 2000, label: '$2,000/mo',note: 'Peak — beyond any single month to date' },
+  ];
+  const hitColor = '#00ff87', partColor = '#ffe600', noColor = '#3a5060';
+  $('proj-milestones').innerHTML = milestones.map(ms => {
+    const hits25 = y25monthly.filter(v => v >= ms.target).length;
+    const hits26 = y26actual.filter(v => v >= ms.target).length;
+    const pct    = Math.round(Math.min(y25total, ms.target * 12) / (ms.target * 12) * 100);
+    const barPct = Math.min(100, Math.round(Math.max(...y25monthly) / ms.target * 100));
+    const col    = hits25 >= 6 ? hitColor : hits25 >= 2 ? partColor : noColor;
+    return `<div style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+        <div style="font-size:13px;font-weight:800;color:${col}">${ms.label}</div>
+        <div style="font-size:10px;font-weight:700;color:var(--dim)">${hits25}/12 months in 2025 · ${hits26}/3 in 2026</div>
+      </div>
+      <div style="height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-bottom:5px">
+        <div style="height:100%;width:${Math.min(100,hits25/12*100)}%;background:${col};border-radius:3px;box-shadow:0 0 6px ${col}66"></div>
+      </div>
+      <div style="font-size:10px;color:var(--dim)">${ms.note}</div>
+    </div>`;
+  }).join('');
+
+  // ── Assumptions ────────────────────────────────────────────────────────────
+  const t6months = MONTHS.slice(-6).map(m=>byYM['2025_'+m]||0);
+  const trail6avg = Math.round(t6months.reduce((s,v)=>s+v,0)/6);
+  $('proj-assumptions').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:12px">
       <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px">
-        <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Trailing 3-Month Avg</div>
-        <div style="font-size:24px;font-weight:900;color:var(--g)">${fmt(avg3)}<span style="font-size:12px;color:var(--dim)">/mo</span></div>
+        <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px">Growth Basis</div>
+        <div style="font-size:12px;color:var(--text);line-height:1.6">2025 monthly rhythm scaled by scenario multiplier. Seasonal highs (Oct–Nov) and lows (Jun) preserved.</div>
       </div>
       <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px">
-        <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:6px">All-Time Monthly Avg</div>
-        <div style="font-size:24px;font-weight:900;color:var(--b)">${fmt(avg)}<span style="font-size:12px;color:var(--dim)">/mo</span></div>
+        <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px">Why not model 2024→2025 growth again?</div>
+        <div style="font-size:12px;color:var(--text);line-height:1.6">2024→2025 grew +115%, largely from adding new tickers and increasing trade frequency. That step-change is unlikely to repeat from the same base.</div>
       </div>
       <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px">
-        <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Projection Model</div>
-        <div style="font-size:12px;font-weight:600;color:var(--text)">Trailing 3-month avg · ±30% band</div>
-        <div style="font-size:11px;color:var(--dim);margin-top:4px">${activeMons.length} months of historical data</div>
+        <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px">2026 YTD pace</div>
+        <div style="font-size:12px;color:var(--text);line-height:1.6">Running at ${ytdPct}% of 2025's Jan–Mar. ${ytdPct >= 100 ? 'Ahead of pace.' : 'Behind pace — strong Q4 could recover the gap given seasonal tailwinds.'}</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px">
+        <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px">Win rate (2024–2026)</div>
+        <div style="font-size:26px;font-weight:900;color:var(--g)">61.9% <span style="font-size:12px;color:var(--dim)">expired + rolled</span></div>
       </div>
     </div>`;
 
-  $('proj-body').innerHTML=projMonths.map((p,i)=>{
-    const isCurrent = i===0;
-    return `<tr${isCurrent?' style="background:rgba(0,255,135,.04)"':''}>
-      <td><strong${isCurrent?' style="color:var(--g)"':''}>${p.label}</strong></td>
-      <td class="r pos">${fmt(p.proj)}</td>
-      <td class="r dim">${fmt(p.lo)}</td>
-      <td class="r dim">${fmt(p.hi)}</td>
-      <td class="dim" style="font-size:11px">${isCurrent?'Next month':'Trailing 3-mo avg'}</td>
+  // ── Monthly table ──────────────────────────────────────────────────────────
+  $('proj-body').innerHTML = MONTHS.map((m, i) => {
+    const a25  = y25monthly[i];
+    const a26  = y26actual[i] || null;
+    const cons = Math.round(a25 * 1.00);
+    const base = Math.round(a25 * 1.15);
+    const opt  = Math.round(a25 * 1.30);
+    const hasFull = a26 !== null;
+    const statusColor = hasFull && a26 >= opt ? 'var(--g)' : hasFull && a26 >= base ? 'var(--b)' : hasFull && a26 >= cons ? 'var(--y)' : hasFull ? 'var(--p)' : 'var(--dim)';
+    const statusText  = hasFull && a26 >= opt ? '🟢 Optimistic' : hasFull && a26 >= base ? '🔵 Base' : hasFull && a26 >= cons ? '🟡 Conservative' : hasFull ? '🔴 Below target' : '—';
+    return `<tr>
+      <td><strong>${m}</strong></td>
+      <td class="r dim">${fmt(a25)}</td>
+      <td class="r" style="color:#5a8090">${fmt(cons)}</td>
+      <td class="r" style="color:var(--b)">${fmt(base)}</td>
+      <td class="r" style="color:var(--g)">${fmt(opt)}</td>
+      <td class="r" style="color:${hasFull?'var(--text)':'var(--dim2)'}">${hasFull ? fmt(a26) : '—'}</td>
+      <td style="font-size:10px;color:${statusColor}">${statusText}</td>
     </tr>`;
   }).join('');
+
+  const totCons = Math.round(y25total * 1.00);
+  const totBase = Math.round(y25total * 1.15);
+  const totOpt  = Math.round(y25total * 1.30);
+  $('proj-foot').innerHTML = `<tr style="background:rgba(0,255,135,.04);font-weight:900">
+    <td>Full Year Total</td>
+    <td class="r dim">${fmt(y25total)}</td>
+    <td class="r" style="color:#5a8090">${fmt(totCons)}</td>
+    <td class="r" style="color:var(--b)">${fmt(totBase)}</td>
+    <td class="r" style="color:var(--g)">${fmt(totOpt)}</td>
+    <td class="r pos">${y26ytd ? fmt(y26ytd) : '—'}</td>
+    <td></td>
+  </tr>`;
 }
 
 // ════════════════════════════════ NAVIGATION ════════════════════════════════
