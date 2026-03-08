@@ -270,6 +270,75 @@ tr:hover td { background: rgba(0,212,255,.03); }
     <div id="tw-legend" style="display:flex;gap:10px;flex-wrap:wrap;padding:6px 20px 16px"></div>
   </div>
 
+  <!-- Analytics row: 3 panels -->
+  <div class="three-col" style="margin-bottom:20px">
+
+    <!-- Win Rate & P&L Quality -->
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title"><em>◈</em>Trade Quality</div></div>
+      <div style="padding:20px">
+        <div style="display:flex;gap:16px;margin-bottom:20px">
+          <div style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center">
+            <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Win Rate</div>
+            <div style="font-size:32px;font-weight:900;color:var(--g)" id="tq-winrate">—</div>
+          </div>
+          <div style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px;text-align:center">
+            <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:6px">Trades</div>
+            <div style="font-size:32px;font-weight:900;color:var(--b)" id="tq-total">—</div>
+          </div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;margin-bottom:5px">
+            <span style="color:var(--g)">Winners</span><span id="tq-win-count" style="color:var(--g)">—</span>
+          </div>
+          <div style="height:8px;background:var(--bg3);border-radius:4px;overflow:hidden">
+            <div id="tq-win-bar" style="height:100%;width:0%;background:var(--g);border-radius:4px;transition:width .6s"></div>
+          </div>
+        </div>
+        <div style="margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;margin-bottom:5px">
+            <span style="color:var(--p)">Losers</span><span id="tq-loss-count" style="color:var(--p)">—</span>
+          </div>
+          <div style="height:8px;background:var(--bg3);border-radius:4px;overflow:hidden">
+            <div id="tq-loss-bar" style="height:100%;width:0%;background:var(--p);border-radius:4px;transition:width .6s"></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+          <div style="background:var(--bg3);border:1px solid rgba(0,255,135,.15);border-radius:6px;padding:10px">
+            <div style="font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:3px">Avg Win</div>
+            <div style="font-size:15px;font-weight:900;color:var(--g)" id="tq-avg-win">—</div>
+          </div>
+          <div style="background:var(--bg3);border:1px solid rgba(255,45,135,.15);border-radius:6px;padding:10px">
+            <div style="font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:3px">Avg Loss</div>
+            <div style="font-size:15px;font-weight:900;color:var(--p)" id="tq-avg-loss">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Return Distribution -->
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title"><em>◈</em>Return Distribution</div></div>
+      <div style="padding:20px">
+        <div id="ret-dist" style="width:100%;"></div>
+      </div>
+    </div>
+
+    <!-- Hold Duration -->
+    <div class="panel">
+      <div class="panel-head"><div class="panel-title"><em>◈</em>Hold Duration</div></div>
+      <div style="padding:20px">
+        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:16px">
+          <div style="font-size:36px;font-weight:900;color:var(--b)" id="hd-avg">—</div>
+          <div style="font-size:12px;color:var(--dim)">avg days held</div>
+        </div>
+        <div id="hold-dist" style="display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+    </div>
+
+  </div>
+
+
   <div class="panel">
     <div class="panel-head">
       <div class="panel-title"><em>◈</em>All Trades</div>
@@ -704,8 +773,24 @@ const minisumTrades = [
 
 // ════════════════════════════════ HELPERS ════════════════════════════════
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const NEON   = ['#00d4ff','#ff2d87','#b44dff','#ff7b00','#ffe600','#00ff87','#ff6b6b','#00ffcc','#ff00aa','#00aaff','#ffaa00','#aa00ff'];
-const TICKER_COLORS = {MSTX:'#ff2d87',TSLL:'#00d4ff',HOOD:'#ffe600',MARA:'#b44dff',CLSK:'#ff7b00',ETHU:'#00ff87',RIVN:'#00ffcc',MSTU:'#ff6b6b',RIOT:'#aa00ff',SOXL:'#00aaff',EOSE:'#ffaa00',TQQQ:'#ff00aa'};
+const NEON   = ['#00d4ff','#ff2d87','#b44dff','#ff7b00','#00ff87','#ff6b6b','#00ffcc','#ff00aa','#00aaff','#ffaa00','#aa00ff','#40e0ff'];
+const TICKER_COLORS = {
+  HOOD: '#00d4ff',   // cyan — top earner, stands out clean
+  MSTX: '#ff2d87',   // hot pink
+  TSLL: '#00ff87',   // neon green
+  MARA: '#b44dff',   // purple
+  CLSK: '#ff7b00',   // orange
+  ETHU: '#40e0ff',   // sky blue
+  RIVN: '#00ffcc',   // teal
+  MSTU: '#ff6b6b',   // coral red
+  RIOT: '#aa00ff',   // deep violet
+  SOXL: '#00aaff',   // steel blue
+  EOSE: '#ffaa00',   // amber
+  TQQQ: '#ff00aa',   // magenta
+  ROBN: '#c8ff40',   // lime
+  NVDL: '#40c8ff',   // light blue
+  SOFI: '#ff8040',   // peach
+};
 function tc(tk) { return TICKER_COLORS[tk] || NEON[Object.keys(TICKER_COLORS).length % NEON.length]; }
 
 const $ = id => document.getElementById(id);
@@ -789,21 +874,40 @@ function svgStackedBars(containerId, weeks, tickers, tickerColors, opts = {}) {
     s.push(`<text x="${padL-5}" y="${y+3}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" fill="#3a5060">${v>=1000?(Math.round(v/100)/10)+'k':v>0?'$'+v:''}</text>`);
   });
   const avgY = yS(avgV);
-  s.push(`<line x1="${padL}" y1="${avgY}" x2="${W-padR}" y2="${avgY}" stroke="#ffe60066" stroke-width="1.5" stroke-dasharray="5,4"/>`);
-  s.push(`<text x="${W-padR-2}" y="${avgY-4}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" font-weight="700" fill="#ffe600">avg ${fmt(avgV)}</text>`);
+  s.push(`<line x1="${padL}" y1="${avgY}" x2="${W-padR}" y2="${avgY}" stroke="#ffffff44" stroke-width="1.5" stroke-dasharray="5,4"/>`);
+  s.push(`<text x="${W-padR-2}" y="${avgY-4}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" font-weight="700" fill="#ffffff88">avg ${fmt(avgV)}</text>`);
   ordered.forEach((wk, i) => {
     const wkD = weeks[wk]; const total = wkD.total;
     const bx = padL + i*bGW + (bGW-bW)/2; let yOff = 0;
     tickers.filter(tk => (wkD.tickers[tk]||0)>0).forEach((tk,si,arr) => {
       const val = wkD.tickers[tk]; const segH = Math.max(2,(val/maxV)*chartH);
       const segY = yB - yOff - segH; const isTop = si===arr.length-1; const col = tickerColors[tk];
-      s.push(`<rect x="${bx}" y="${segY}" width="${bW}" height="${segH}" fill="${col}" opacity="0.88" rx="${isTop?3:0}" ry="${isTop?3:0}" style="filter:drop-shadow(0 0 4px ${col}55)"><title>${tk}: ${fmt(val)}</title></rect>`);
+      s.push(`<rect x="${bx}" y="${segY}" width="${bW}" height="${segH}" fill="${col}" opacity="0.9" rx="${isTop?3:0}" ry="${isTop?3:0}"><title>${tk}: ${fmt(val)}</title></rect>`);
       yOff += segH;
     });
+
+    // Total label — inside the bar, large font
     const totalH = (total/maxV)*chartH;
-    const valStr = total>=1000?(Math.round(total/100)/10)+'k':fmtS(total);
-    s.push(`<text x="${bx+bW/2}" y="${yB-totalH-6}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9" font-weight="800" fill="#c8d8e8cc">${valStr}</text>`);
-    s.push(`<text x="${bx+bW/2}" y="${yB+16}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="${n>9?8:10}" fill="#4a6070">${wk}</text>`);
+    const valStr = total>=1000 ? '$'+(Math.round(total/100)/10)+'k' : '$'+total;
+    const cx = bx + bW/2;
+    const labelFontSize = bW >= 28 ? 11 : 9;
+    if (totalH >= 22) {
+      // Enough height — place label inside near top of bar
+      const labelY = yB - totalH + 14;
+      if (bW >= 26) {
+        // Wide enough for horizontal text
+        s.push(`<text x="${cx}" y="${labelY}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="${labelFontSize}" font-weight="900" fill="rgba(0,0,0,0.75)">${valStr}</text>`);
+      } else {
+        // Narrow bar — rotate vertical
+        s.push(`<text transform="rotate(-90,${cx},${yB-totalH/2})" x="${cx}" y="${yB-totalH/2+4}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9" font-weight="900" fill="rgba(0,0,0,0.75)">${valStr}</text>`);
+      }
+    } else {
+      // Short bar — label above
+      s.push(`<text x="${cx}" y="${yB-totalH-5}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9" font-weight="800" fill="#8090a0">${valStr}</text>`);
+    }
+
+    // X axis label
+    s.push(`<text x="${cx}" y="${yB+16}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="${n>9?8:10}" fill="#4a6070">${wk}</text>`);
   });
   s.push('</svg>');
   wrap.innerHTML = s.join('');
@@ -826,7 +930,7 @@ function legendEl(tickers, totals, colors) {
 }
 
 // ════════════════════════════════ STATE ════════════════════════════════
-let tradesYear = 'all', tradesTicker = 'all', tradesWeekYear = 'all';
+let tradesYear = 'all', tradesTicker = 'all', tradesWeekMonth = 'all';
 let monthlyYear = 'all';
 
 function getYearButtons(currentVal, onclickFn) {
@@ -839,7 +943,6 @@ function initYearFilters() {
   const filters = [
     ['trades-year-filter', 'setTradesYear'],
     ['monthly-year-filter', 'setMonthlyYear'],
-    ['trades-week-year', 'setTradesWeekYear'],
   ];
   filters.forEach(([id, fn]) => {
     const el = $(id);
@@ -856,7 +959,7 @@ function filterByYear(year) {
 
 // ════════════════════════════════ PAGE: TRADES ════════════════════════════════
 function setTradesYear(y, btn) {
-  tradesYear = y; tradesTicker = 'all';
+  tradesYear = y; tradesTicker = 'all'; tradesWeekMonth = 'all';
   $('trades-year-filter').innerHTML = getYearButtons(y, 'setTradesYear');
   renderTrades();
 }
@@ -866,10 +969,21 @@ function setTradesTicker(v, btn) {
   btn.classList.add('active');
   renderTradesTable();
 }
-function setTradesWeekYear(y, btn) {
-  tradesWeekYear = y;
-  $('trades-week-year').innerHTML = getYearButtons(y, 'setTradesWeekYear');
+function setTradesWeekMonth(m, btn) {
+  tradesWeekMonth = m;
+  $('trades-week-year').querySelectorAll('.fb').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
   renderTradesWeekBars();
+}
+
+function buildWeekMonthButtons() {
+  // Show month buttons for the active year's data (or all months if year=all)
+  const base = filterByYear(tradesYear);
+  const activeMons = [...new Set(base.map(t => mon(t.exp)))].sort((a,b) => MONTHS.indexOf(a) - MONTHS.indexOf(b));
+  const el = $('trades-week-year');
+  if (!el) return;
+  el.innerHTML = `<button class="fb${tradesWeekMonth==='all'?' active':''}" onclick="setTradesWeekMonth('all',this)">All</button>` +
+    activeMons.map(m => `<button class="fb${tradesWeekMonth===m?' active':''}" onclick="setTradesWeekMonth('${m}',this)">${m}</button>`).join('');
 }
 
 function renderTrades() {
@@ -940,7 +1054,121 @@ function renderTrades() {
     tickers.map(tk=>`<button class="fb${tradesTicker===tk?' active':''}" onclick="setTradesTicker('${tk}',this)">${tk}</button>`).join('');
 
   renderTradesTable();
+  buildWeekMonthButtons();
   renderTradesWeekBars();
+  renderTradeAnalytics(base);
+}
+
+function renderTradeAnalytics(base) {
+  if (!base || !base.length) return;
+
+  // ── Trade Quality ──────────────────────────────────────────────────────────
+  const winners  = base.filter(t => t.profit > 0);
+  const losers   = base.filter(t => t.profit <= 0);
+  const winRate  = Math.round(winners.length / base.length * 100);
+  const avgWin   = winners.length ? Math.round(winners.reduce((s,t)=>s+t.profit,0)/winners.length) : 0;
+  const avgLoss  = losers.length  ? Math.round(losers.reduce((s,t)=>s+t.profit,0)/losers.length)  : 0;
+
+  $('tq-winrate').textContent  = winRate + '%';
+  $('tq-total').textContent    = base.length;
+  $('tq-win-count').textContent= winners.length + ' · avg ' + fmt(avgWin);
+  $('tq-loss-count').textContent= losers.length + ' · avg ' + fmtS(avgLoss);
+  $('tq-avg-win').textContent  = fmt(avgWin);
+  $('tq-avg-loss').textContent = fmtS(avgLoss);
+  setTimeout(() => {
+    $('tq-win-bar').style.width  = winRate + '%';
+    $('tq-loss-bar').style.width = (100 - winRate) + '%';
+  }, 60);
+
+  // ── Return Distribution histogram ─────────────────────────────────────────
+  const retBuckets = [
+    { label: '< 0%',  lo: -999, hi: 0,   color: '#ff2d87' },
+    { label: '0–1%',  lo: 0,    hi: 1,   color: '#00d4ff' },
+    { label: '1–2%',  lo: 1,    hi: 2,   color: '#00ff87' },
+    { label: '2–3%',  lo: 2,    hi: 3,   color: '#00ff87' },
+    { label: '3–5%',  lo: 3,    hi: 5,   color: '#b44dff' },
+    { label: '5–10%', lo: 5,    hi: 10,  color: '#ff7b00' },
+    { label: '10%+',  lo: 10,   hi: 999, color: '#ffaa00' },
+  ];
+  const validRets = base.filter(t => t.ret !== 0 && Math.abs(t.ret) < 50);
+  retBuckets.forEach(b => {
+    b.count = validRets.filter(t => t.ret >= b.lo && t.ret < b.hi).length;
+    b.pct   = validRets.length ? b.count / validRets.length : 0;
+  });
+  const maxCount = Math.max(...retBuckets.map(b => b.count), 1);
+
+  const rdWrap = $('ret-dist');
+  // Horizontal bar chart — works cleanly at any sample size
+  rdWrap.innerHTML = retBuckets.map(b => {
+    const pct    = Math.round(b.pct * 100);
+    const barW   = Math.round(b.pct * 100); // % width
+    const dimmed = b.count === 0;
+    return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+      <div style="width:44px;text-align:right;font-size:10px;font-weight:700;color:${dimmed ? '#2a3545' : b.color};flex-shrink:0">${b.label}</div>
+      <div style="flex:1;height:20px;background:var(--bg3);border-radius:4px;overflow:hidden;position:relative">
+        <div style="height:100%;width:${barW}%;background:${b.color};border-radius:4px;transition:width .5s;min-width:${b.count>0?'3px':'0'};box-shadow:${b.count>0?'0 0 8px '+b.color+'55':'none'}"></div>
+        ${b.count > 0 ? `<span style="position:absolute;left:${Math.min(barW+1,88)}%;top:50%;transform:translateY(-50%);font-size:11px;font-weight:900;color:${barW > 50 ? 'rgba(0,0,0,0.7)' : b.color};${barW > 50 ? 'left:8px' : ''};white-space:nowrap;padding:0 4px">${b.count} <span style="font-size:9px;font-weight:600;opacity:.7">${pct}%</span></span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  // ── Hold Duration ─────────────────────────────────────────────────────────
+  // Compute days between open and expiry using week numbers as proxy
+  // Use year+week of exp vs year+week of open
+  const holdBuckets = [
+    { label: '1–3 days',  lo: 1,  hi: 3  },
+    { label: '4–7 days',  lo: 4,  hi: 7  },
+    { label: '8–14 days', lo: 8,  hi: 14 },
+    { label: '15+ days',  lo: 15, hi: 999 },
+  ];
+
+  // Estimate days from exp week vs open date string
+  const MONTH_NUMS = {Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12,
+    January:1,February:2,March:3,April:4,May:5,June:6,July:7,August:8,September:9,October:10,November:11,December:12};
+
+  function parseDateStr(s, yr) {
+    if (!s) return null;
+    const p = s.trim().split(' ');
+    if (p.length >= 2 && MONTH_NUMS[p[0]] && !isNaN(p[1])) {
+      return new Date(yr, MONTH_NUMS[p[0]] - 1, parseInt(p[1]));
+    }
+    return null;
+  }
+
+  let totalDays = 0, daysCount = 0;
+  holdBuckets.forEach(b => b.count = 0);
+
+  base.forEach(t => {
+    const yr = parseInt(t.year) || 2025;
+    const od = parseDateStr(t.open, yr);
+    const ed = parseDateStr(t.exp, yr);
+    if (!od || !ed) return;
+    let diff = Math.round((ed - od) / 86400000);
+    if (diff < 0) diff += 365; // year wrap
+    if (diff < 0 || diff > 90) return;
+    totalDays += diff; daysCount++;
+    const bucket = holdBuckets.find(b => diff >= b.lo && diff <= b.hi);
+    if (bucket) bucket.count++;
+  });
+
+  const avgDays = daysCount ? (totalDays / daysCount).toFixed(1) : '—';
+  $('hd-avg').textContent = avgDays;
+
+  const hdMax = Math.max(...holdBuckets.map(b => b.count), 1);
+  const hdColors = ['#00d4ff', '#00ff87', '#b44dff', '#ff7b00'];
+  $('hold-dist').innerHTML = holdBuckets.map((b, i) => {
+    const pct = Math.round(b.count / (daysCount || 1) * 100);
+    const barW = Math.round(b.count / hdMax * 100);
+    return `<div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">
+        <span style="font-size:11px;font-weight:700;color:${hdColors[i]}">${b.label}</span>
+        <span style="font-size:10px;color:var(--dim)">${b.count} trades · ${pct}%</span>
+      </div>
+      <div style="height:7px;background:var(--bg3);border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:${barW}%;background:${hdColors[i]};border-radius:4px;transition:width .5s;box-shadow:0 0 6px ${hdColors[i]}66"></div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function renderTradesTable() {
@@ -968,22 +1196,24 @@ function renderTradesTable() {
 
 function renderTradesWeekBars() {
   const base = filterByYear(tradesYear);
-  const data = tradesWeekYear==='all' ? base : base.filter(t=>t.year===tradesWeekYear);
+  // Sub-filter by month if one is selected
+  const data = tradesWeekMonth === 'all' ? base : base.filter(t => mon(t.exp) === tradesWeekMonth);
 
-  // Group by ISO week. Key = "YYYY-WNN" when multi-year, "WNN" when single year view.
-  const singleYear = tradesWeekYear !== 'all';
+  // Label style: single year selected AND single month → just "Wk N"
+  //              single year, all months  → "Wk N"
+  //              all years               → "YYYY WN" to avoid collisions
+  const isSingleYear = tradesYear !== 'all';
   const weekMap = {}, tickerTotals = {};
 
   data.forEach(t => {
     if (t.week == null) return;
-    const key = singleYear ? t.week : t.year + '-' + String(t.week).padStart(2,'0');
-    if (!weekMap[key]) weekMap[key] = {total:0, tickers:{}, week:t.week, year:t.year, label:null};
+    const key = isSingleYear ? t.week : t.year + '-' + String(t.week).padStart(2,'0');
+    if (!weekMap[key]) weekMap[key] = {total:0, tickers:{}, week:t.week, year:t.year};
     weekMap[key].total += t.profit;
     weekMap[key].tickers[t.stock] = (weekMap[key].tickers[t.stock]||0) + t.profit;
     tickerTotals[t.stock] = (tickerTotals[t.stock]||0) + t.profit;
   });
 
-  // Sort keys numerically
   const ordered = Object.keys(weekMap).sort((a,b) => {
     const [ay,aw] = a.includes('-') ? a.split('-').map(Number) : [0, Number(a)];
     const [by,bw] = b.includes('-') ? b.split('-').map(Number) : [0, Number(b)];
@@ -995,10 +1225,9 @@ function renderTradesWeekBars() {
     $('tw-stats').innerHTML = ''; $('tw-legend').innerHTML = ''; return;
   }
 
-  // Build label: "Wk 1", "Wk 12" — tooltip shows year
   ordered.forEach(k => {
     const d = weekMap[k];
-    d.label = singleYear ? 'Wk '+d.week : d.year+' W'+d.week;
+    d.label = isSingleYear ? 'Wk '+d.week : d.year+' W'+d.week;
   });
 
   const tickers = Object.keys(tickerTotals).sort((a,b)=>tickerTotals[b]-tickerTotals[a]);
@@ -1008,15 +1237,15 @@ function renderTradesWeekBars() {
   const avg     = vals.length ? Math.round(total/vals.length) : 0;
   const bestKey = ordered.reduce((a,b)=>weekMap[a].total>weekMap[b].total?a:b);
   const bestWk  = weekMap[bestKey];
+  const monthLabel = tradesWeekMonth !== 'all' ? ' · '+tradesWeekMonth : '';
 
   statStrip('tw-stats', [
-    {label:'Total Booked', val:fmt(total),                                           color:'var(--g)'},
-    {label:'Weekly Avg',   val:fmt(avg),                                             color:'var(--y)'},
-    {label:'Best Week',    val:fmt(bestWk.total)+' (Wk '+bestWk.week+(singleYear?'':'  '+bestWk.year)+')', color:'var(--b)'},
-    {label:'Weeks Active', val:ordered.length+' of 52',                              color:'var(--pu)'},
+    {label:'Total Booked', val:fmt(total),  color:'var(--g)'},
+    {label:'Weekly Avg',   val:fmt(avg),    color:'var(--y)'},
+    {label:'Best Week',    val:fmt(bestWk.total)+' (Wk '+bestWk.week+(isSingleYear?'':' '+bestWk.year)+')', color:'var(--b)'},
+    {label:'Weeks Active', val:ordered.length+(tradesWeekMonth==='all'?' of 52':''), color:'var(--pu)'},
   ]);
 
-  // Build weeks object keyed by label for svgStackedBars
   const weeksForChart = {};
   ordered.forEach(k => {
     const d = weekMap[k];
@@ -1025,7 +1254,7 @@ function renderTradesWeekBars() {
   svgStackedBars('tw-bars', weeksForChart, tickers, colors);
 
   $('tw-legend').innerHTML = legendEl(tickers, tickerTotals, colors) +
-    `<div style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--dim)"><svg width="16" height="8" style="overflow:visible"><line x1="0" y1="4" x2="16" y2="4" stroke="#ffe60077" stroke-width="1.5" stroke-dasharray="4,3"/></svg><span style="color:var(--y)">Weekly avg</span></div>`;
+    `<div style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--dim)"><svg width="16" height="8" style="overflow:visible"><line x1="0" y1="4" x2="16" y2="4" stroke="#ffffff44" stroke-width="1.5" stroke-dasharray="4,3"/></svg><span style="color:#ffffff88">Weekly avg</span></div>`;
 }
 
 // ════════════════════════════════ PAGE: MONTHLY ════════════════════════════════
@@ -1090,24 +1319,30 @@ function renderMonthly() {
   let s=[`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;overflow:visible">`];
   gridVals.forEach(v=>{const y=yS(v);s.push(`<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#1a2535" stroke-width="1"/><text x="${padL-6}" y="${y+3}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" fill="#3a5060">${v>=1000?(Math.round(v/100)/10)+'k':'$'+v}</text>`);});
   const avgY=yS(avgV);
-  s.push(`<line x1="${padL}" y1="${avgY}" x2="${W-padR}" y2="${avgY}" stroke="#ffe60066" stroke-width="1.5" stroke-dasharray="5,4"/><text x="${W-padR-2}" y="${avgY-4}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" font-weight="700" fill="#ffe600">avg ${fmt(avgV)}</text>`);
+  s.push(`<line x1="${padL}" y1="${avgY}" x2="${W-padR}" y2="${avgY}" stroke="#ffffff44" stroke-width="1.5" stroke-dasharray="5,4"/><text x="${W-padR-2}" y="${avgY-4}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" font-weight="700" fill="#ffffff88">avg ${fmt(avgV)}</text>`);
   activeMons.forEach((m,i)=>{
     const total=byMon[m].profit; const bx=padL+i*bGW+(bGW-bW)/2; let yOff=0;
     tickers.filter(tk=>(byMonTickers[m][tk]||0)>0).forEach((tk,si,arr)=>{
       const val=byMonTickers[m][tk]; const segH=Math.max(2,(val/maxV)*chartH);
       const segY=yB-yOff-segH; const isTop=si===arr.length-1; const col=colors[tk];
-      s.push(`<rect x="${bx}" y="${segY}" width="${bW}" height="${segH}" fill="${col}" opacity="0.88" rx="${isTop?3:0}" ry="${isTop?3:0}" style="filter:drop-shadow(0 0 4px ${col}55)"><title>${tk}: ${fmt(val)}</title></rect>`);
+      s.push(`<rect x="${bx}" y="${segY}" width="${bW}" height="${segH}" fill="${col}" opacity="0.9" rx="${isTop?3:0}" ry="${isTop?3:0}"><title>${tk}: ${fmt(val)}</title></rect>`);
       yOff+=segH;
     });
     const totalH=(total/maxV)*chartH;
-    s.push(`<text x="${bx+bW/2}" y="${yB-totalH-6}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="10" font-weight="800" fill="#c8d8e8cc">${total>=1000?(Math.round(total/100)/10)+'k':fmt(total)}</text>`);
-    s.push(`<text x="${bx+bW/2}" y="${yB+16}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="11" fill="#6080a0">${m}</text>`);
+    const valStr = total>=1000?'$'+(Math.round(total/100)/10)+'k':'$'+total;
+    const cx = bx+bW/2;
+    if (totalH >= 22) {
+      s.push(`<text x="${cx}" y="${yB-totalH+14}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="11" font-weight="900" fill="rgba(0,0,0,0.75)">${valStr}</text>`);
+    } else {
+      s.push(`<text x="${cx}" y="${yB-totalH-5}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9" font-weight="800" fill="#8090a0">${valStr}</text>`);
+    }
+    s.push(`<text x="${cx}" y="${yB+16}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="11" fill="#6080a0">${m}</text>`);
   });
   s.push('</svg>');
   wrap.innerHTML=s.join('');
 
   $('m-legend').innerHTML = legendEl(tickers, tickerTotals, colors) +
-    `<div style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--dim)"><svg width="16" height="8" style="overflow:visible"><line x1="0" y1="4" x2="16" y2="4" stroke="#ffe60077" stroke-width="1.5" stroke-dasharray="4,3"/></svg><span style="color:var(--y)">Monthly avg</span></div>`;
+    `<div style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--dim)"><svg width="16" height="8" style="overflow:visible"><line x1="0" y1="4" x2="16" y2="4" stroke="#ffffff44" stroke-width="1.5" stroke-dasharray="4,3"/></svg><span style="color:#ffffff88">Monthly avg</span></div>`;
 
   $('monthly-body').innerHTML = activeMons.map(m=>{
     const d=byMon[m], avg=d.trades?Math.round(d.profit/d.trades):0;
