@@ -200,9 +200,104 @@ tr:hover td { background: rgba(0,212,255,.03); }
 /* ── YEAR BADGE TOP-RIGHT ── */
 .year-badge { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; color:var(--g); background:rgba(0,255,135,.1); border:1px solid rgba(0,255,135,.2); border-radius:20px; padding:4px 12px; }
 
+/* ── RESPONSIVE: TABLET (≤900px) ── */
 @media(max-width:900px) {
   .cards-4, .cards-5 { grid-template-columns: repeat(2,1fr); }
   .two-col, .three-col { grid-template-columns: 1fr; }
+  .page { padding: 24px 16px 48px; }
+  #nav { padding: 0 16px; }
+  .ph-title { font-size: 30px; }
+  .stat-strip { grid-template-columns: repeat(2,1fr); }
+  .stat-cell:nth-child(odd) { border-left: none; }
+  .stat-cell:nth-child(3), .stat-cell:nth-child(4) { border-top: 1px solid var(--border); }
+}
+
+/* ── RESPONSIVE: MOBILE (≤600px) ── */
+@media(max-width:600px) {
+  /* Nav — logo hidden, tabs scroll horizontally */
+  #nav { padding: 0 12px; height: auto; min-height: 48px; flex-wrap: wrap; gap: 0; }
+  .logo { display: none; }
+  .nav-tabs {
+    order: 1; width: 100%;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    padding: 6px 0; gap: 2px;
+    scrollbar-width: none;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .nt { padding: 6px 12px; font-size: 10px; white-space: nowrap; flex-shrink: 0; }
+  #nav-badge { order: 0; margin-left: auto; font-size: 9px; padding: 3px 8px; }
+
+  /* Page */
+  .page { padding: 16px 12px 40px; }
+  .ph { margin-bottom: 18px; }
+  .ph-title { font-size: 26px; }
+  .ph-sub { font-size: 10px; }
+  .ph-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+
+  /* Stat cards — 2 col on mobile, 1 col for 5-card rows */
+  .cards-4 { grid-template-columns: repeat(2,1fr); gap: 10px; }
+  .cards-5 { grid-template-columns: repeat(2,1fr); gap: 10px; }
+  .card { padding: 14px; }
+  .card-val { font-size: 22px; }
+  .card-label { font-size: 8px; }
+  .card-sub { font-size: 10px; }
+
+  /* Panels */
+  .panel-head { padding: 12px 14px; flex-wrap: wrap; gap: 8px; }
+  .panel-title { font-size: 9px; }
+  .two-col, .three-col { gap: 12px; }
+
+  /* Stat strip — 2 col */
+  .stat-strip { grid-template-columns: repeat(2,1fr); }
+  .stat-cell { padding: 12px 14px; }
+  .stat-cell:nth-child(odd) { border-left: none; }
+  .stat-cell:nth-child(3), .stat-cell:nth-child(4) { border-top: 1px solid var(--border); }
+  .stat-cell-val { font-size: 18px; }
+  .stat-cell-label { font-size: 8px; }
+
+  /* Filters — wrap and smaller */
+  .filters { gap: 4px; }
+  .fb { padding: 4px 10px; font-size: 9px; }
+
+  /* Tables — horizontal scroll */
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { min-width: 540px; }
+  th, td { padding: 8px 10px; font-size: 11px; }
+
+  /* Charts — reduce heights on mobile */
+  #tw-bars { height: 180px !important; }
+  #m-bars  { height: 180px !important; }
+  #yoy-bars{ height: 200px !important; }
+  #proj-line { height: 200px !important; }
+  #ret-dist { font-size: 10px; }
+
+  /* Composition panel — stack vertically */
+  .donut-wrap { width: 110px; height: 110px; }
+  #d-legend { grid-template-columns: repeat(2,1fr) !important; gap: 6px 12px !important; }
+
+  /* Scenario cards on projection — stack */
+  #scenario-cards { grid-template-columns: 1fr !important; }
+
+  /* Result distribution on yearly — 2 col */
+  #result-bars { grid-template-columns: repeat(2,1fr) !important; }
+
+  /* YoY chart legend — wrap */
+  #yoy-legend { flex-wrap: wrap; gap: 8px !important; }
+
+  /* Ticker filter — scroll */
+  #trades-ticker-filter { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+  #trades-ticker-filter::-webkit-scrollbar { display: none; }
+
+  /* Hold duration / trade quality panels */
+  .three-col > .panel { min-width: 0; }
+}
+
+/* ── RESPONSIVE: SMALL MOBILE (≤380px) ── */
+@media(max-width:380px) {
+  .cards-4, .cards-5 { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .card-val { font-size: 18px; }
+  .ph-title { font-size: 22px; }
+  .nt { padding: 5px 10px; font-size: 9px; }
 }
 </style>
 </head>
@@ -1779,7 +1874,21 @@ renderTrades();
 pageRendered['trades'] = true;
 updateFooter('Mar 8 2026');
 
-// Validate script integrity
+// Re-render charts on resize (debounced) so SVGs recalculate at new width
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    const active = document.querySelector('.page.active');
+    if (!active) return;
+    const name = active.id.replace('page-','');
+    if (name === 'trades')     { renderTradesWeekBars(); }
+    if (name === 'monthly')    { renderMonthly(); }
+    if (name === 'yearly')     { renderYearly(); }
+    if (name === 'tickers')    { renderTickers(); }
+    if (name === 'projection') { renderProjection(); }
+  }, 200);
+});
 </script>
 </body>
 </html>
