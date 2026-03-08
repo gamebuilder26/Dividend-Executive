@@ -490,9 +490,20 @@ footer { text-align: center; padding: 18px; color: var(--text-dim); font-size: 1
 
 <!-- MINI SUM -->
 <div id="page-minisum" class="page">
-  <div class="sh">
-    <div class="sh-title" style="background:linear-gradient(120deg,var(--neon-orange),var(--neon-yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Mini Sum</div>
-    <div class="sh-sub" id="minisum-sub">Trade log · minisum tab</div>
+  <div class="sh" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <div>
+      <div class="sh-title" style="background:linear-gradient(120deg,var(--neon-orange),var(--neon-yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Mini Sum</div>
+      <div class="sh-sub" id="minisum-sub">Trade log · minisum tab</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding-top:6px">
+      <span style="font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim)">Year</span>
+      <div class="filters" id="ms-year-filters">
+        <button class="fb active" onclick="setMsYear('all',this)">All</button>
+        <button class="fb" onclick="setMsYear('2024',this)">2024</button>
+        <button class="fb" onclick="setMsYear('2025',this)">2025</button>
+        <button class="fb" onclick="setMsYear('2026',this)">2026</button>
+      </div>
+    </div>
   </div>
   <div class="sg" style="grid-template-columns:repeat(4,1fr)" id="minisum-cards">
     <div class="sc g"><div class="sc-label">Total Premium</div><div class="sc-val g" id="ms-total-prem">—</div><div class="sc-sub">Trade profit</div></div>
@@ -516,7 +527,7 @@ footer { text-align: center; padding: 18px; color: var(--text-dim); font-size: 1
       </div>
     </div>
     <div class="panel">
-      <div class="ph"><div class="pt"><em>◈</em>Booked Premium by Expiry Week</div><div class="filters"><button class="fb active" onclick="setMsWeeklyYear('all',this)">All</button><button class="fb" onclick="setMsWeeklyYear('2026',this)">2026</button></div></div>
+      <div class="ph"><div class="pt"><em>◈</em>Booked Premium by Month</div><div class="filters"><button class="fb active" onclick="setMsWeeklyYear('all',this)">All</button><button class="fb" onclick="setMsWeeklyYear('2024',this)">2024</button><button class="fb" onclick="setMsWeeklyYear('2025',this)">2025</button><button class="fb" onclick="setMsWeeklyYear('2026',this)">2026</button></div></div>
       <div id="ms-weekly-stats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid var(--border)"></div>
       <div style="padding:14px 16px 4px"><div id="ms-weekly-bars" style="width:100%;height:220px;position:relative"></div></div>
       <div id="ms-weekly-legend" style="display:flex;gap:12px;padding:4px 16px 14px;flex-wrap:wrap"></div>
@@ -541,40 +552,51 @@ footer { text-align: center; padding: 18px; color: var(--text-dim); font-size: 1
   </div>
 </div>
 
-<footer>DIVIDEND EXECUTIVE · SMALL IRA · 2026 · Last synced: Mar 8 2026 · 11:15 AM MDT</footer>
+<footer>DIVIDEND EXECUTIVE · SMALL IRA · 2026 · PERSONAL TRACKING ONLY</footer>
 
 <script>
 // DATA
 // [START:trades]
 const trades = [
-  {stock:'ETHU',open:'January 2',exp:'Jan 2',shares:100,strike:'$59.00',type:'Call',prem:35,cost:0,profit:35,capital:5900,ret:'0.6%',result:'Assigned'},
-  {stock:'TSLL',open:'January 2',exp:'Jan 9',shares:300,strike:'$16.00',type:'Put',prem:39,cost:-9,profit:30,capital:4800,ret:'0.6%',result:'Bought Back'},
-  {stock:'TSLL',open:'January 2',exp:'Jan 9',shares:500,strike:'$17.00',type:'Put',prem:145,cost:-5,profit:140,capital:8500,ret:'1.6%',result:'Bought Back'},
-  {stock:'TSLL',open:'January 6',exp:'Jan 9',shares:800,strike:'$16.00',type:'Put',prem:72,cost:0,profit:72,capital:12800,ret:'0.6%',result:'Expired'},
-  {stock:'HOOD',open:'January 9',exp:'Jan 16',shares:100,strike:'$109.00',type:'Put',prem:103,cost:0,profit:103,capital:10900,ret:'0.9%',result:'Assigned'},
-  {stock:'TSLL',open:'January 12',exp:'Jan 26',shares:500,strike:'$16.50',type:'Put',prem:60,cost:-5,profit:55,capital:8250,ret:'0.7%',result:'Bought Back'},
-  {stock:'TQQQ',open:'January 12',exp:'Jan 16',shares:100,strike:'$52.00',type:'Put',prem:32,cost:-1,profit:31,capital:5200,ret:'0.6%',result:'Bought Back'},
-  {stock:'TSLL',open:'January 15',exp:'Jan 23',shares:500,strike:'$16.00',type:'Put',prem:55,cost:-5,profit:50,capital:8000,ret:'0.6%',result:'Bought Back'},
-  {stock:'HOOD',open:'January 20',exp:'Jan 23',shares:100,strike:'$110.00',type:'Call',prem:110,cost:-5,profit:105,capital:11000,ret:'1.0%',result:'Rolled'},
-  {stock:'TSLL',open:'January 20',exp:'Jan 23',shares:400,strike:'$15.50',type:'Put',prem:48,cost:-4,profit:44,capital:6200,ret:'0.7%',result:'Bought Back'},
-  {stock:'HOOD',open:'January 23',exp:'Jan 30',shares:100,strike:'$111.00',type:'Call',prem:196,cost:0,profit:196,capital:11100,ret:'1.8%',result:'Expired'},
-  {stock:'TSLL',open:'January 26',exp:'Jan 30',shares:300,strike:'$14.50',type:'Put',prem:30,cost:0,profit:30,capital:4350,ret:'0.7%',result:'Expired'},
-  {stock:'HOOD',open:'January 26',exp:'Jan 30',shares:100,strike:'$102.00',type:'Put',prem:80,cost:0,profit:80,capital:10200,ret:'0.8%',result:'Assigned'},
-  {stock:'TSLL',open:'February 3',exp:'Feb 13',shares:300,strike:'$14.00',type:'Put',prem:54,cost:-3,profit:51,capital:4200,ret:'1.2%',result:'Bought Back'},
-  {stock:'HOOD',open:'February 6',exp:'Feb 13',shares:200,strike:'$104.00',type:'Call',prem:80,cost:-2,profit:78,capital:20800,ret:'0.4%',result:'Bought Back'},
-  {stock:'TSLL',open:'February 13',exp:'Feb 20',shares:300,strike:'$14.00',type:'Put',prem:36,cost:-3,profit:33,capital:4200,ret:'0.8%',result:'Rolled'},
-  {stock:'HOOD',open:'February 17',exp:'Feb 20',shares:200,strike:'$80.00',type:'Call',prem:108,cost:-80,profit:28,capital:16000,ret:'0.2%',result:'Bought Back'},
-  {stock:'HOOD',open:'February 17',exp:'Feb 20',shares:200,strike:'$82.00',type:'Call',prem:86,cost:-2,profit:84,capital:16400,ret:'0.5%',result:'Rolled'},
-  {stock:'TSLL',open:'February 20',exp:'Feb 27',shares:300,strike:'$13.50',type:'Put',prem:42,cost:-6,profit:36,capital:4050,ret:'0.9%',result:'Rolled'},
-  {stock:'HOOD',open:'February 20',exp:'Feb 27',shares:200,strike:'$84.00',type:'Call',prem:94,cost:0,profit:94,capital:16800,ret:'0.6%',result:'Expired'},
-  {stock:'TSLL',open:'February 27',exp:'Mar 6',shares:300,strike:'$13.50',type:'Put',prem:57,cost:-3,profit:54,capital:4050,ret:'1.3%',result:'Bought Back'},
-  {stock:'HOOD',open:'March 2',exp:'Mar 6',shares:200,strike:'$83.00',type:'Call',prem:104,cost:0,profit:104,capital:16600,ret:'0.6%',result:'Expired'},
-  {stock:'TSLL',open:'March 6',exp:'Mar 13',shares:300,strike:'$12.50',type:'Put',prem:48,cost:0,profit:48,capital:3750,ret:'1.3%',result:'In Progress'},
+  {stock:'ETHU',open:'January 2',exp:'Jan 2',shares:100,strike:'$59.00',type:'Call',prem:35,cost:0,profit:35,capital:5900,ret:'1.0%',result:'Assigned',year:'2026'},
+  {stock:'TSLL',open:'January 2',exp:'Jan 9',shares:300,strike:'$16.00',type:'Put',prem:39,cost:-9,profit:30,capital:4800,ret:'0.6%',result:'Bought Back',year:'2026'},
+  {stock:'TSLL',open:'January 2',exp:'Jan 9',shares:500,strike:'$17.00',type:'Put',prem:145,cost:-5,profit:140,capital:8500,ret:'1.6%',result:'Bought Back',year:'2026'},
+  {stock:'TSLL',open:'January 6',exp:'Jan 9',shares:800,strike:'$16.00',type:'Put',prem:72,cost:0,profit:72,capital:12800,ret:'0.6%',result:'Expired',year:'2026'},
+  {stock:'HOOD',open:'January 9',exp:'Jan 16',shares:100,strike:'$109.00',type:'Put',prem:103,cost:0,profit:103,capital:10900,ret:'0.9%',result:'Assigned',year:'2026'},
+  {stock:'TSLL',open:'January 12',exp:'Jan 26',shares:500,strike:'$16.50',type:'Put',prem:60,cost:-5,profit:55,capital:8250,ret:'0.7%',result:'Bought Back',year:'2026'},
+  {stock:'TQQQ',open:'January 12',exp:'Jan 16',shares:100,strike:'$52.00',type:'Put',prem:32,cost:-1,profit:31,capital:5200,ret:'0.6%',result:'Bought Back',year:'2026'},
+  {stock:'TSLL',open:'January 15',exp:'Jan 23',shares:500,strike:'$16.00',type:'Put',prem:55,cost:-5,profit:50,capital:8000,ret:'0.6%',result:'Bought Back',year:'2026'},
+  {stock:'HOOD',open:'January 20',exp:'Jan 23',shares:100,strike:'$110.00',type:'Call',prem:110,cost:-5,profit:105,capital:11000,ret:'1.0%',result:'Rolled',year:'2026'},
+  {stock:'TSLL',open:'January 20',exp:'Jan 23',shares:400,strike:'$15.50',type:'Put',prem:48,cost:-4,profit:44,capital:6200,ret:'0.7%',result:'Bought Back',year:'2026'},
+  {stock:'HOOD',open:'January 23',exp:'Jan 30',shares:100,strike:'$111.00',type:'Call',prem:196,cost:0,profit:196,capital:11100,ret:'1.8%',result:'Expired',year:'2026'},
+  {stock:'TSLL',open:'January 26',exp:'Jan 30',shares:300,strike:'$14.50',type:'Put',prem:30,cost:0,profit:30,capital:4350,ret:'0.7%',result:'Expired',year:'2026'},
+  {stock:'HOOD',open:'January 26',exp:'Jan 30',shares:100,strike:'$102.00',type:'Put',prem:80,cost:0,profit:80,capital:10200,ret:'0.8%',result:'Assigned',year:'2026'},
+  {stock:'TSLL',open:'February 3',exp:'Feb 13',shares:300,strike:'$14.00',type:'Put',prem:54,cost:-3,profit:51,capital:4200,ret:'1.2%',result:'Bought Back',year:'2026'},
+  {stock:'HOOD',open:'February 6',exp:'Feb 13',shares:200,strike:'$104.00',type:'Call',prem:80,cost:-2,profit:78,capital:20800,ret:'0.4%',result:'Bought Back',year:'2026'},
+  {stock:'TSLL',open:'February 13',exp:'Feb 20',shares:300,strike:'$14.00',type:'Put',prem:36,cost:-3,profit:33,capital:4200,ret:'0.8%',result:'Rolled',year:'2026'},
+  {stock:'HOOD',open:'February 17',exp:'Feb 20',shares:200,strike:'$80.00',type:'Call',prem:108,cost:-80,profit:28,capital:16000,ret:'0.2%',result:'Bought Back',year:'2026'},
+  {stock:'HOOD',open:'February 17',exp:'Feb 20',shares:200,strike:'$82.00',type:'Call',prem:86,cost:-2,profit:84,capital:16400,ret:'0.5%',result:'Rolled',year:'2026'},
+  {stock:'TSLL',open:'February 20',exp:'Feb 27',shares:300,strike:'$13.50',type:'Put',prem:42,cost:-6,profit:36,capital:4050,ret:'0.9%',result:'Rolled',year:'2026'},
+  {stock:'HOOD',open:'February 20',exp:'Feb 27',shares:200,strike:'$84.00',type:'Call',prem:94,cost:0,profit:94,capital:16800,ret:'0.6%',result:'Expired',year:'2026'},
+  {stock:'TSLL',open:'February 27',exp:'Mar 6',shares:300,strike:'$13.50',type:'Put',prem:57,cost:-3,profit:54,capital:4050,ret:'1.3%',result:'Bought Back',year:'2026'},
+  {stock:'HOOD',open:'March 2',exp:'Mar 6',shares:200,strike:'$83.00',type:'Call',prem:104,cost:0,profit:104,capital:16600,ret:'0.6%',result:'In Progress',year:'2026'},
+  {stock:'TSLL',open:'March 6',exp:'Mar 13',shares:300,strike:'$12.50',type:'Put',prem:48,cost:0,profit:48,capital:3750,ret:'1.3%',result:'In Progress',year:'2026'},
 ]; // [END:trades] 
 
 // [START:yoyData]
 const yoyData = [
-
+  {m:'Jan',y24:168,y25:928,y26:971},
+  {m:'Feb',y24:34,y25:523,y26:458},
+  {m:'Mar',y24:143,y25:1129,y26:152},
+  {m:'Apr',y24:498,y25:646,y26:0},
+  {m:'May',y24:573,y25:554,y26:0},
+  {m:'Jun',y24:220,y25:696,y26:0},
+  {m:'Jul',y24:563,y25:620,y26:0},
+  {m:'Aug',y24:308,y25:695,y26:0},
+  {m:'Sep',y24:160,y25:1710,y26:0},
+  {m:'Oct',y24:545,y25:1042,y26:0},
+  {m:'Nov',y24:923,y25:1152,y26:0},
+  {m:'Dec',y24:741,y25:774,y26:0},
 ]; // [END:yoyData] 
 
 // Projection: 3% monthly model from CSV
@@ -614,236 +636,257 @@ const projData = [
 
 // [START:challengeData]
 const challengeData = [
-
+  {period:'Dec 2024',   start:10913, opts:327, added:120, ending:11360, actual:741},
+  {period:'Jan 2025',   start:11360, opts:340, added:140, ending:11841, actual:928},
+  {period:'Feb 2025',   start:11841, opts:355, added:140, ending:12336, actual:523},
+  {period:'Mar 2025',   start:12336, opts:370, added:140, ending:12846, actual:1129},
+  {period:'Apr 2025',   start:12846, opts:385, added:140, ending:13371, actual:646},
+  {period:'May 2025',   start:13371, opts:401, added:140, ending:13913, actual:554},
+  {period:'Jun 2025',   start:13913, opts:417, added:140, ending:14470, actual:696},
+  {period:'Jul 2025',   start:14470, opts:434, added:140, ending:15044, actual:620},
+  {period:'Aug 2025',   start:15044, opts:451, added:140, ending:15635, actual:695},
+  {period:'Sep 2025',   start:15635, opts:469, added:140, ending:16245, actual:1710},
+  {period:'Oct 2025',   start:16245, opts:487, added:140, ending:16872, actual:1042},
+  {period:'Nov 2025',   start:16872, opts:506, added:140, ending:17518, actual:1152},
+  {period:'Dec 2025',   start:17518, opts:525, added:140, ending:18184, actual:774},
+  {period:'Jan 2026',   start:18184, opts:545, added:140, ending:25293, actual:971},
+  {period:'Feb 2026',   start:18869, opts:566, added:140, ending:22500, actual:458},
+  {period:'Mar 2026',   start:19575, opts:587, added:140, ending:21300, actual:152},
 ]; // [END:challengeData] 
 
 // [START:lots]
 const lots = [
-
+  {date:'11/24',shares:5,cb:104.15,total:520.75},
+  {date:'2/3',shares:3,cb:87.09,total:261.27},
+  {date:'2/3',shares:2,cb:88.87,total:177.74},
+  {date:'2/11',shares:2,cb:75.27,total:150.54},
+  {date:'2/20',shares:2,cb:76.39,total:152.78},
+  {date:'2/23',shares:2,cb:73.37,total:146.74},
+  {date:'3/6',shares:2,cb:78.23,total:156.46},
 ]; // [END:lots]
 
 // Monthly starting balances (Jan–Mar 2026)
 
 // [START:minisumTrades]
 const minisumTrades = [
-  {stock:'TSLL',open:'January 2',exp:'Jan 5',shares:100,strike:'$13.73',type:'Put',prem:17,cost:0,profit:17,capital:1373,ret:'1.2%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'TSLL',open:'January 2',exp:'Jan 5',shares:200,strike:'$13.23',type:'Put',prem:14,cost:0,profit:14,capital:2646,ret:'0.5%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'TSLL',open:'January 8',exp:'Jan 12',shares:100,strike:'$14.23',type:'Call',prem:10,cost:0,profit:10,capital:1423,ret:'0.7%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'TSLL',open:'January 8',exp:'Jan 12',shares:100,strike:'$13.23',type:'Put',prem:35,cost:0,profit:35,capital:1323,ret:'2.6%',result:'Assigned',wheel:0,year:'2024'}
-  {stock:'TSLL',open:'January 8',exp:'Jan 12',shares:200,strike:'$12.73',type:'Put',prem:32,cost:-182,profit:-150,capital:2546,ret:'-5.9%',result:'Rolled',wheel:0,year:'2024'}
-  {stock:'TSLL',open:'January 12',exp:'Jan 26',shares:200,strike:'$12.23',type:'Put',prem:192,cost:0,profit:192,capital:2446,ret:'7.8%',result:'Assigned',wheel:0,year:'2024'}
-  {stock:'TSLL',open:'January 16',exp:'Jan 26',shares:200,strike:'$13.73',type:'Call',prem:38,cost:0,profit:38,capital:2746,ret:'1.4%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'TSLL',open:'January 29',exp:'Feb 2',shares:400,strike:'$10.50',type:'Call',prem:12,cost:0,profit:12,capital:4200,ret:'0.3%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'TSLL',open:'February 6',exp:'Feb 9',shares:400,strike:'$10.50',type:'Call',prem:4,cost:0,profit:4,capital:4200,ret:'0.1%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'TSLL',open:'February 12',exp:'Feb 16',shares:400,strike:'$11.00',type:'Call',prem:8,cost:0,profit:8,capital:4400,ret:'0.2%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'TSLL',open:'February 15',exp:'Feb 23',shares:100,strike:'$11.00',type:'Call',prem:4,cost:0,profit:4,capital:1100,ret:'0.4%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'TSLL',open:'February 22',exp:'Mar 8',shares:400,strike:'$12.50',type:'Call',prem:16,cost:0,profit:16,capital:5000,ret:'0.3%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'TSLL',open:'February 26',exp:'Mar 1',shares:100,strike:'$11.50',type:'Call',prem:2,cost:0,profit:2,capital:1150,ret:'0.2%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'TSLL',open:'March 12',exp:'Apr 5',shares:500,strike:'$10.50',type:'Call',prem:55,cost:-19,profit:36,capital:5250,ret:'0.7%',result:'Bought Back',wheel:0,year:'2024'}
-  {stock:'CLSK',open:'March 22',exp:'Mar 28',shares:100,strike:'$17.50',type:'Put',prem:45,cost:0,profit:45,capital:1750,ret:'2.6%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'RIOT',open:'March 22',exp:'Mar 28',shares:200,strike:'$11.00',type:'Put',prem:62,cost:0,profit:62,capital:2200,ret:'2.8%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'CLSK',open:'April 1',exp:'Apr 5',shares:200,strike:'$17.00',type:'Put',prem:70,cost:0,profit:70,capital:3400,ret:'2.1%',result:'Assigned',wheel:0,year:'2024'}
-  {stock:'RIOT',open:'April 1',exp:'Apr 19',shares:100,strike:'$9.50',type:'Put',prem:19,cost:0,profit:19,capital:950,ret:'2.0%',result:'Assigned',wheel:0,year:'2024'}
-  {stock:'CLSK',open:'April 8',exp:'Apr 12',shares:200,strike:'$17.00',type:'Call',prem:82,cost:-8,profit:74,capital:3400,ret:'2.2%',result:'Rolled',wheel:0,year:'2024'}
-  {stock:'CLSK',open:'April 11',exp:'Apr 19',shares:200,strike:'$17.00',type:'Call',prem:100,cost:0,profit:100,capital:3400,ret:'2.9%',result:'Assigned',wheel:123.99999999999984,year:'2024'}
-  {stock:'RIOT',open:'April 22',exp:'Apr 26',shares:100,strike:'$10.50',type:'Call',prem:35,cost:0,profit:35,capital:1050,ret:'3.3%',result:'Assigned',wheel:100,year:'2024'}
-  {stock:'CLSK',open:'April 22',exp:'Apr 26',shares:100,strike:'$16.50',type:'Put',prem:50,cost:0,profit:50,capital:1650,ret:'3.0%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'CLSK',open:'April 22',exp:'Apr 26',shares:100,strike:'$18.00',type:'Call',prem:90,cost:0,profit:90,capital:1800,ret:'5.0%',result:'Assigned',wheel:123.99999999999984,year:'2024'}
-  {stock:'CLSK',open:'April 29',exp:'May 3',shares:300,strike:'$16.00',type:'Put',prem:60,cost:0,profit:60,capital:4800,ret:'1.3%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'CLSK',open:'May 6',exp:'May 10',shares:300,strike:'$16.00',type:'Put',prem:135,cost:0,profit:135,capital:4800,ret:'2.8%',result:'Assigned',wheel:0,year:'2024'}
-  {stock:'CLSK',open:'May 13',exp:'May 17',shares:300,strike:'$17.50',type:'Call',prem:135,cost:-9,profit:126,capital:5250,ret:'2.4%',result:'Bought Back',wheel:0,year:'2024'}
-  {stock:'CLSK',open:'May 17',exp:'May 24',shares:200,strike:'$17.50',type:'Call',prem:80,cost:0,profit:80,capital:3500,ret:'2.3%',result:'Assigned',wheel:286,year:'2024'}
-  {stock:'CLSK',open:'May 17',exp:'May 24',shares:100,strike:'$17.00',type:'Call',prem:53,cost:0,profit:53,capital:1700,ret:'3.1%',result:'Assigned',wheel:93,year:'2024'}
-  {stock:'RIOT',open:'May 20',exp:'May 24',shares:100,strike:'$9.50',type:'Put',prem:19,cost:0,profit:19,capital:950,ret:'2.0%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'CLSK',open:'May 28',exp:'Jun 7',shares:400,strike:'$16.00',type:'Put',prem:160,cost:0,profit:160,capital:6400,ret:'2.5%',result:'Assigned',wheel:0,year:'2024'}
-  {stock:'CLSK',open:'June 10',exp:'Jun 14',shares:400,strike:'$16.50',type:'Call',prem:160,cost:0,profit:160,capital:6600,ret:'2.4%',result:'Assigned',wheel:215.99999999999966,year:'2024'}
-  {stock:'CLSK',open:'June 21',exp:'Jun 28',shares:400,strike:'$16.50',type:'Put',prem:60,cost:0,profit:60,capital:6600,ret:'0.9%',result:'Assigned',wheel:0,year:'2024'}
-  {stock:'CLSK',open:'July 1',exp:'Jul 5',shares:400,strike:'$17.00',type:'Call',prem:148,cost:-4,profit:144,capital:6800,ret:'2.1%',result:'Rolled',wheel:0,year:'2024'}
-  {stock:'CLSK',open:'July 5',exp:'Jul 12',shares:400,strike:'$17.00',type:'Call',prem:144,cost:-4,profit:140,capital:6800,ret:'2.1%',result:'Rolled',wheel:0,year:'2024'}
-  {stock:'CLSK',open:'July 12',exp:'Jul 19',shares:400,strike:'$16.50',type:'Call',prem:116,cost:0,profit:116,capital:6600,ret:'1.8%',result:'Assigned',wheel:35.99999999999994,year:'2024'}
-  {stock:'CLSK',open:'July 15',exp:'Jul 15',shares:50,strike:'',type:'trade',prem:0,cost:0,profit:0,capital:0,ret:'',result:'Expired',wheel:43.50000000000005,year:'2024'}
-  {stock:'CLSK',open:'July 22',exp:'Jul 26',shares:500,strike:'$15.50',type:'Put',prem:91,cost:0,profit:91,capital:7750,ret:'1.2%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'MARA',open:'July 29',exp:'Aug 2',shares:400,strike:'$19.00',type:'Put',prem:72,cost:0,profit:72,capital:7600,ret:'0.9%',result:'Assigned',wheel:0,year:'2024'}
-  {stock:'MARA',open:'August 5',exp:'Aug 9',shares:400,strike:'$19.00',type:'Call',prem:48,cost:-8,profit:40,capital:7600,ret:'0.5%',result:'Rolled',wheel:0,year:'2024'}
-  {stock:'MARA',open:'August 8',exp:'Aug 16',shares:400,strike:'$19.00',type:'Call',prem:84,cost:0,profit:84,capital:7600,ret:'1.1%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'MARA',open:'August 20',exp:'Aug 23',shares:400,strike:'$19.00',type:'Call',prem:36,cost:-8,profit:28,capital:7600,ret:'0.4%',result:'Rolled',wheel:0,year:'2024'}
-  {stock:'MARA',open:'August 23',exp:'Aug 30',shares:400,strike:'$19.00',type:'Call',prem:156,cost:0,profit:156,capital:7600,ret:'2.1%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'MARA',open:'September 4',exp:'Sep 6',shares:400,strike:'$17.50',type:'Call',prem:16,cost:0,profit:16,capital:7000,ret:'0.2%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'MARA',open:'September 9',exp:'Sep 13',shares:400,strike:'$17.00',type:'Call',prem:24,cost:0,profit:24,capital:6800,ret:'0.4%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'MARA',open:'September 16',exp:'Sep 20',shares:400,strike:'$18.50',type:'Call',prem:40,cost:0,profit:40,capital:7400,ret:'0.5%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'MARA',open:'September 25',exp:'Oct 4',shares:400,strike:'$19.00',type:'Call',prem:80,cost:0,profit:80,capital:7600,ret:'1.1%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'MARA',open:'October 7',exp:'Oct 11',shares:400,strike:'$18.50',type:'Call',prem:52,cost:0,profit:52,capital:7400,ret:'0.7%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'MARA',open:'October 14',exp:'Oct 18',shares:400,strike:'$19.00',type:'Call',prem:52,cost:-4,profit:48,capital:7600,ret:'0.6%',result:'Rolled',wheel:0,year:'2024'}
-  {stock:'MARA',open:'October 18',exp:'Oct 25',shares:400,strike:'$19.50',type:'Call',prem:240,cost:-8,profit:232,capital:7800,ret:'3.0%',result:'Rolled',wheel:0,year:'2024'}
-  {stock:'MARA',open:'October 25',exp:'Nov 1',shares:400,strike:'$19.00',type:'Call',prem:180,cost:0,profit:180,capital:7600,ret:'2.4%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'MARA',open:'October 28',exp:'Nov 1',shares:100,strike:'$19.50',type:'Call',prem:33,cost:0,profit:33,capital:1950,ret:'1.7%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'MARA',open:'November 5',exp:'Nov 8',shares:500,strike:'$19.00',type:'Call',prem:115,cost:-66,profit:49,capital:9500,ret:'0.5%',result:'Rolled',wheel:0,year:'2024'}
-  {stock:'MARA',open:'November 8',exp:'Nov 15',shares:500,strike:'$19.50',type:'Call',prem:530,cost:0,profit:530,capital:9750,ret:'5.4%',result:'Assigned',wheel:265.00000000000057,year:'2024'}
-  {stock:'MARA',open:'November 18',exp:'Nov 22',shares:500,strike:'$17.00',type:'Put',prem:135,cost:0,profit:135,capital:8500,ret:'1.6%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'MARA',open:'November 18',exp:'Nov 22',shares:100,strike:'$16.50',type:'Put',prem:9,cost:0,profit:9,capital:1650,ret:'0.5%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'MSTX',open:'November 25',exp:'Nov 29',shares:100,strike:'$65.00',type:'Put',prem:180,cost:0,profit:180,capital:6500,ret:'2.8%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'TSLL',open:'November 25',exp:'Nov 29',shares:200,strike:'$18.50',type:'Put',prem:20,cost:0,profit:20,capital:3700,ret:'0.5%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'MARA',open:'December 2',exp:'Dec 6',shares:200,strike:'$20.00',type:'Put',prem:18,cost:0,profit:18,capital:4000,ret:'0.4%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'MSTX',open:'December 2',exp:'Dec 6',shares:100,strike:'$65.00',type:'Put',prem:130,cost:0,profit:130,capital:6500,ret:'2.0%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'MSTX',open:'December 9',exp:'Dec 13',shares:100,strike:'$65.00',type:'Put',prem:100,cost:-5,profit:95,capital:6500,ret:'1.5%',result:'Bought Back',wheel:0,year:'2024'}
-  {stock:'MARA',open:'December 9',exp:'Dec 13',shares:200,strike:'$20.50',type:'Put',prem:18,cost:-2,profit:16,capital:4100,ret:'0.4%',result:'Bought Back',wheel:0,year:'2024'}
-  {stock:'MSTX',open:'December 13',exp:'Dec 20',shares:200,strike:'$55.00',type:'Put',prem:114,cost:-14,profit:100,capital:11000,ret:'0.9%',result:'Rolled',wheel:0,year:'2024'}
-  {stock:'MSTX',open:'December 20',exp:'Jan 3',shares:200,strike:'$50.00',type:'Put',prem:384,cost:-30,profit:354,capital:10000,ret:'3.5%',result:'Bought Back',wheel:0,year:'2024'}
-  {stock:'MARA',open:'December 20',exp:'Jan 3',shares:100,strike:'$16.00',type:'Put',prem:28,cost:0,profit:28,capital:1600,ret:'1.8%',result:'Expired',wheel:0,year:'2024'}
-  {stock:'MSTX',open:'January 6',exp:'Jan 10',shares:200,strike:'$42.00',type:'Put',prem:130,cost:-14,profit:116,capital:8400,ret:'1.4%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'MARA',open:'January 7',exp:'Jan 10',shares:200,strike:'$17.50',type:'Put',prem:18,cost:-2,profit:16,capital:3500,ret:'0.5%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'January 10',exp:'Jan 17',shares:200,strike:'$38.00',type:'Put',prem:296,cost:0,profit:296,capital:7600,ret:'3.9%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MARA',open:'January 10',exp:'Jan 17',shares:200,strike:'$15.50',type:'Put',prem:39,cost:0,profit:39,capital:3100,ret:'1.3%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'January 21',exp:'Jan 24',shares:300,strike:'$41.00',type:'Put',prem:165,cost:0,profit:165,capital:12300,ret:'1.3%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MARA',open:'January 27',exp:'Jan 31',shares:100,strike:'$17.00',type:'Put',prem:17,cost:0,profit:17,capital:1700,ret:'1.0%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'January 27',exp:'Jan 31',shares:300,strike:'$34.00',type:'Put',prem:120,cost:-9,profit:111,capital:10200,ret:'1.1%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'January 31',exp:'Feb 7',shares:300,strike:'$34.00',type:'Put',prem:168,cost:0,profit:168,capital:10200,ret:'1.6%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'February 3',exp:'Feb 7',shares:100,strike:'$26.00',type:'Put',prem:40,cost:0,profit:40,capital:2600,ret:'1.5%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'February 10',exp:'Feb 14',shares:700,strike:'$17.00',type:'Put',prem:105,cost:0,profit:105,capital:11900,ret:'0.9%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'RIOT',open:'February 10',exp:'Feb 14',shares:100,strike:'$10.50',type:'Put',prem:10,cost:0,profit:10,capital:1050,ret:'1.0%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'February 18',exp:'Feb 21',shares:300,strike:'$36.00',type:'Put',prem:75,cost:0,profit:75,capital:10800,ret:'0.7%',result:'Assigned',wheel:0,year:'2025'}
-  {stock:'MARA',open:'February 18',exp:'Feb 21',shares:100,strike:'$15.00',type:'Put',prem:5,cost:0,profit:5,capital:1500,ret:'0.3%',result:'Assigned',wheel:0,year:'2025'}
-  {stock:'MSTU',open:'February 18',exp:'Feb 21',shares:100,strike:'$7.50',type:'Put',prem:5,cost:0,profit:5,capital:750,ret:'0.7%',result:'Assigned',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'February 24',exp:'Feb 28',shares:300,strike:'$36.00',type:'Call',prem:195,cost:0,profit:195,capital:10800,ret:'1.8%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTU',open:'February 24',exp:'Feb 28',shares:100,strike:'$7.50',type:'Call',prem:15,cost:0,profit:15,capital:750,ret:'2.0%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MARA',open:'February 24',exp:'Feb 28',shares:100,strike:'$15.50',type:'Call',prem:26,cost:-2,profit:24,capital:1550,ret:'1.5%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'MARA',open:'February 28',exp:'Mar 7',shares:100,strike:'$15.00',type:'Call',prem:49,cost:0,profit:49,capital:1500,ret:'3.3%',result:'Assigned',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'March 3',exp:'Mar 7',shares:300,strike:'$37.00',type:'Call',prem:240,cost:0,profit:240,capital:11100,ret:'2.2%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTU',open:'March 3',exp:'Mar 7',shares:100,strike:'$6.50',type:'Call',prem:40,cost:0,profit:40,capital:650,ret:'6.2%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTU',open:'March 7',exp:'Mar 7',shares:0,strike:'',type:'trade',prem:0,cost:0,profit:0,capital:0,ret:'#DIV/0!',result:'Assigned',wheel:30.549999999999983,year:'2025'}
-  {stock:'MSTX',open:'March 11',exp:'Mar 14',shares:400,strike:'$30.00',type:'Call',prem:80,cost:-11,profit:69,capital:12000,ret:'0.6%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'MSTU',open:'March 11',exp:'Mar 14',shares:100,strike:'$5.50',type:'Call',prem:10,cost:0,profit:10,capital:550,ret:'1.8%',result:'Assigned',wheel:-5.999999999999961,year:'2025'}
-  {stock:'MSTX',open:'March 14',exp:'Mar 21',shares:400,strike:'$33.00',type:'Call',prem:123,cost:-12,profit:111,capital:13200,ret:'0.8%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'MSTU',open:'March 14',exp:'Mar 14',shares:0,strike:'',type:'trade',prem:0,cost:0,profit:0,capital:0,ret:'#DIV/0!',result:'Assigned',wheel:25.50000000000006,year:'2025'}
-  {stock:'MSTU',open:'March 17',exp:'Mar 21',shares:200,strike:'$4.70',type:'Put',prem:24,cost:0,profit:24,capital:940,ret:'2.6%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'March 21',exp:'Mar 28',shares:400,strike:'$33.00',type:'Call',prem:316,cost:-8,profit:308,capital:13200,ret:'2.3%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'March 25',exp:'Mar 25',shares:0,strike:'',type:'trade',prem:0,cost:0,profit:0,capital:0,ret:'#DIV/0!',result:'Bought Back',wheel:84.20000000000002,year:'2025'}
-  {stock:'TSLL',open:'March 26',exp:'Mar 28',shares:200,strike:'$9.00',type:'Put',prem:10,cost:-2,profit:8,capital:1800,ret:'0.4%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'March 28',exp:'Apr 4',shares:100,strike:'$19.00',type:'Put',prem:35,cost:-8,profit:27,capital:1900,ret:'1.4%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'March 28',exp:'Apr 4',shares:400,strike:'$33.00',type:'Call',prem:308,cost:-16,profit:292,capital:13200,ret:'2.2%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'April 4',exp:'Apr 11',shares:400,strike:'$33.00',type:'Call',prem:188,cost:-12,profit:176,capital:13200,ret:'1.3%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'April 4',exp:'Apr 11',shares:100,strike:'$20.00',type:'Put',prem:138,cost:0,profit:138,capital:2000,ret:'6.9%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'April 11',exp:'Apr 17',shares:400,strike:'$32.50',type:'Call',prem:124,cost:-48,profit:76,capital:13000,ret:'0.6%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'April 14',exp:'Apr 17',shares:100,strike:'$20.50',type:'Put',prem:25,cost:-10,profit:15,capital:2050,ret:'0.7%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'April 16',exp:'Apr 25',shares:400,strike:'$32.50',type:'Call',prem:296,cost:-310,profit:-14,capital:13000,ret:'-0.1%',result:'Assigned',wheel:9.999999999999432,year:'2025'}
-  {stock:'MSTX',open:'April 17',exp:'Apr 25',shares:100,strike:'$21.50',type:'Put',prem:55,cost:0,profit:55,capital:2150,ret:'2.6%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'April 22',exp:'Apr 22',shares:229,strike:'',type:'trade',prem:0,cost:0,profit:0,capital:0,ret:'#DIV/0!',result:'Assigned',wheel:-150.14000000000095,year:'2025'}
-  {stock:'MSTX',open:'April 23',exp:'Apr 25',shares:200,strike:'$26.00',type:'Put',prem:40,cost:0,profit:40,capital:5200,ret:'0.8%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'HOOD',open:'April 28',exp:'May 2',shares:400,strike:'$40.00',type:'Put',prem:160,cost:0,profit:160,capital:16000,ret:'1.0%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'May 5',exp:'May 9',shares:2000,strike:'$8.00',type:'Put',prem:140,cost:0,profit:140,capital:16000,ret:'0.9%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'May 12',exp:'May 16',shares:400,strike:'$34.00',type:'Put',prem:140,cost:0,profit:140,capital:13600,ret:'1.0%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'May 13',exp:'May 16',shares:100,strike:'$29.50',type:'Put',prem:10,cost:0,profit:10,capital:2950,ret:'0.3%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'May 19',exp:'May 23',shares:500,strike:'$30.00',type:'Put',prem:100,cost:-15,profit:85,capital:15000,ret:'0.6%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'MSTU',open:'May 21',exp:'May 23',shares:200,strike:'$8.00',type:'Put',prem:24,cost:-30,profit:-6,capital:1600,ret:'-0.4%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'May 23',exp:'May 30',shares:500,strike:'$26.00',type:'Put',prem:155,cost:0,profit:155,capital:13000,ret:'1.2%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'May 23',exp:'May 30',shares:200,strike:'$19.00',type:'Put',prem:30,cost:0,profit:30,capital:3800,ret:'0.8%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'June 2',exp:'Jun 6',shares:1400,strike:'$12.00',type:'Put',prem:154,cost:-1022,profit:-868,capital:16800,ret:'-5.2%',result:'Assigned',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'June 6',exp:'Jun 13',shares:700,strike:'$11.50',type:'Put',prem:1029,cost:0,profit:1029,capital:8050,ret:'12.8%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'June 9',exp:'Jun 13',shares:700,strike:'$12.00',type:'Call',prem:154,cost:0,profit:154,capital:8400,ret:'1.8%',result:'Assigned',wheel:105.00000000000026,year:'2025'}
-  {stock:'TSLL',open:'June 10',exp:'Jun 10',shares:75,strike:'',type:'trade',prem:0,cost:0,profit:0,capital:0,ret:'#DIV/0!',result:'Assigned',wheel:65.25000000000007,year:'2025'}
-  {stock:'MSTX',open:'June 16',exp:'Jun 20',shares:500,strike:'$31.00',type:'Put',prem:105,cost:0,profit:105,capital:15500,ret:'0.7%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTU',open:'June 16',exp:'Jun 20',shares:300,strike:'$7.00',type:'Put',prem:15,cost:0,profit:15,capital:2100,ret:'0.7%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'SOXL',open:'June 23',exp:'Jun 27',shares:1000,strike:'$17.00',type:'Put',prem:120,cost:0,profit:120,capital:17000,ret:'0.7%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTU',open:'June 23',exp:'Jun 27',shares:100,strike:'$6.50',type:'Put',prem:5,cost:0,profit:5,capital:650,ret:'0.8%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'June 30',exp:'Jul 3',shares:1700,strike:'$10.00',type:'Put',prem:136,cost:0,profit:136,capital:17000,ret:'0.8%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'July 1',exp:'Jul 3',shares:100,strike:'$8.50',type:'Put',prem:5,cost:0,profit:5,capital:850,ret:'0.6%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'July 7',exp:'Jul 11',shares:300,strike:'$7.50',type:'Put',prem:15,cost:0,profit:15,capital:2250,ret:'0.7%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'July 7',exp:'Jul 11',shares:500,strike:'$31.50',type:'Put',prem:125,cost:0,profit:125,capital:15750,ret:'0.8%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'SOXL',open:'July 14',exp:'Jul 18',shares:800,strike:'$22.00',type:'Put',prem:104,cost:-80,profit:24,capital:17600,ret:'0.1%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'July 14',exp:'Jul 18',shares:1800,strike:'$10.00',type:'Put',prem:129,cost:-18,profit:111,capital:18000,ret:'0.6%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'July 18',exp:'Jul 25',shares:500,strike:'$35.00',type:'Put',prem:135,cost:-29,profit:106,capital:17500,ret:'0.6%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'July 21',exp:'Jul 25',shares:700,strike:'$10.50',type:'Put',prem:122,cost:0,profit:122,capital:7350,ret:'1.7%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'HOOD',open:'July 28',exp:'Aug 1',shares:200,strike:'$90.00',type:'Put',prem:124,cost:-12,profit:112,capital:18000,ret:'0.6%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'August 1',exp:'Aug 8',shares:1500,strike:'$9.00',type:'Put',prem:165,cost:-15,profit:150,capital:13500,ret:'1.1%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'August 1',exp:'Aug 8',shares:200,strike:'$20.00',type:'Put',prem:42,cost:-6,profit:36,capital:4000,ret:'0.9%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'MSTU',open:'August 1',exp:'Aug 8',shares:300,strike:'$4.50',type:'Put',prem:15,cost:0,profit:15,capital:1350,ret:'1.1%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'August 8',exp:'Aug 15',shares:600,strike:'$21.00',type:'Put',prem:90,cost:-18,profit:72,capital:12600,ret:'0.6%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'August 8',exp:'Aug 15',shares:200,strike:'$25.00',type:'Put',prem:56,cost:-4,profit:52,capital:5000,ret:'1.0%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'August 15',exp:'Aug 22',shares:100,strike:'$10.00',type:'Put',prem:6,cost:0,profit:6,capital:1000,ret:'0.6%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'August 15',exp:'Aug 22',shares:200,strike:'$20.00',type:'Put',prem:54,cost:0,profit:54,capital:4000,ret:'1.4%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'August 15',exp:'Aug 22',shares:600,strike:'$18.00',type:'Put',prem:150,cost:0,profit:150,capital:10800,ret:'1.4%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'August 15',exp:'Aug 22',shares:300,strike:'$10.50',type:'Put',prem:30,cost:0,profit:30,capital:3150,ret:'1.0%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'August 25',exp:'Aug 29',shares:1000,strike:'$18.00',type:'Put',prem:100,cost:0,profit:100,capital:18000,ret:'0.6%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTU',open:'August 25',exp:'Aug 29',shares:300,strike:'$5.00',type:'Put',prem:30,cost:0,profit:30,capital:1500,ret:'2.0%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'HOOD',open:'September 2',exp:'Sep 5',shares:200,strike:'$94.00',type:'Put',prem:190,cost:-14,profit:176,capital:18800,ret:'0.9%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'MSTU',open:'September 3',exp:'Sep 12',shares:200,strike:'$4.50',type:'Put',prem:30,cost:0,profit:30,capital:900,ret:'3.3%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'HOOD',open:'September 5',exp:'Sep 12',shares:200,strike:'$93.00',type:'Put',prem:316,cost:-20,profit:296,capital:18600,ret:'1.6%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'September 8',exp:'Sep 12',shares:1000,strike:'$18.00',type:'Put',prem:150,cost:0,profit:150,capital:18000,ret:'0.8%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'September 8',exp:'Sep 12',shares:100,strike:'$12.00',type:'Put',prem:13,cost:0,profit:13,capital:1200,ret:'1.1%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'September 15',exp:'Sep 19',shares:1000,strike:'$19.50',type:'Put',prem:170,cost:-20,profit:150,capital:19500,ret:'0.8%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'September 19',exp:'Sep 26',shares:1000,strike:'$20.00',type:'Put',prem:210,cost:0,profit:210,capital:20000,ret:'1.1%',result:'Assigned',wheel:0,year:'2025'}
-  {stock:'MSTU',open:'September 22',exp:'Sep 26',shares:100,strike:'$4.50',type:'Put',prem:5,cost:0,profit:5,capital:450,ret:'1.1%',result:'Assigned',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'September 29',exp:'Oct 3',shares:500,strike:'$20.50',type:'Call',prem:475,cost:0,profit:475,capital:10250,ret:'4.6%',result:'Assigned',wheel:250,year:'2025'}
-  {stock:'MSTX',open:'September 29',exp:'Oct 3',shares:300,strike:'$22.00',type:'Call',prem:135,cost:0,profit:135,capital:6600,ret:'2.0%',result:'Assigned',wheel:600,year:'2025'}
-  {stock:'MSTU',open:'September 29',exp:'Oct 3',shares:100,strike:'$4.50',type:'Call',prem:20,cost:0,profit:20,capital:450,ret:'4.4%',result:'Assigned',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'September 30',exp:'Oct 3',shares:200,strike:'$19.00',type:'Put',prem:50,cost:0,profit:50,capital:3800,ret:'1.3%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'September 29',exp:'Oct 3',shares:200,strike:'$19.00',type:'trade',prem:0,cost:0,profit:0,capital:3800,ret:'0.0%',result:'Bought Back',wheel:61.999999999999744,year:'2025'}
-  {stock:'TSLL',open:'October 3',exp:'Oct 10',shares:500,strike:'$16.00',type:'Put',prem:75,cost:-12,profit:63,capital:8000,ret:'0.8%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'October 3',exp:'Oct 10',shares:200,strike:'$15.00',type:'Put',prem:20,cost:-2,profit:18,capital:3000,ret:'0.6%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'RIVN',open:'October 6',exp:'Oct 10',shares:800,strike:'$13.00',type:'Put',prem:104,cost:0,profit:104,capital:10400,ret:'1.0%',result:'Assigned',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'October 7',exp:'Oct 10',shares:200,strike:'$18.50',type:'Put',prem:34,cost:-8,profit:26,capital:3700,ret:'0.7%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'October 9',exp:'Oct 17',shares:400,strike:'$16.00',type:'Put',prem:108,cost:0,profit:108,capital:6400,ret:'1.7%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'October 10',exp:'Oct 17',shares:200,strike:'$16.00',type:'Put',prem:50,cost:0,profit:50,capital:3200,ret:'1.6%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'RIVN',open:'October 13',exp:'Oct 17',shares:400,strike:'$13.00',type:'Call',prem:132,cost:0,profit:132,capital:5200,ret:'2.5%',result:'Assigned',wheel:0,year:'2025'}
-  {stock:'RIVN',open:'October 13',exp:'Oct 17',shares:400,strike:'$13.50',type:'Call',prem:56,cost:-8,profit:48,capital:5400,ret:'0.9%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'MSTX',open:'October 13',exp:'Oct 17',shares:200,strike:'$14.00',type:'Put',prem:30,cost:0,profit:30,capital:2800,ret:'1.1%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'RIVN',open:'October 17',exp:'Oct 24',shares:400,strike:'$13.50',type:'Call',prem:84,cost:-8,profit:76,capital:5400,ret:'1.4%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'October 20',exp:'Oct 24',shares:1100,strike:'$16.00',type:'Put',prem:165,cost:-22,profit:143,capital:17600,ret:'0.8%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'ETHU',open:'October 23',exp:'Oct 31',shares:200,strike:'$80.00',type:'Put',prem:280,cost:-6,profit:274,capital:16000,ret:'1.7%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'RIVN',open:'October 23',exp:'Oct 31',shares:100,strike:'$12.50',type:'Put',prem:19,cost:0,profit:19,capital:1250,ret:'1.5%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'RIVN',open:'October 24',exp:'Oct 31',shares:400,strike:'$13.50',type:'Call',prem:80,cost:-8,profit:72,capital:5400,ret:'1.3%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'RIVN',open:'October 28',exp:'Nov 7',shares:100,strike:'$12.00',type:'Put',prem:29,cost:-2,profit:27,capital:1200,ret:'2.3%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'ETHU',open:'October 31',exp:'Nov 7',shares:200,strike:'$80.00',type:'Put',prem:176,cost:-560,profit:-384,capital:16000,ret:'-2.4%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'RIVN',open:'October 31',exp:'Nov 7',shares:400,strike:'$13.50',type:'Call',prem:236,cost:0,profit:236,capital:5400,ret:'4.4%',result:'Assigned',wheel:200,year:'2025'}
-  {stock:'MSTU',open:'November 3',exp:'Nov 7',shares:500,strike:'$2.50',type:'Put',prem:25,cost:0,profit:25,capital:1250,ret:'2.0%',result:'Assigned',wheel:0,year:'2025'}
-  {stock:'ETHU',open:'November 7',exp:'Nov 14',shares:100,strike:'$74.00',type:'Put',prem:570,cost:-574,profit:-4,capital:7400,ret:'-0.1%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'November 7',exp:'Nov 14',shares:100,strike:'$15.50',type:'Put',prem:17,cost:-7,profit:10,capital:1550,ret:'0.6%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'HOOD',open:'November 10',exp:'Nov 14',shares:100,strike:'$124.00',type:'Put',prem:108,cost:-35,profit:73,capital:12400,ret:'0.6%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'EOSE',open:'November 11',exp:'Nov 14',shares:100,strike:'$15.50',type:'Put',prem:12,cost:-63,profit:-51,capital:1550,ret:'-3.3%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'ETHU',open:'November 14',exp:'Nov 21',shares:100,strike:'$70.00',type:'Put',prem:701,cost:0,profit:701,capital:7000,ret:'10.0%',result:'Assigned',wheel:0,year:'2025'}
-  {stock:'HOOD',open:'November 17',exp:'Nov 21',shares:100,strike:'$110.00',type:'Put',prem:128,cost:0,profit:128,capital:11000,ret:'1.2%',result:'Assigned',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'November 17',exp:'Nov 21',shares:300,strike:'$14.00',type:'Put',prem:39,cost:0,profit:39,capital:4200,ret:'0.9%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'HOOD',open:'November 24',exp:'Nov 28',shares:100,strike:'$115.00',type:'Call',prem:165,cost:0,profit:165,capital:11500,ret:'1.4%',result:'Assigned',wheel:500,year:'2025'}
-  {stock:'ETHU',open:'November 24',exp:'Nov 28',shares:100,strike:'$70.00',type:'Call',prem:40,cost:0,profit:40,capital:7000,ret:'0.6%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'TQQQ',open:'November 25',exp:'Nov 28',shares:100,strike:'$44.50',type:'Put',prem:26,cost:0,profit:26,capital:4450,ret:'0.6%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'EOSE',open:'December 1',exp:'Dec 5',shares:1000,strike:'$12.50',type:'Put',prem:120,cost:0,profit:120,capital:12500,ret:'1.0%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'ETHU',open:'December 2',exp:'Dec 5',shares:100,strike:'$68.50',type:'Call',prem:35,cost:-5,profit:30,capital:6850,ret:'0.4%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'EOSE',open:'December 2',exp:'Dec 5',shares:300,strike:'$11.50',type:'Put',prem:24,cost:-3,profit:21,capital:3450,ret:'0.6%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'December 8',exp:'Dec 12',shares:500,strike:'$17.00',type:'Put',prem:55,cost:-5,profit:50,capital:8500,ret:'0.6%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'ETHU',open:'December 8',exp:'Dec 12',shares:100,strike:'$70.00',type:'Call',prem:135,cost:0,profit:135,capital:7000,ret:'1.9%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'SOFI',open:'December 8',exp:'Dec 12',shares:300,strike:'$25.00',type:'Put',prem:36,cost:-3,profit:33,capital:7500,ret:'0.4%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'HOOD',open:'December 12',exp:'Dec 19',shares:100,strike:'$109.00',type:'Put',prem:104,cost:0,profit:104,capital:10900,ret:'1.0%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'ROBN',open:'December 12',exp:'Dec 19',shares:100,strike:'$49.00',type:'Put',prem:45,cost:0,profit:45,capital:4900,ret:'0.9%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'ETHU',open:'December 17',exp:'Dec 19',shares:100,strike:'$65.00',type:'Call',prem:55,cost:-10,profit:45,capital:6500,ret:'0.7%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'ETHU',open:'December 18',exp:'Dec 19',shares:100,strike:'$60.00',type:'Call',prem:35,cost:0,profit:35,capital:6000,ret:'0.6%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'ETHU',open:'December 22',exp:'Dec 26',shares:100,strike:'$65.00',type:'Call',prem:70,cost:0,profit:70,capital:6500,ret:'1.1%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'HOOD',open:'December 23',exp:'Dec 26',shares:100,strike:'$116.00',type:'Put',prem:92,cost:0,profit:92,capital:11600,ret:'0.8%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'EOSE',open:'December 23',exp:'Dec 26',shares:500,strike:'$11.50',type:'Put',prem:30,cost:0,profit:30,capital:5750,ret:'0.5%',result:'Expired',wheel:0,year:'2025'}
-  {stock:'TSLL',open:'December 29',exp:'Jan 2',shares:500,strike:'$18.50',type:'Put',prem:75,cost:-150,profit:-75,capital:9250,ret:'-0.8%',result:'Rolled',wheel:0,year:'2025'}
-  {stock:'NVDL',open:'December 29',exp:'Jan 2',shares:100,strike:'$83.00',type:'Put',prem:41,cost:-2,profit:39,capital:8300,ret:'0.5%',result:'Bought Back',wheel:0,year:'2025'}
-  {stock:'ETHU',open:'January 2',exp:'Jan 2',shares:100,strike:'$59.00',type:'Call',prem:35,cost:0,profit:35,capital:5900,ret:'0.6%',result:'Assigned',wheel:-900,year:'2026'}
-  {stock:'TSLL',open:'January 2',exp:'Jan 9',shares:300,strike:'$16.00',type:'Put',prem:39,cost:-9,profit:30,capital:4800,ret:'0.6%',result:'Bought Back',wheel:0,year:'2026'}
-  {stock:'TSLL',open:'January 2',exp:'Jan 9',shares:500,strike:'$17.00',type:'Put',prem:145,cost:-5,profit:140,capital:8500,ret:'1.6%',result:'Bought Back',wheel:0,year:'2026'}
-  {stock:'TSLL',open:'January 6',exp:'Jan 9',shares:800,strike:'$16.00',type:'Put',prem:72,cost:0,profit:72,capital:12800,ret:'0.6%',result:'Expired',wheel:0,year:'2026'}
-  {stock:'HOOD',open:'January 9',exp:'Jan 16',shares:100,strike:'$109.00',type:'Put',prem:103,cost:0,profit:103,capital:10900,ret:'0.9%',result:'Assigned',wheel:0,year:'2026'}
-  {stock:'TSLL',open:'January 12',exp:'Jan 26',shares:500,strike:'$16.50',type:'Put',prem:60,cost:-5,profit:55,capital:8250,ret:'0.7%',result:'Bought Back',wheel:0,year:'2026'}
-  {stock:'TQQQ',open:'January 12',exp:'Jan 16',shares:100,strike:'$52.00',type:'Put',prem:32,cost:-1,profit:31,capital:5200,ret:'0.6%',result:'Bought Back',wheel:0,year:'2026'}
-  {stock:'TSLL',open:'January 15',exp:'Jan 23',shares:500,strike:'$16.00',type:'Put',prem:55,cost:-5,profit:50,capital:8000,ret:'0.6%',result:'Bought Back',wheel:0,year:'2026'}
-  {stock:'HOOD',open:'January 20',exp:'Jan 23',shares:100,strike:'$110.00',type:'Call',prem:110,cost:-5,profit:105,capital:11000,ret:'1.0%',result:'Rolled',wheel:0,year:'2026'}
-  {stock:'TSLL',open:'January 20',exp:'Jan 23',shares:400,strike:'$15.50',type:'Put',prem:48,cost:-4,profit:44,capital:6200,ret:'0.7%',result:'Bought Back',wheel:0,year:'2026'}
-  {stock:'HOOD',open:'January 23',exp:'Jan 30',shares:100,strike:'$111.00',type:'Call',prem:196,cost:0,profit:196,capital:11100,ret:'1.8%',result:'Expired',wheel:0,year:'2026'}
-  {stock:'TSLL',open:'January 26',exp:'Jan 30',shares:300,strike:'$14.50',type:'Put',prem:30,cost:0,profit:30,capital:4350,ret:'0.7%',result:'Expired',wheel:0,year:'2026'}
-  {stock:'HOOD',open:'January 26',exp:'Jan 30',shares:100,strike:'$102.00',type:'Put',prem:80,cost:0,profit:80,capital:10200,ret:'0.8%',result:'Assigned',wheel:0,year:'2026'}
-  {stock:'TSLL',open:'February 3',exp:'Feb 13',shares:300,strike:'$14.00',type:'Put',prem:54,cost:-3,profit:51,capital:4200,ret:'1.2%',result:'Bought Back',wheel:0,year:'2026'}
-  {stock:'HOOD',open:'February 6',exp:'Feb 13',shares:200,strike:'$104.00',type:'Call',prem:80,cost:-2,profit:78,capital:20800,ret:'0.4%',result:'Bought Back',wheel:0,year:'2026'}
-  {stock:'TSLL',open:'February 13',exp:'Feb 20',shares:300,strike:'$14.00',type:'Put',prem:36,cost:-3,profit:33,capital:4200,ret:'0.8%',result:'Rolled',wheel:0,year:'2026'}
-  {stock:'HOOD',open:'February 17',exp:'Feb 20',shares:200,strike:'$80.00',type:'Call',prem:108,cost:-80,profit:28,capital:16000,ret:'0.2%',result:'Bought Back',wheel:0,year:'2026'}
-  {stock:'HOOD',open:'February 17',exp:'Feb 20',shares:200,strike:'$82.00',type:'Call',prem:86,cost:-2,profit:84,capital:16400,ret:'0.5%',result:'Rolled',wheel:0,year:'2026'}
-  {stock:'TSLL',open:'February 20',exp:'Feb 27',shares:300,strike:'$13.50',type:'Put',prem:42,cost:-6,profit:36,capital:4050,ret:'0.9%',result:'Rolled',wheel:0,year:'2026'}
-  {stock:'HOOD',open:'February 20',exp:'Feb 27',shares:200,strike:'$84.00',type:'Call',prem:94,cost:0,profit:94,capital:16800,ret:'0.6%',result:'Expired',wheel:0,year:'2026'}
-  {stock:'TSLL',open:'February 27',exp:'Mar 6',shares:300,strike:'$13.50',type:'Put',prem:57,cost:-3,profit:54,capital:4050,ret:'1.3%',result:'Bought Back',wheel:0,year:'2026'}
-  {stock:'HOOD',open:'March 2',exp:'Mar 6',shares:200,strike:'$83.00',type:'Call',prem:104,cost:0,profit:104,capital:16600,ret:'0.6%',result:'Expired',wheel:0,year:'2026'}
-  {stock:'TSLL',open:'March 6',exp:'Mar 13',shares:300,strike:'$12.50',type:'Put',prem:48,cost:0,profit:48,capital:3750,ret:'1.3%',result:'In Progress',wheel:0,year:'2026'}
+  {stock:'TSLL',open:'January 2',exp:'Jan 5',shares:100,strike:'$13.73',type:'Put',prem:17,cost:0,profit:17,capital:1373,ret:'1.2%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'January 2',exp:'Jan 5',shares:200,strike:'$13.23',type:'Put',prem:14,cost:0,profit:14,capital:2646,ret:'0.5%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'January 8',exp:'Jan 12',shares:100,strike:'$14.23',type:'Call',prem:10,cost:0,profit:10,capital:1423,ret:'0.7%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'January 8',exp:'Jan 12',shares:100,strike:'$13.23',type:'Put',prem:35,cost:0,profit:35,capital:1323,ret:'2.6%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'January 8',exp:'Jan 12',shares:200,strike:'$12.73',type:'Put',prem:32,cost:-182,profit:-150,capital:2546,ret:'-5.9%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'January 12',exp:'Jan 26',shares:200,strike:'$12.23',type:'Put',prem:192,cost:0,profit:192,capital:2446,ret:'7.8%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'January 16',exp:'Jan 26',shares:200,strike:'$13.73',type:'Call',prem:38,cost:0,profit:38,capital:2746,ret:'1.4%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'January 29',exp:'Feb 2',shares:400,strike:'$10.50',type:'Call',prem:12,cost:0,profit:12,capital:4200,ret:'0.3%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'February 6',exp:'Feb 9',shares:400,strike:'$10.50',type:'Call',prem:4,cost:0,profit:4,capital:4200,ret:'0.1%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'February 12',exp:'Feb 16',shares:400,strike:'$11.00',type:'Call',prem:8,cost:0,profit:8,capital:4400,ret:'0.2%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'February 15',exp:'Feb 23',shares:100,strike:'$11.00',type:'Call',prem:4,cost:0,profit:4,capital:1100,ret:'0.4%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'February 22',exp:'Mar 8',shares:400,strike:'$12.50',type:'Call',prem:16,cost:0,profit:16,capital:5000,ret:'0.3%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'February 26',exp:'Mar 1',shares:100,strike:'$11.50',type:'Call',prem:2,cost:0,profit:2,capital:1150,ret:'0.2%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'March 12',exp:'Apr 5',shares:500,strike:'$10.50',type:'Call',prem:55,cost:-19,profit:36,capital:5250,ret:'0.7%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'CLSK',open:'March 22',exp:'Mar 28',shares:100,strike:'$17.50',type:'Put',prem:45,cost:0,profit:45,capital:1750,ret:'2.6%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'RIOT',open:'March 22',exp:'Mar 28',shares:200,strike:'$11.00',type:'Put',prem:62,cost:0,profit:62,capital:2200,ret:'2.8%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'CLSK',open:'April 1',exp:'Apr 5',shares:200,strike:'$17.00',type:'Put',prem:70,cost:0,profit:70,capital:3400,ret:'2.1%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'RIOT',open:'April 1',exp:'Apr 19',shares:100,strike:'$9.50',type:'Put',prem:19,cost:0,profit:19,capital:950,ret:'2.0%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'CLSK',open:'April 8',exp:'Apr 12',shares:200,strike:'$17.00',type:'Call',prem:82,cost:-8,profit:74,capital:3400,ret:'2.2%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'CLSK',open:'April 11',exp:'Apr 19',shares:200,strike:'$17.00',type:'Call',prem:100,cost:0,profit:100,capital:3400,ret:'2.9%',result:'Assigned',wheel:124,year:'2026'},
+  {stock:'RIOT',open:'April 22',exp:'Apr 26',shares:100,strike:'$10.50',type:'Call',prem:35,cost:0,profit:35,capital:1050,ret:'3.3%',result:'Assigned',wheel:100,year:'2026'},
+  {stock:'CLSK',open:'April 22',exp:'Apr 26',shares:100,strike:'$16.50',type:'Put',prem:50,cost:0,profit:50,capital:1650,ret:'3.0%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'CLSK',open:'April 22',exp:'Apr 26',shares:100,strike:'$18.00',type:'Call',prem:90,cost:0,profit:90,capital:1800,ret:'5.0%',result:'Assigned',wheel:124,year:'2026'},
+  {stock:'CLSK',open:'April 29',exp:'May 3',shares:300,strike:'$16.00',type:'Put',prem:60,cost:0,profit:60,capital:4800,ret:'1.3%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'CLSK',open:'May 6',exp:'May 10',shares:300,strike:'$16.00',type:'Put',prem:135,cost:0,profit:135,capital:4800,ret:'2.8%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'CLSK',open:'May 13',exp:'May 17',shares:300,strike:'$17.50',type:'Call',prem:135,cost:-9,profit:126,capital:5250,ret:'2.4%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'CLSK',open:'May 17',exp:'May 24',shares:200,strike:'$17.50',type:'Call',prem:80,cost:0,profit:80,capital:3500,ret:'2.3%',result:'Assigned',wheel:286,year:'2026'},
+  {stock:'CLSK',open:'May 17',exp:'May 24',shares:100,strike:'$17.00',type:'Call',prem:53,cost:0,profit:53,capital:1700,ret:'3.1%',result:'Assigned',wheel:93,year:'2026'},
+  {stock:'RIOT',open:'May 20',exp:'May 24',shares:100,strike:'$9.50',type:'Put',prem:19,cost:0,profit:19,capital:950,ret:'2.0%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'CLSK',open:'May 28',exp:'Jun 7',shares:400,strike:'$16.00',type:'Put',prem:160,cost:0,profit:160,capital:6400,ret:'2.5%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'CLSK',open:'June 10',exp:'Jun 14',shares:400,strike:'$16.50',type:'Call',prem:160,cost:0,profit:160,capital:6600,ret:'2.4%',result:'Assigned',wheel:216,year:'2026'},
+  {stock:'CLSK',open:'June 21',exp:'Jun 28',shares:400,strike:'$16.50',type:'Put',prem:60,cost:0,profit:60,capital:6600,ret:'0.9%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'CLSK',open:'July 1',exp:'Jul 5',shares:400,strike:'$17.00',type:'Call',prem:148,cost:-4,profit:144,capital:6800,ret:'2.1%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'CLSK',open:'July 5',exp:'Jul 12',shares:400,strike:'$17.00',type:'Call',prem:144,cost:-4,profit:140,capital:6800,ret:'2.1%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'CLSK',open:'July 12',exp:'Jul 19',shares:400,strike:'$16.50',type:'Call',prem:116,cost:0,profit:116,capital:6600,ret:'1.8%',result:'Assigned',wheel:36,year:'2026'},
+  {stock:'CLSK',open:'July 15',exp:'Jul 15',shares:50,strike:'',type:'trade',prem:0,cost:0,profit:0,capital:0,ret:'',result:'Expired',wheel:44,year:'2026'},
+  {stock:'CLSK',open:'July 22',exp:'Jul 26',shares:500,strike:'$15.50',type:'Put',prem:91,cost:0,profit:91,capital:7750,ret:'1.2%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MARA',open:'July 29',exp:'Aug 2',shares:400,strike:'$19.00',type:'Put',prem:72,cost:0,profit:72,capital:7600,ret:'0.9%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'MARA',open:'August 5',exp:'Aug 9',shares:400,strike:'$19.00',type:'Call',prem:48,cost:-8,profit:40,capital:7600,ret:'0.5%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MARA',open:'August 8',exp:'Aug 16',shares:400,strike:'$19.00',type:'Call',prem:84,cost:0,profit:84,capital:7600,ret:'1.1%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MARA',open:'August 20',exp:'Aug 23',shares:400,strike:'$19.00',type:'Call',prem:36,cost:-8,profit:28,capital:7600,ret:'0.4%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MARA',open:'August 23',exp:'Aug 30',shares:400,strike:'$19.00',type:'Call',prem:156,cost:0,profit:156,capital:7600,ret:'2.1%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MARA',open:'September 4',exp:'Sep 6',shares:400,strike:'$17.50',type:'Call',prem:16,cost:0,profit:16,capital:7000,ret:'0.2%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MARA',open:'September 9',exp:'Sep 13',shares:400,strike:'$17.00',type:'Call',prem:24,cost:0,profit:24,capital:6800,ret:'0.4%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MARA',open:'September 16',exp:'Sep 20',shares:400,strike:'$18.50',type:'Call',prem:40,cost:0,profit:40,capital:7400,ret:'0.5%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MARA',open:'September 25',exp:'Oct 4',shares:400,strike:'$19.00',type:'Call',prem:80,cost:0,profit:80,capital:7600,ret:'1.1%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MARA',open:'October 7',exp:'Oct 11',shares:400,strike:'$18.50',type:'Call',prem:52,cost:0,profit:52,capital:7400,ret:'0.7%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MARA',open:'October 14',exp:'Oct 18',shares:400,strike:'$19.00',type:'Call',prem:52,cost:-4,profit:48,capital:7600,ret:'0.6%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MARA',open:'October 18',exp:'Oct 25',shares:400,strike:'$19.50',type:'Call',prem:240,cost:-8,profit:232,capital:7800,ret:'3.0%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MARA',open:'October 25',exp:'Nov 1',shares:400,strike:'$19.00',type:'Call',prem:180,cost:0,profit:180,capital:7600,ret:'2.4%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MARA',open:'October 28',exp:'Nov 1',shares:100,strike:'$19.50',type:'Call',prem:33,cost:0,profit:33,capital:1950,ret:'1.7%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MARA',open:'November 5',exp:'Nov 8',shares:500,strike:'$19.00',type:'Call',prem:115,cost:-66,profit:49,capital:9500,ret:'0.5%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MARA',open:'November 8',exp:'Nov 15',shares:500,strike:'$19.50',type:'Call',prem:530,cost:0,profit:530,capital:9750,ret:'5.4%',result:'Assigned',wheel:265,year:'2026'},
+  {stock:'MARA',open:'November 18',exp:'Nov 22',shares:500,strike:'$17.00',type:'Put',prem:135,cost:0,profit:135,capital:8500,ret:'1.6%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MARA',open:'November 18',exp:'Nov 22',shares:100,strike:'$16.50',type:'Put',prem:9,cost:0,profit:9,capital:1650,ret:'0.5%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'November 25',exp:'Nov 29',shares:100,strike:'$65.00',type:'Put',prem:180,cost:0,profit:180,capital:6500,ret:'2.8%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'November 25',exp:'Nov 29',shares:200,strike:'$18.50',type:'Put',prem:20,cost:0,profit:20,capital:3700,ret:'0.5%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MARA',open:'December 2',exp:'Dec 6',shares:200,strike:'$20.00',type:'Put',prem:18,cost:0,profit:18,capital:4000,ret:'0.5%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'December 2',exp:'Dec 6',shares:100,strike:'$65.00',type:'Put',prem:130,cost:0,profit:130,capital:6500,ret:'2.0%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'December 9',exp:'Dec 13',shares:100,strike:'$65.00',type:'Put',prem:100,cost:-5,profit:95,capital:6500,ret:'1.5%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'MARA',open:'December 9',exp:'Dec 13',shares:200,strike:'$20.50',type:'Put',prem:18,cost:-2,profit:16,capital:4100,ret:'0.4%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'December 13',exp:'Dec 20',shares:200,strike:'$55.00',type:'Put',prem:114,cost:-14,profit:100,capital:11000,ret:'0.9%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'December 20',exp:'Jan 3',shares:200,strike:'$50.00',type:'Put',prem:384,cost:-30,profit:354,capital:10000,ret:'3.5%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'MARA',open:'December 20',exp:'Jan 3',shares:100,strike:'$16.00',type:'Put',prem:28,cost:0,profit:28,capital:1600,ret:'1.8%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'January 6',exp:'Jan 10',shares:200,strike:'$42.00',type:'Put',prem:130,cost:-14,profit:116,capital:8400,ret:'1.4%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MARA',open:'January 7',exp:'Jan 10',shares:200,strike:'$17.50',type:'Put',prem:18,cost:-2,profit:16,capital:3500,ret:'0.5%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'January 10',exp:'Jan 17',shares:200,strike:'$38.00',type:'Put',prem:296,cost:0,profit:296,capital:7600,ret:'3.9%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MARA',open:'January 10',exp:'Jan 17',shares:200,strike:'$15.50',type:'Put',prem:39,cost:0,profit:39,capital:3100,ret:'1.3%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'January 21',exp:'Jan 24',shares:300,strike:'$41.00',type:'Put',prem:165,cost:0,profit:165,capital:12300,ret:'1.3%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MARA',open:'January 27',exp:'Jan 31',shares:100,strike:'$17.00',type:'Put',prem:17,cost:0,profit:17,capital:1700,ret:'1.0%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'January 27',exp:'Jan 31',shares:300,strike:'$34.00',type:'Put',prem:120,cost:-9,profit:111,capital:10200,ret:'1.1%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'January 31',exp:'Feb 7',shares:300,strike:'$34.00',type:'Put',prem:168,cost:0,profit:168,capital:10200,ret:'1.6%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'February 3',exp:'Feb 7',shares:100,strike:'$26.00',type:'Put',prem:40,cost:0,profit:40,capital:2600,ret:'1.5%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'February 10',exp:'Feb 14',shares:700,strike:'$17.00',type:'Put',prem:105,cost:0,profit:105,capital:11900,ret:'0.9%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'RIOT',open:'February 10',exp:'Feb 14',shares:100,strike:'$10.50',type:'Put',prem:10,cost:0,profit:10,capital:1050,ret:'1.0%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'February 18',exp:'Feb 21',shares:300,strike:'$36.00',type:'Put',prem:75,cost:0,profit:75,capital:10800,ret:'0.7%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'MARA',open:'February 18',exp:'Feb 21',shares:100,strike:'$15.00',type:'Put',prem:5,cost:0,profit:5,capital:1500,ret:'0.3%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'MSTU',open:'February 18',exp:'Feb 21',shares:100,strike:'$7.50',type:'Put',prem:5,cost:0,profit:5,capital:750,ret:'0.7%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'February 24',exp:'Feb 28',shares:300,strike:'$36.00',type:'Call',prem:195,cost:0,profit:195,capital:10800,ret:'1.8%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTU',open:'February 24',exp:'Feb 28',shares:100,strike:'$7.50',type:'Call',prem:15,cost:0,profit:15,capital:750,ret:'2.0%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MARA',open:'February 24',exp:'Feb 28',shares:100,strike:'$15.50',type:'Call',prem:26,cost:-2,profit:24,capital:1550,ret:'1.5%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MARA',open:'February 28',exp:'Mar 7',shares:100,strike:'$15.00',type:'Call',prem:49,cost:0,profit:49,capital:1500,ret:'3.3%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'March 3',exp:'Mar 7',shares:300,strike:'$37.00',type:'Call',prem:240,cost:0,profit:240,capital:11100,ret:'2.2%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTU',open:'March 3',exp:'Mar 7',shares:100,strike:'$6.50',type:'Call',prem:40,cost:0,profit:40,capital:650,ret:'6.2%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTU',open:'March 7',exp:'Mar 7',shares:0,strike:'',type:'trade',prem:0,cost:0,profit:0,capital:0,ret:'#DIV/0!',result:'Assigned',wheel:31,year:'2026'},
+  {stock:'MSTX',open:'March 11',exp:'Mar 14',shares:400,strike:'$30.00',type:'Call',prem:80,cost:-11,profit:69,capital:12000,ret:'0.6%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'MSTU',open:'March 11',exp:'Mar 14',shares:100,strike:'$5.50',type:'Call',prem:10,cost:0,profit:10,capital:550,ret:'1.8%',result:'Assigned',wheel:6,year:'2026'},
+  {stock:'MSTX',open:'March 14',exp:'Mar 21',shares:400,strike:'$33.00',type:'Call',prem:123,cost:-12,profit:111,capital:13200,ret:'0.8%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MSTU',open:'March 14',exp:'Mar 14',shares:0,strike:'',type:'trade',prem:0,cost:0,profit:0,capital:0,ret:'#DIV/0!',result:'Assigned',wheel:26,year:'2026'},
+  {stock:'MSTU',open:'March 17',exp:'Mar 21',shares:200,strike:'$4.70',type:'Put',prem:24,cost:0,profit:24,capital:940,ret:'2.6%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'March 21',exp:'Mar 28',shares:400,strike:'$33.00',type:'Call',prem:316,cost:-8,profit:308,capital:13200,ret:'2.3%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'March 25',exp:'Mar 25',shares:0,strike:'',type:'trade',prem:0,cost:0,profit:0,capital:0,ret:'#DIV/0!',result:'Bought Back',wheel:84,year:'2026'},
+  {stock:'TSLL',open:'March 26',exp:'Mar 28',shares:200,strike:'$9.00',type:'Put',prem:10,cost:-2,profit:8,capital:1800,ret:'0.4%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'March 28',exp:'Apr 4',shares:100,strike:'$19.00',type:'Put',prem:35,cost:-8,profit:27,capital:1900,ret:'1.4%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'March 28',exp:'Apr 4',shares:400,strike:'$33.00',type:'Call',prem:308,cost:-16,profit:292,capital:13200,ret:'2.2%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'April 4',exp:'Apr 11',shares:400,strike:'$33.00',type:'Call',prem:188,cost:-12,profit:176,capital:13200,ret:'1.3%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'April 4',exp:'Apr 11',shares:100,strike:'$20.00',type:'Put',prem:138,cost:0,profit:138,capital:2000,ret:'6.9%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'April 11',exp:'Apr 17',shares:400,strike:'$32.50',type:'Call',prem:124,cost:-48,profit:76,capital:13000,ret:'0.6%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'April 14',exp:'Apr 17',shares:100,strike:'$20.50',type:'Put',prem:25,cost:-10,profit:15,capital:2050,ret:'0.7%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'April 16',exp:'Apr 25',shares:400,strike:'$32.50',type:'Call',prem:296,cost:-310,profit:-14,capital:13000,ret:'-0.1%',result:'Assigned',wheel:10,year:'2026'},
+  {stock:'MSTX',open:'April 17',exp:'Apr 25',shares:100,strike:'$21.50',type:'Put',prem:55,cost:0,profit:55,capital:2150,ret:'2.6%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'April 22',exp:'Apr 22',shares:229,strike:'',type:'trade',prem:0,cost:0,profit:0,capital:0,ret:'#DIV/0!',result:'Assigned',wheel:-150,year:'2026'},
+  {stock:'MSTX',open:'April 23',exp:'Apr 25',shares:200,strike:'$26.00',type:'Put',prem:40,cost:0,profit:40,capital:5200,ret:'0.8%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'HOOD',open:'April 28',exp:'May 2',shares:400,strike:'$40.00',type:'Put',prem:160,cost:0,profit:160,capital:16000,ret:'1.0%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'May 5',exp:'May 9',shares:2000,strike:'$8.00',type:'Put',prem:140,cost:0,profit:140,capital:16000,ret:'0.9%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'May 12',exp:'May 16',shares:400,strike:'$34.00',type:'Put',prem:140,cost:0,profit:140,capital:13600,ret:'1.0%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'May 13',exp:'May 16',shares:100,strike:'$29.50',type:'Put',prem:10,cost:0,profit:10,capital:2950,ret:'0.3%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'May 19',exp:'May 23',shares:500,strike:'$30.00',type:'Put',prem:100,cost:-15,profit:85,capital:15000,ret:'0.6%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MSTU',open:'May 21',exp:'May 23',shares:200,strike:'$8.00',type:'Put',prem:24,cost:-30,profit:-6,capital:1600,ret:'-0.4%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'May 23',exp:'May 30',shares:500,strike:'$26.00',type:'Put',prem:155,cost:0,profit:155,capital:13000,ret:'1.2%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'May 23',exp:'May 30',shares:200,strike:'$19.00',type:'Put',prem:30,cost:0,profit:30,capital:3800,ret:'0.8%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'June 2',exp:'Jun 6',shares:1400,strike:'$12.00',type:'Put',prem:154,cost:-1022,profit:-868,capital:16800,ret:'-5.2%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'June 6',exp:'Jun 13',shares:700,strike:'$11.50',type:'Put',prem:1029,cost:0,profit:1029,capital:8050,ret:'12.8%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'June 9',exp:'Jun 13',shares:700,strike:'$12.00',type:'Call',prem:154,cost:0,profit:154,capital:8400,ret:'1.8%',result:'Assigned',wheel:105,year:'2026'},
+  {stock:'TSLL',open:'June 10',exp:'Jun 10',shares:75,strike:'',type:'trade',prem:0,cost:0,profit:0,capital:0,ret:'#DIV/0!',result:'Assigned',wheel:65,year:'2026'},
+  {stock:'MSTX',open:'June 16',exp:'Jun 20',shares:500,strike:'$31.00',type:'Put',prem:105,cost:0,profit:105,capital:15500,ret:'0.7%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTU',open:'June 16',exp:'Jun 20',shares:300,strike:'$7.00',type:'Put',prem:15,cost:0,profit:15,capital:2100,ret:'0.7%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'SOXL',open:'June 23',exp:'Jun 27',shares:1000,strike:'$17.00',type:'Put',prem:120,cost:0,profit:120,capital:17000,ret:'0.7%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTU',open:'June 23',exp:'Jun 27',shares:100,strike:'$6.50',type:'Put',prem:5,cost:0,profit:5,capital:650,ret:'0.8%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'June 30',exp:'Jul 3',shares:1700,strike:'$10.00',type:'Put',prem:136,cost:0,profit:136,capital:17000,ret:'0.8%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'July 1',exp:'Jul 3',shares:100,strike:'$8.50',type:'Put',prem:5,cost:0,profit:5,capital:850,ret:'0.6%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'July 7',exp:'Jul 11',shares:300,strike:'$7.50',type:'Put',prem:15,cost:0,profit:15,capital:2250,ret:'0.7%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'July 7',exp:'Jul 11',shares:500,strike:'$31.50',type:'Put',prem:125,cost:0,profit:125,capital:15750,ret:'0.8%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'SOXL',open:'July 14',exp:'Jul 18',shares:800,strike:'$22.00',type:'Put',prem:104,cost:-80,profit:24,capital:17600,ret:'0.1%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'July 14',exp:'Jul 18',shares:1800,strike:'$10.00',type:'Put',prem:129,cost:-18,profit:111,capital:18000,ret:'0.6%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'July 18',exp:'Jul 25',shares:500,strike:'$35.00',type:'Put',prem:135,cost:-29,profit:106,capital:17500,ret:'0.6%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'July 21',exp:'Jul 25',shares:700,strike:'$10.50',type:'Put',prem:122,cost:0,profit:122,capital:7350,ret:'1.7%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'HOOD',open:'July 28',exp:'Aug 1',shares:200,strike:'$90.00',type:'Put',prem:124,cost:-12,profit:112,capital:18000,ret:'0.6%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'August 1',exp:'Aug 8',shares:1500,strike:'$9.00',type:'Put',prem:165,cost:-15,profit:150,capital:13500,ret:'1.1%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'August 1',exp:'Aug 8',shares:200,strike:'$20.00',type:'Put',prem:42,cost:-6,profit:36,capital:4000,ret:'0.9%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MSTU',open:'August 1',exp:'Aug 8',shares:300,strike:'$4.50',type:'Put',prem:15,cost:0,profit:15,capital:1350,ret:'1.1%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'August 8',exp:'Aug 15',shares:600,strike:'$21.00',type:'Put',prem:90,cost:-18,profit:72,capital:12600,ret:'0.6%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'August 8',exp:'Aug 15',shares:200,strike:'$25.00',type:'Put',prem:56,cost:-4,profit:52,capital:5000,ret:'1.0%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'August 15',exp:'Aug 22',shares:100,strike:'$10.00',type:'Put',prem:6,cost:0,profit:6,capital:1000,ret:'0.6%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'August 15',exp:'Aug 22',shares:200,strike:'$20.00',type:'Put',prem:54,cost:0,profit:54,capital:4000,ret:'1.4%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'August 15',exp:'Aug 22',shares:600,strike:'$18.00',type:'Put',prem:150,cost:0,profit:150,capital:10800,ret:'1.4%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'August 15',exp:'Aug 22',shares:300,strike:'$10.50',type:'Put',prem:30,cost:0,profit:30,capital:3150,ret:'1.0%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'August 25',exp:'Aug 29',shares:1000,strike:'$18.00',type:'Put',prem:100,cost:0,profit:100,capital:18000,ret:'0.6%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTU',open:'August 25',exp:'Aug 29',shares:300,strike:'$5.00',type:'Put',prem:30,cost:0,profit:30,capital:1500,ret:'2.0%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'HOOD',open:'September 2',exp:'Sep 5',shares:200,strike:'$94.00',type:'Put',prem:190,cost:-14,profit:176,capital:18800,ret:'0.9%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MSTU',open:'September 3',exp:'Sep 12',shares:200,strike:'$4.50',type:'Put',prem:30,cost:0,profit:30,capital:900,ret:'3.3%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'HOOD',open:'September 5',exp:'Sep 12',shares:200,strike:'$93.00',type:'Put',prem:316,cost:-20,profit:296,capital:18600,ret:'1.6%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'September 8',exp:'Sep 12',shares:1000,strike:'$18.00',type:'Put',prem:150,cost:0,profit:150,capital:18000,ret:'0.8%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'September 8',exp:'Sep 12',shares:100,strike:'$12.00',type:'Put',prem:13,cost:0,profit:13,capital:1200,ret:'1.1%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'September 15',exp:'Sep 19',shares:1000,strike:'$19.50',type:'Put',prem:170,cost:-20,profit:150,capital:19500,ret:'0.8%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'September 19',exp:'Sep 26',shares:1000,strike:'$20.00',type:'Put',prem:210,cost:0,profit:210,capital:20000,ret:'1.1%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'MSTU',open:'September 22',exp:'Sep 26',shares:100,strike:'$4.50',type:'Put',prem:5,cost:0,profit:5,capital:450,ret:'1.1%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'September 29',exp:'Oct 3',shares:500,strike:'$20.50',type:'Call',prem:475,cost:0,profit:475,capital:10250,ret:'4.6%',result:'Assigned',wheel:250,year:'2026'},
+  {stock:'MSTX',open:'September 29',exp:'Oct 3',shares:300,strike:'$22.00',type:'Call',prem:135,cost:0,profit:135,capital:6600,ret:'2.0%',result:'Assigned',wheel:600,year:'2026'},
+  {stock:'MSTU',open:'September 29',exp:'Oct 3',shares:100,strike:'$4.50',type:'Call',prem:20,cost:0,profit:20,capital:450,ret:'4.4%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'September 30',exp:'Oct 3',shares:200,strike:'$19.00',type:'Put',prem:50,cost:0,profit:50,capital:3800,ret:'1.3%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'September 29',exp:'Oct 3',shares:200,strike:'$19.00',type:'trade',prem:0,cost:0,profit:0,capital:3800,ret:'0.0%',result:'Bought Back',wheel:62,year:'2026'},
+  {stock:'TSLL',open:'October 3',exp:'Oct 10',shares:500,strike:'$16.00',type:'Put',prem:75,cost:-12,profit:63,capital:8000,ret:'0.8%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'October 3',exp:'Oct 10',shares:200,strike:'$15.00',type:'Put',prem:20,cost:-2,profit:18,capital:3000,ret:'0.6%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'RIVN',open:'October 6',exp:'Oct 10',shares:800,strike:'$13.00',type:'Put',prem:104,cost:0,profit:104,capital:10400,ret:'1.0%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'October 7',exp:'Oct 10',shares:200,strike:'$18.50',type:'Put',prem:34,cost:-8,profit:26,capital:3700,ret:'0.7%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'October 9',exp:'Oct 17',shares:400,strike:'$16.00',type:'Put',prem:108,cost:0,profit:108,capital:6400,ret:'1.7%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'October 10',exp:'Oct 17',shares:200,strike:'$16.00',type:'Put',prem:50,cost:0,profit:50,capital:3200,ret:'1.6%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'RIVN',open:'October 13',exp:'Oct 17',shares:400,strike:'$13.00',type:'Call',prem:132,cost:0,profit:132,capital:5200,ret:'2.5%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'RIVN',open:'October 13',exp:'Oct 17',shares:400,strike:'$13.50',type:'Call',prem:56,cost:-8,profit:48,capital:5400,ret:'0.9%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'MSTX',open:'October 13',exp:'Oct 17',shares:200,strike:'$14.00',type:'Put',prem:30,cost:0,profit:30,capital:2800,ret:'1.1%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'RIVN',open:'October 17',exp:'Oct 24',shares:400,strike:'$13.50',type:'Call',prem:84,cost:-8,profit:76,capital:5400,ret:'1.4%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'October 20',exp:'Oct 24',shares:1100,strike:'$16.00',type:'Put',prem:165,cost:-22,profit:143,capital:17600,ret:'0.8%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'ETHU',open:'October 23',exp:'Oct 31',shares:200,strike:'$80.00',type:'Put',prem:280,cost:-6,profit:274,capital:16000,ret:'1.7%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'RIVN',open:'October 23',exp:'Oct 31',shares:100,strike:'$12.50',type:'Put',prem:19,cost:0,profit:19,capital:1250,ret:'1.5%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'RIVN',open:'October 24',exp:'Oct 31',shares:400,strike:'$13.50',type:'Call',prem:80,cost:-8,profit:72,capital:5400,ret:'1.3%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'RIVN',open:'October 28',exp:'Nov 7',shares:100,strike:'$12.00',type:'Put',prem:29,cost:-2,profit:27,capital:1200,ret:'2.3%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'ETHU',open:'October 31',exp:'Nov 7',shares:200,strike:'$80.00',type:'Put',prem:176,cost:-560,profit:-384,capital:16000,ret:'-2.4%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'RIVN',open:'October 31',exp:'Nov 7',shares:400,strike:'$13.50',type:'Call',prem:236,cost:0,profit:236,capital:5400,ret:'4.4%',result:'Assigned',wheel:200,year:'2026'},
+  {stock:'MSTU',open:'November 3',exp:'Nov 7',shares:500,strike:'$2.50',type:'Put',prem:25,cost:0,profit:25,capital:1250,ret:'2.0%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'ETHU',open:'November 7',exp:'Nov 14',shares:100,strike:'$74.00',type:'Put',prem:570,cost:-574,profit:-4,capital:7400,ret:'-0.1%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'November 7',exp:'Nov 14',shares:100,strike:'$15.50',type:'Put',prem:17,cost:-7,profit:10,capital:1550,ret:'0.6%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'HOOD',open:'November 10',exp:'Nov 14',shares:100,strike:'$124.00',type:'Put',prem:108,cost:-35,profit:73,capital:12400,ret:'0.6%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'EOSE',open:'November 11',exp:'Nov 14',shares:100,strike:'$15.50',type:'Put',prem:12,cost:-63,profit:-51,capital:1550,ret:'-3.3%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'ETHU',open:'November 14',exp:'Nov 21',shares:100,strike:'$70.00',type:'Put',prem:701,cost:0,profit:701,capital:7000,ret:'10.0%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'HOOD',open:'November 17',exp:'Nov 21',shares:100,strike:'$110.00',type:'Put',prem:128,cost:0,profit:128,capital:11000,ret:'1.2%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'November 17',exp:'Nov 21',shares:300,strike:'$14.00',type:'Put',prem:39,cost:0,profit:39,capital:4200,ret:'0.9%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'HOOD',open:'November 24',exp:'Nov 28',shares:100,strike:'$115.00',type:'Call',prem:165,cost:0,profit:165,capital:11500,ret:'1.4%',result:'Assigned',wheel:500,year:'2026'},
+  {stock:'ETHU',open:'November 24',exp:'Nov 28',shares:100,strike:'$70.00',type:'Call',prem:40,cost:0,profit:40,capital:7000,ret:'0.6%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TQQQ',open:'November 25',exp:'Nov 28',shares:100,strike:'$44.50',type:'Put',prem:26,cost:0,profit:26,capital:4450,ret:'0.6%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'EOSE',open:'December 1',exp:'Dec 5',shares:1000,strike:'$12.50',type:'Put',prem:120,cost:0,profit:120,capital:12500,ret:'1.0%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'ETHU',open:'December 2',exp:'Dec 5',shares:100,strike:'$68.50',type:'Call',prem:35,cost:-5,profit:30,capital:6850,ret:'0.4%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'EOSE',open:'December 2',exp:'Dec 5',shares:300,strike:'$11.50',type:'Put',prem:24,cost:-3,profit:21,capital:3450,ret:'0.6%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'December 8',exp:'Dec 12',shares:500,strike:'$17.00',type:'Put',prem:55,cost:-5,profit:50,capital:8500,ret:'0.6%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'ETHU',open:'December 8',exp:'Dec 12',shares:100,strike:'$70.00',type:'Call',prem:135,cost:0,profit:135,capital:7000,ret:'1.9%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'SOFI',open:'December 8',exp:'Dec 12',shares:300,strike:'$25.00',type:'Put',prem:36,cost:-3,profit:33,capital:7500,ret:'0.4%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'HOOD',open:'December 12',exp:'Dec 19',shares:100,strike:'$109.00',type:'Put',prem:104,cost:0,profit:104,capital:10900,ret:'1.0%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'ROBN',open:'December 12',exp:'Dec 19',shares:100,strike:'$49.00',type:'Put',prem:45,cost:0,profit:45,capital:4900,ret:'0.9%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'ETHU',open:'December 17',exp:'Dec 19',shares:100,strike:'$65.00',type:'Call',prem:55,cost:-10,profit:45,capital:6500,ret:'0.7%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'ETHU',open:'December 18',exp:'Dec 19',shares:100,strike:'$60.00',type:'Call',prem:35,cost:0,profit:35,capital:6000,ret:'0.6%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'ETHU',open:'December 22',exp:'Dec 26',shares:100,strike:'$65.00',type:'Call',prem:70,cost:0,profit:70,capital:6500,ret:'1.1%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'HOOD',open:'December 23',exp:'Dec 26',shares:100,strike:'$116.00',type:'Put',prem:92,cost:0,profit:92,capital:11600,ret:'0.8%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'EOSE',open:'December 23',exp:'Dec 26',shares:500,strike:'$11.50',type:'Put',prem:30,cost:0,profit:30,capital:5750,ret:'0.5%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'December 29',exp:'Jan 2',shares:500,strike:'$18.50',type:'Put',prem:75,cost:-150,profit:-75,capital:9250,ret:'-0.8%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'NVDL',open:'December 29',exp:'Jan 2',shares:100,strike:'$83.00',type:'Put',prem:41,cost:-2,profit:39,capital:8300,ret:'0.5%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'ETHU',open:'January 2',exp:'Jan 2',shares:100,strike:'$59.00',type:'Call',prem:35,cost:0,profit:35,capital:5900,ret:'0.6%',result:'Assigned',wheel:-900,year:'2026'},
+  {stock:'TSLL',open:'January 2',exp:'Jan 9',shares:300,strike:'$16.00',type:'Put',prem:39,cost:-9,profit:30,capital:4800,ret:'0.6%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'January 2',exp:'Jan 9',shares:500,strike:'$17.00',type:'Put',prem:145,cost:-5,profit:140,capital:8500,ret:'1.6%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'January 6',exp:'Jan 9',shares:800,strike:'$16.00',type:'Put',prem:72,cost:0,profit:72,capital:12800,ret:'0.6%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'HOOD',open:'January 9',exp:'Jan 16',shares:100,strike:'$109.00',type:'Put',prem:103,cost:0,profit:103,capital:10900,ret:'0.9%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'January 12',exp:'Jan 26',shares:500,strike:'$16.50',type:'Put',prem:60,cost:-5,profit:55,capital:8250,ret:'0.7%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'TQQQ',open:'January 12',exp:'Jan 16',shares:100,strike:'$52.00',type:'Put',prem:32,cost:-1,profit:31,capital:5200,ret:'0.6%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'January 15',exp:'Jan 23',shares:500,strike:'$16.00',type:'Put',prem:55,cost:-5,profit:50,capital:8000,ret:'0.6%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'HOOD',open:'January 20',exp:'Jan 23',shares:100,strike:'$110.00',type:'Call',prem:110,cost:-5,profit:105,capital:11000,ret:'1.0%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'January 20',exp:'Jan 23',shares:400,strike:'$15.50',type:'Put',prem:48,cost:-4,profit:44,capital:6200,ret:'0.7%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'HOOD',open:'January 23',exp:'Jan 30',shares:100,strike:'$111.00',type:'Call',prem:196,cost:0,profit:196,capital:11100,ret:'1.8%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'January 26',exp:'Jan 30',shares:300,strike:'$14.50',type:'Put',prem:30,cost:0,profit:30,capital:4350,ret:'0.7%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'HOOD',open:'January 26',exp:'Jan 30',shares:100,strike:'$102.00',type:'Put',prem:80,cost:0,profit:80,capital:10200,ret:'0.8%',result:'Assigned',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'February 3',exp:'Feb 13',shares:300,strike:'$14.00',type:'Put',prem:54,cost:-3,profit:51,capital:4200,ret:'1.2%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'HOOD',open:'February 6',exp:'Feb 13',shares:200,strike:'$104.00',type:'Call',prem:80,cost:-2,profit:78,capital:20800,ret:'0.4%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'February 13',exp:'Feb 20',shares:300,strike:'$14.00',type:'Put',prem:36,cost:-3,profit:33,capital:4200,ret:'0.8%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'HOOD',open:'February 17',exp:'Feb 20',shares:200,strike:'$80.00',type:'Call',prem:108,cost:-80,profit:28,capital:16000,ret:'0.2%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'HOOD',open:'February 17',exp:'Feb 20',shares:200,strike:'$82.00',type:'Call',prem:86,cost:-2,profit:84,capital:16400,ret:'0.5%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'February 20',exp:'Feb 27',shares:300,strike:'$13.50',type:'Put',prem:42,cost:-6,profit:36,capital:4050,ret:'0.9%',result:'Rolled',wheel:0,year:'2026'},
+  {stock:'HOOD',open:'February 20',exp:'Feb 27',shares:200,strike:'$84.00',type:'Call',prem:94,cost:0,profit:94,capital:16800,ret:'0.6%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'February 27',exp:'Mar 6',shares:300,strike:'$13.50',type:'Put',prem:57,cost:-3,profit:54,capital:4050,ret:'1.3%',result:'Bought Back',wheel:0,year:'2026'},
+  {stock:'HOOD',open:'March 2',exp:'Mar 6',shares:200,strike:'$83.00',type:'Call',prem:104,cost:0,profit:104,capital:16600,ret:'0.6%',result:'Expired',wheel:0,year:'2026'},
+  {stock:'TSLL',open:'March 6',exp:'Mar 13',shares:300,strike:'$12.50',type:'Put',prem:48,cost:0,profit:48,capital:3750,ret:'1.3%',result:'In Progress',wheel:0,year:'2026'},
 ]; // [END:minisumTrades]
 
 // [START:monthlyBalances]
@@ -1017,10 +1060,144 @@ function setWeeklyYear(y, btn) {
   btn.classList.add('active');
   renderWeeklyBarsGeneric(trades, 'weekly-stats', 'weekly-bars', 'weekly-legend', y);
 }
+
+// MINI SUM MONTHLY BARS — groups by month, handles large datasets cleanly
+function renderMiniSumMonthlyBars(yearFilter, dataOverride) {
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const NEON_PALETTE = ['#00d4ff','#ff2d87','#b44dff','#ff6b00','#ffe600','#00ff87','#ff6b6b','#00ffcc','#ff00aa','#00ffee','#ffaa00','#aa00ff','#00aaff','#ffff00'];
+
+  // Use provided data override, or filter by year string
+  let data = dataOverride || minisumTrades;
+  if (!dataOverride && yearFilter && yearFilter !== 'all') data = data.filter(t => t.year === yearFilter);
+
+  if (!data.length) {
+    document.getElementById('ms-weekly-stats').innerHTML = '<div style="padding:20px;color:var(--text-dim);font-size:11px">No data for selected year</div>';
+    document.getElementById('ms-weekly-bars').innerHTML = '';
+    document.getElementById('ms-weekly-legend').innerHTML = '';
+    return;
+  }
+
+  // Group by month
+  const monthTotals = {};
+  const monthTickers = {};
+  MONTHS.forEach(m => { monthTotals[m] = 0; monthTickers[m] = {}; });
+
+  data.forEach(t => {
+    const mon = t.exp.split(' ')[0];
+    if (!MONTHS.includes(mon)) return;
+    monthTotals[mon] += t.profit;
+    monthTickers[mon][t.stock] = (monthTickers[mon][t.stock] || 0) + t.profit;
+  });
+
+  // Only show months with data
+  const activeMonths = MONTHS.filter(m => monthTotals[m] !== 0);
+  if (!activeMonths.length) return;
+
+  const vals     = activeMonths.map(m => monthTotals[m]);
+  const maxV     = Math.max(...vals.map(Math.abs)) || 1;
+  const totalV   = Math.round(vals.reduce((s,v) => s+v, 0));
+  const avgV     = Math.round(totalV / activeMonths.length);
+  const bestMon  = activeMonths[vals.indexOf(Math.max(...vals))];
+  const bestVal  = Math.max(...vals);
+
+  // Ticker totals + colors
+  const tickerTotals = {};
+  data.forEach(t => { tickerTotals[t.stock] = (tickerTotals[t.stock]||0) + t.profit; });
+  const tickers = Object.keys(tickerTotals).sort((a,b) => tickerTotals[b]-tickerTotals[a]);
+  const tickerColors = {};
+  const fixed = {ETHU:'#ff6b00',TSLL:'#00d4ff',TQQQ:'#b44dff',HOOD:'#ff2d87',MSTU:'#ffe600',MSTX:'#00ff87',CLSK:'#ff6b6b',MARA:'#00ffcc',RIOT:'#ff00aa',SOXL:'#00aaff'};
+  let ci = 0;
+  tickers.forEach(tk => { tickerColors[tk] = fixed[tk] || NEON_PALETTE[ci++ % NEON_PALETTE.length]; });
+
+  // Stat strip
+  document.getElementById('ms-weekly-stats').innerHTML = [
+    {label:'Total Booked',    val:'$'+totalV.toLocaleString(),         color:'var(--neon-green)'},
+    {label:'Monthly Avg',     val:'$'+avgV.toLocaleString(),           color:'var(--neon-yellow)'},
+    {label:'Best Month',      val:'$'+bestVal.toLocaleString()+' ('+bestMon+')', color:'var(--neon-blue)'},
+    {label:'Trades Counted',  val:data.length+' trades',               color:'var(--neon-purple)'},
+  ].map((s,i) => `
+    <div style="padding:14px 18px;border-right:${i<3?'1px solid var(--border)':'none'}">
+      <div style="font-family:'Outfit',sans-serif;font-size:9px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px">${s.label}</div>
+      <div style="font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;color:${s.color};line-height:1">${s.val}</div>
+    </div>`).join('');
+
+  // SVG chart
+  const wrap  = document.getElementById('ms-weekly-bars');
+  const W     = wrap.clientWidth || 700;
+  const H     = 220;
+  const padL  = 48, padR = 16, padT = 28, padB = 28;
+  const chartW = W - padL - padR;
+  const chartH = H - padT - padB;
+  const n      = activeMonths.length;
+  const barGroupW = chartW / n;
+  const barW   = Math.max(18, barGroupW * 0.65);
+  const yScale = v => padT + chartH - (v / maxV) * chartH;
+
+  const gridVals = [0, Math.round(maxV*0.25), Math.round(maxV*0.5), Math.round(maxV*0.75), maxV];
+  let svg = [`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;overflow:visible">`];
+
+  // Grid lines
+  gridVals.forEach(v => {
+    const y = yScale(v);
+    svg.push(`<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#1a2230" stroke-width="1"/>`);
+    svg.push(`<text x="${padL-6}" y="${y+3}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" fill="#4a6070">$${v>=1000?Math.round(v/100)/10+'k':v}</text>`);
+  });
+
+  // Avg line
+  const avgY = yScale(avgV);
+  svg.push(`<line x1="${padL}" y1="${avgY}" x2="${W-padR}" y2="${avgY}" stroke="#ffe60088" stroke-width="1.5" stroke-dasharray="6,4"/>`);
+  svg.push(`<text x="${W-padR-2}" y="${avgY-4}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" font-weight="800" fill="#ffe600">avg $${avgV}</text>`);
+
+  // Bars — stacked by ticker
+  activeMonths.forEach((mon, i) => {
+    const total  = monthTotals[mon];
+    const bx     = padL + i * barGroupW + (barGroupW - barW) / 2;
+    const barBot = padT + chartH;
+    let yOff = 0;
+
+    // Stack tickers present in this month
+    const monTickers = tickers.filter(tk => (monthTickers[mon][tk]||0) > 0);
+    monTickers.forEach((tk, si) => {
+      const val  = monthTickers[mon][tk];
+      const segH = Math.max(2, (val / maxV) * chartH);
+      const segY = barBot - yOff - segH;
+      const isTop = si === monTickers.length - 1;
+      const col  = tickerColors[tk];
+      svg.push(`<rect x="${bx}" y="${segY}" width="${barW}" height="${segH}" fill="${col}" opacity="0.88" rx="${isTop?3:0}" ry="${isTop?3:0}" style="filter:drop-shadow(0 0 4px ${col}66)"><title>${tk}: $${Math.round(val)}</title></rect>`);
+      yOff += segH;
+    });
+
+    // Total label above bar
+    const totalBarH = (total / maxV) * chartH;
+    svg.push(`<text x="${bx+barW/2}" y="${barBot-totalBarH-6}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9" font-weight="800" fill="#e8f0f8cc">$${Math.round(total/100)/10}k</text>`);
+    // Month label below
+    svg.push(`<text x="${bx+barW/2}" y="${barBot+16}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="10" fill="#8090a0">${mon}</text>`);
+  });
+
+  svg.push('</svg>');
+  wrap.innerHTML = svg.join('');
+
+  // Legend — top tickers only (max 12 to keep it clean)
+  const topTickers = tickers.filter(tk => tickerTotals[tk] > 0).slice(0, 12);
+  document.getElementById('ms-weekly-legend').innerHTML =
+    topTickers.map(tk =>
+      `<div style="display:flex;align-items:center;gap:5px;font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;color:var(--text-dim)">
+        <div style="width:10px;height:10px;border-radius:2px;background:${tickerColors[tk]};box-shadow:0 0 6px ${tickerColors[tk]}99"></div>
+        <span>${tk}</span><span style="color:${tickerColors[tk]}">$${Math.round(tickerTotals[tk]).toLocaleString()}</span>
+      </div>`).join('') +
+    `<div style="display:flex;align-items:center;gap:6px;font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;color:var(--text-dim)">
+      <svg width="18" height="8" style="overflow:visible"><line x1="0" y1="4" x2="18" y2="4" stroke="#ffe60099" stroke-width="1.5" stroke-dasharray="4,3"/></svg>
+      <span style="color:var(--neon-yellow)">Monthly avg</span>
+    </div>`;
+}
+
 function setMsWeeklyYear(y, btn) {
-  document.querySelectorAll('#page-minisum .panel .fb').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#page-minisum .two-col .panel:last-child .fb').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  renderWeeklyBarsGeneric(minisumTrades, 'ms-weekly-stats', 'ms-weekly-bars', 'ms-weekly-legend', y);
+  // Filter from current year-filtered data
+  const base = msYearFilter === 'all' ? minisumTrades : minisumTrades.filter(t => t.year === msYearFilter);
+  const filtered = y === 'all' ? base : base.filter(t => t.year === y);
+  renderMiniSumMonthlyBars(null, filtered);
 }
 // WEEKLY BARS — Small IRA trades
 function renderWeeklyBars() {
@@ -1281,8 +1458,8 @@ function renderLots() {
 
 
 // MINI SUM COMPOSITION
-function renderMiniSumComposition() {
-  const data = minisumTrades;
+function renderMiniSumComposition(data) {
+  if (!data) data = minisumTrades;
   const puts  = data.filter(t => t.type === 'Put');
   const calls = data.filter(t => t.type === 'Call');
   const circumference = 226;
@@ -1319,37 +1496,59 @@ function renderMiniSumComposition() {
 }
 
 // MINI SUM
-function renderMiniSum(filter) {
-  const tickers = [...new Set(minisumTrades.map(t=>t.stock))];
+// Global year state for Mini Sum page
+let msYearFilter = 'all';
+let msTickerFilter = 'all';
 
-  // Build filter buttons dynamically
+// Top-level year toggle — rerenders entire page
+function setMsYear(year, btn) {
+  msYearFilter = year;
+  msTickerFilter = 'all'; // reset ticker filter when year changes
+  document.querySelectorAll('#ms-year-filters .fb').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Reset ticker filter buttons back to All
+  document.querySelectorAll('#minisum-filters .fb').forEach((b,i) => b.classList.toggle('active', i===0));
+  renderMiniSumPage();
+}
+
+// Ticker filter within current year
+function filterMiniSum(v, btn) {
+  msTickerFilter = v;
+  document.querySelectorAll('#minisum-filters .fb').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMiniSumPage();
+}
+
+// Master render — called by both year and ticker filters
+function renderMiniSumPage() {
+  // Base data filtered by year
+  const yearData = msYearFilter === 'all' ? minisumTrades : minisumTrades.filter(t => t.year === msYearFilter);
+  // Table data also filtered by ticker
+  const tableData = msTickerFilter === 'all' ? yearData : yearData.filter(t => t.stock === msTickerFilter);
+
+  // Build ticker filter buttons from year-filtered data
+  const tickers = [...new Set(yearData.map(t => t.stock))].sort();
   const filtersEl = document.getElementById('minisum-filters');
-  if (filtersEl && filtersEl.children.length === 1) {
-    tickers.forEach(tk => {
-      const btn = document.createElement('button');
-      btn.className = 'fb';
-      btn.textContent = tk;
-      btn.onclick = function(){ filterMiniSum(tk, this); };
-      filtersEl.appendChild(btn);
-    });
+  if (filtersEl) {
+    filtersEl.innerHTML = '<button class="fb' + (msTickerFilter==='all'?' active':'') + '" onclick="filterMiniSum(\'all\',this)">All</button>' +
+      tickers.map(tk => `<button class="fb${msTickerFilter===tk?' active':''}" onclick="filterMiniSum('${tk}',this)">${tk}</button>`).join('');
   }
 
-  const data = !filter || filter==='all' ? minisumTrades : minisumTrades.filter(t=>t.stock===filter);
-
-  // Update sub heading
+  // Sub heading
   const sub = document.getElementById('minisum-sub');
-  if (sub) sub.textContent = data.length + ' trades · minisum tab';
+  const yearLabel = msYearFilter === 'all' ? 'all years' : msYearFilter;
+  if (sub) sub.textContent = yearData.length + ' trades · ' + yearLabel;
 
-  // Totals footer — rendered first so it appears at top
-  const totPrem   = data.reduce((s,t)=>s+t.prem,   0);
-  const totCost   = data.reduce((s,t)=>s+t.cost,   0);
-  const totProfit = data.reduce((s,t)=>s+t.profit,  0);
-  const totCap    = data.reduce((s,t)=>s+t.capital, 0);
-  const avgRet    = data.length ? (data.reduce((s,t)=>s+parseFloat(t.ret||0),0)/data.length).toFixed(1)+'%' : '—';
+  // Trades table totals footer
+  const totPrem   = tableData.reduce((s,t) => s+t.prem,    0);
+  const totCost   = tableData.reduce((s,t) => s+t.cost,    0);
+  const totProfit = tableData.reduce((s,t) => s+t.profit,  0);
+  const totCap    = tableData.reduce((s,t) => s+t.capital, 0);
+  const avgRet    = tableData.length ? (tableData.reduce((s,t) => s+parseFloat(t.ret||0), 0)/tableData.length).toFixed(1)+'%' : '—';
   document.getElementById('minisum-foot').innerHTML = `
     <tr style="border-bottom:2px solid var(--border);background:rgba(0,255,135,0.03)">
       <td colspan="6" style="font-family:'Inter',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-dim);padding:10px 14px">
-        ${data.length} trade${data.length!==1?'s':''} · Total
+        ${tableData.length} trade${tableData.length!==1?'s':''} · Total
       </td>
       <td class="r" style="color:var(--neon-green);font-weight:700">$${totPrem.toLocaleString()}</td>
       <td class="r ${totCost<0?'neg':'dim'}" style="font-weight:700">${totCost<0?'−$'+Math.abs(totCost).toLocaleString():'—'}</td>
@@ -1359,7 +1558,8 @@ function renderMiniSum(filter) {
       <td></td>
     </tr>`;
 
-  document.getElementById('minisum-body').innerHTML = data.map(t => `
+  // Trades table rows
+  document.getElementById('minisum-body').innerHTML = tableData.map(t => `
     <tr>
       <td><strong>${t.stock}</strong></td>
       <td class="dim">${t.open}</td><td class="dim">${t.exp}</td>
@@ -1374,45 +1574,40 @@ function renderMiniSum(filter) {
       <td>${badge(t.result)}</td>
     </tr>`).join('');
 
-  // Composition panel
-  renderMiniSumComposition();
-  // Weekly bars
-  renderWeeklyBarsGeneric(minisumTrades, 'ms-weekly-stats', 'ms-weekly-bars', 'ms-weekly-legend');
+  // Composition (uses yearData)
+  renderMiniSumComposition(yearData);
 
-  // Stat cards
-  const allData = minisumTrades;
-  const totalPrem = allData.reduce((s,t)=>s+t.profit, 0);
-  const caps = allData.filter(t=>t.capital>0).map(t=>t.capital);
-  const avgCap = caps.length ? Math.round(caps.reduce((s,c)=>s+c,0)/caps.length) : 0;
-  const weekMap = {};
-  allData.forEach(t => {
+  // Monthly bars (uses yearData)
+  renderMiniSumMonthlyBars(null, yearData);
+
+  // Stat cards (uses yearData)
+  const totalPrem = yearData.reduce((s,t) => s+t.profit, 0);
+  const caps      = yearData.filter(t => t.capital>0).map(t => t.capital);
+  const avgCap    = caps.length ? Math.round(caps.reduce((s,c) => s+c, 0)/caps.length) : 0;
+  const weekMap   = {};
+  yearData.forEach(t => {
     if (t.result==='In Progress') return;
     weekMap[t.exp] = (weekMap[t.exp]||0) + t.profit;
   });
-  const weekVals = Object.values(weekMap);
-  const weeklyAvg = weekVals.length ? Math.round(weekVals.reduce((s,v)=>s+v,0)/weekVals.length) : 0;
+  const weekVals  = Object.values(weekMap);
+  const weeklyAvg = weekVals.length ? Math.round(weekVals.reduce((s,v) => s+v, 0)/weekVals.length) : 0;
+  const wheelPnl  = Math.round(yearData.reduce((s,t) => s+(t.wheel||0), 0));
 
-  const el = id => document.getElementById(id);
-  const fmtM = n => '$'+Math.abs(Math.round(n)).toLocaleString();
+  const el   = id => document.getElementById(id);
+  const fmtM = n  => '$'+Math.abs(Math.round(n)).toLocaleString();
   if (el('ms-total-prem')) el('ms-total-prem').textContent = fmtM(totalPrem);
-  const wheelPnl = Math.round(allData.reduce((s,t) => s + (t.wheel||0), 0));
   if (el('ms-wheel')) {
-    if (wheelPnl === 0) {
-      el('ms-wheel').textContent = '$0';
-    } else if (wheelPnl < 0) {
-      el('ms-wheel').textContent = '−$' + Math.abs(wheelPnl).toLocaleString();
-    } else {
-      el('ms-wheel').textContent = '$' + wheelPnl.toLocaleString();
-    }
+    el('ms-wheel').textContent = wheelPnl === 0 ? '$0' : (wheelPnl < 0 ? '−$'+Math.abs(wheelPnl).toLocaleString() : '$'+wheelPnl.toLocaleString());
   }
   if (el('ms-avg-cap'))    el('ms-avg-cap').textContent = fmtM(avgCap);
   if (el('ms-weekly'))     el('ms-weekly').textContent = fmtM(weeklyAvg);
   if (el('ms-weekly-sub')) el('ms-weekly-sub').textContent = 'Avg over '+weekVals.length+' weeks';
 }
-function filterMiniSum(v, btn) {
-  document.querySelectorAll('#page-minisum .fb').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderMiniSum(v);
+
+// Kept for backward compat — just delegates to page render
+function renderMiniSum(filter) {
+  msTickerFilter = filter || 'all';
+  renderMiniSumPage();
 }
 
 // PAGE NAV
@@ -1497,7 +1692,7 @@ renderProj('2026');
 renderHoodBars();
 renderLots();
 computeAndInjectStats();
-renderMiniSum('all');
+msYearFilter = 'all'; msTickerFilter = 'all'; renderMiniSumPage();
 </script>
 </body>
 </html>
