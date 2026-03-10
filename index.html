@@ -649,7 +649,6 @@ tr:hover td { background: rgba(0,212,255,.03); }
 <script>
 // ===== DATA =====
 // [START:minisumTrades]
-var syncTimestamp = 'Mar 10 2026 · 2:00 PM MDT';
 const minisumTrades = [
   {stock:'TSLL',open:'January 2',exp:'Jan 5',shares:100,strike:'$13.73',type:'Put',prem:17,cost:0,profit:17,capital:1373,ret:'1.2%',result:'Expired',wheel:0,year:'2024',week:1},
   {stock:'TSLL',open:'January 2',exp:'Jan 5',shares:200,strike:'$13.23',type:'Put',prem:14,cost:0,profit:14,capital:2646,ret:'0.5%',result:'Expired',wheel:0,year:'2024',week:1},
@@ -708,7 +707,7 @@ const minisumTrades = [
   {stock:'MARA',open:'November 18',exp:'Nov 22',shares:100,strike:'$16.50',type:'Put',prem:9,cost:0,profit:9,capital:1650,ret:'0.5%',result:'Expired',wheel:0,year:'2024',week:47},
   {stock:'MSTX',open:'November 25',exp:'Nov 29',shares:100,strike:'$65.00',type:'Put',prem:180,cost:0,profit:180,capital:6500,ret:'2.8%',result:'Expired',wheel:0,year:'2024',week:48},
   {stock:'TSLL',open:'November 25',exp:'Nov 29',shares:200,strike:'$18.50',type:'Put',prem:20,cost:0,profit:20,capital:3700,ret:'0.5%',result:'Expired',wheel:0,year:'2024',week:48},
-  {stock:'MARA',open:'December 2',exp:'Dec 6',shares:200,strike:'$20.00',type:'Put',prem:18,cost:0,profit:18,capital:4000,ret:'0.4%',result:'Expired',wheel:0,year:'2024',week:49},
+  {stock:'MARA',open:'December 2',exp:'Dec 6',shares:200,strike:'$20.00',type:'Put',prem:18,cost:0,profit:18,capital:4000,ret:'0.5%',result:'Expired',wheel:0,year:'2024',week:49},
   {stock:'MSTX',open:'December 2',exp:'Dec 6',shares:100,strike:'$65.00',type:'Put',prem:130,cost:0,profit:130,capital:6500,ret:'2.0%',result:'Expired',wheel:0,year:'2024',week:49},
   {stock:'MSTX',open:'December 9',exp:'Dec 13',shares:100,strike:'$65.00',type:'Put',prem:100,cost:-5,profit:95,capital:6500,ret:'1.5%',result:'Bought Back',wheel:0,year:'2024',week:50},
   {stock:'MARA',open:'December 9',exp:'Dec 13',shares:200,strike:'$20.50',type:'Put',prem:18,cost:-2,profit:16,capital:4100,ret:'0.4%',result:'Bought Back',wheel:0,year:'2024',week:50},
@@ -737,7 +736,7 @@ const minisumTrades = [
   {stock:'MSTU',open:'March 3',exp:'Mar 7',shares:100,strike:'$6.50',type:'Call',prem:40,cost:0,profit:40,capital:650,ret:'6.2%',result:'Expired',wheel:0,year:'2025',week:10},
   {stock:'MSTU',open:'March 7',exp:'Mar 7',shares:0,strike:'',type:'trade',prem:0,cost:0,profit:0,capital:0,ret:'',result:'Assigned',wheel:31,year:'2025',week:10},
   {stock:'MSTX',open:'March 11',exp:'Mar 14',shares:400,strike:'$30.00',type:'Call',prem:80,cost:-11,profit:69,capital:12000,ret:'0.6%',result:'Bought Back',wheel:0,year:'2025',week:11},
-  {stock:'MSTU',open:'March 11',exp:'Mar 14',shares:100,strike:'$5.50',type:'Call',prem:10,cost:0,profit:10,capital:550,ret:'1.8%',result:'Assigned',wheel:-6,year:'2025',week:11},
+  {stock:'MSTU',open:'March 11',exp:'Mar 14',shares:100,strike:'$5.50',type:'Call',prem:10,cost:0,profit:10,capital:550,ret:'1.8%',result:'Assigned',wheel:6,year:'2025',week:11},
   {stock:'MSTX',open:'March 14',exp:'Mar 21',shares:400,strike:'$33.00',type:'Call',prem:123,cost:-12,profit:111,capital:13200,ret:'0.8%',result:'Rolled',wheel:0,year:'2025',week:11},
   {stock:'MSTU',open:'March 14',exp:'Mar 14',shares:0,strike:'',type:'trade',prem:0,cost:0,profit:0,capital:0,ret:'',result:'Assigned',wheel:26,year:'2025',week:11},
   {stock:'MSTU',open:'March 17',exp:'Mar 21',shares:200,strike:'$4.70',type:'Put',prem:24,cost:0,profit:24,capital:940,ret:'2.6%',result:'Expired',wheel:0,year:'2025',week:12},
@@ -868,8 +867,7 @@ const minisumTrades = [
   {stock:'HOOD',open:'February 20',exp:'Feb 27',shares:200,strike:'$84.00',type:'Call',prem:94,cost:0,profit:94,capital:16800,ret:'0.6%',result:'Expired',wheel:0,year:'2026',week:8},
   {stock:'TSLL',open:'February 27',exp:'Mar 6',shares:300,strike:'$13.50',type:'Put',prem:57,cost:-3,profit:54,capital:4050,ret:'1.3%',result:'Bought Back',wheel:0,year:'2026',week:9},
   {stock:'HOOD',open:'March 2',exp:'Mar 6',shares:200,strike:'$83.00',type:'Call',prem:104,cost:0,profit:104,capital:16600,ret:'0.6%',result:'Expired',wheel:0,year:'2026',week:10},
-  {stock:'TSLL',open:'March 6',exp:'Mar 13',shares:300,strike:'$12.50',type:'Put',prem:48,cost:0,profit:48,capital:3750,ret:'1.3%',result:'In Progress',wheel:0,year:'2026',week:10},
-  {stock:'HOOD',open:'March 9',exp:'Mar 13',shares:200,strike:'$84.00',type:'Call',prem:144,cost:0,profit:144,capital:16800,ret:'0.9%',result:'In Progress',wheel:0,year:'2026',week:11}
+  {stock:'TSLL',open:'March 6',exp:'Mar 13',shares:300,strike:'$12.50',type:'Put',prem:48,cost:0,profit:48,capital:3750,ret:'1.3%',result:'In Progress',wheel:0,year:'2026',week:10}
 ]; // [END:minisumTrades]
 
 // ════════════════════════════════ HELPERS ════════════════════════════════
@@ -1908,6 +1906,6 @@ window.addEventListener('resize', () => {
     if (name === 'projection') { renderProjection(); }
   }, 200);
 });
-
+</script>
 </body>
 </html>
