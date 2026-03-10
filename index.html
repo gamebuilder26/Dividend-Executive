@@ -1283,7 +1283,7 @@ function renderTradeAnalytics(base) {
 
 function renderTradesTable() {
   const base = filterByYear(tradesYear);
-  const data = tradesTicker==='all' ? base : base.filter(t=>t.stock===tradesTicker);
+  const data = (tradesTicker==='all' ? base : base.filter(t=>t.stock===tradesTicker)).slice().reverse();
   const totP  = data.reduce((s,t)=>s+t.prem, 0);
   const totC  = data.reduce((s,t)=>s+t.cost, 0);
   const totPr = data.reduce((s,t)=>s+t.profit, 0);
