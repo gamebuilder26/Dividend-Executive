@@ -587,17 +587,17 @@ tr:hover td { background: rgba(0,212,255,.03); }
     <div class="ph-row">
       <div>
         <div class="ph-title" style="background:linear-gradient(120deg,var(--g),var(--y));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Projection</div>
-        <div class="ph-sub">Income targets based on 2024–2026 trade history · 218 trades</div>
+        <div class="ph-sub">Weighted multi-year average model · 2024–2026 trade history · auto-smooths as years accumulate</div>
       </div>
     </div>
   </div>
 
   <!-- Context strip: where we've been -->
   <div class="cards cards-4" style="margin-bottom:16px">
-    <div class="card b"><div class="card-label">2024 Full Year</div><div class="card-val b">$4,876</div><div class="card-sub">12 months · baseline year</div></div>
-    <div class="card g"><div class="card-label">2025 Full Year</div><div class="card-val g">$10,469</div><div class="card-sub">+115% YoY · best year</div></div>
+    <div class="card b"><div class="card-label">2024 Full Year</div><div class="card-val b">$4,876</div><div class="card-sub">12 months · $406/mo avg</div></div>
+    <div class="card g"><div class="card-label">2025 Full Year</div><div class="card-val g">$10,469</div><div class="card-sub">+115% YoY · $872/mo avg</div></div>
     <div class="card y"><div class="card-label">2026 YTD</div><div class="card-val y" id="proj-ytd">—</div><div class="card-sub" id="proj-ytd-sub">vs 2025 same period</div></div>
-    <div class="card pu"><div class="card-label">2025 Monthly Avg</div><div class="card-val pu">$872</div><div class="card-sub">Best full-year baseline</div></div>
+    <div class="card pu"><div class="card-label">Weighted Avg Baseline</div><div class="card-val pu">$727/mo</div><div class="card-sub">2024×30% + 2025×70% blend</div></div>
   </div>
 
   <!-- Scenario cards -->
@@ -654,6 +654,150 @@ tr:hover td { background: rgba(0,212,255,.03); }
       <div>
         <div class="ph-title" style="background:linear-gradient(120deg,var(--b),var(--g));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">HOOD</div>
         <div class="ph-sub">Cost basis tracker · 220 shares · Assigned + odd lot purchases</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CALL INCOME · BASIS STEP-DOWN ── -->
+  <div class="panel" style="margin-bottom:24px">
+    <div class="panel-head" style="flex-wrap:wrap;gap:12px">
+      <div class="panel-title"><em>◈</em>Call Income · Basis Step-Down</div>
+      <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+        <div id="hood-call-stats" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"></div>
+        <div style="display:flex;gap:12px;align-items:center;margin-left:8px">
+          <div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:50%;background:#ff2d87;flex-shrink:0"></div><span style="font-size:10px;font-weight:700;color:#ff2d8799;letter-spacing:.04em">Put assigned</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:50%;background:#00ff87;flex-shrink:0"></div><span style="font-size:10px;font-weight:700;color:#00ff8799;letter-spacing:.04em">Call cycle</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:4px 0 0">
+      <div id="hood-call-subhead" style="padding:8px 20px 0;font-size:11px;color:var(--dim)"></div>
+      <div style="padding:12px 20px 20px">
+        <div id="hood-call-chart" style="width:100%;height:300px;position:relative"></div>
+      </div>
+      <!-- ── Basis-to-Market Projection ── -->
+      <div style="border-top:1px solid var(--border);padding:20px">
+        <!-- Header row -->
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+          <div>
+            <span style="font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)">Basis → Market Price Projection</span>
+            <span style="font-size:10px;color:var(--dim);margin-left:10px">@ $104/wk avg · 200 shares · target <span style="color:var(--y);font-weight:800">$74.00</span></span>
+          </div>
+          <div style="display:flex;gap:20px;align-items:baseline">
+            <div style="text-align:right">
+              <div style="font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:2px">Gap to close</div>
+              <div style="font-size:18px;font-weight:900;color:var(--p);font-family:'JetBrains Mono',monospace">$26.42<span style="font-size:11px;color:var(--dim)">/sh</span></div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:2px">Est. weeks</div>
+              <div style="font-size:18px;font-weight:900;color:var(--b);font-family:'JetBrains Mono',monospace">~51</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:2px">Projected date</div>
+              <div style="font-size:18px;font-weight:900;color:var(--g);font-family:'JetBrains Mono',monospace">Mar '27</div>
+            </div>
+          </div>
+        </div>
+        <!-- Progress bars — two scenarios -->
+        <div style="margin-bottom:16px;display:flex;flex-direction:column;gap:14px">
+
+          <!-- Bar 1: 200 assigned shares only -->
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+              <span style="font-size:10px;font-weight:800;color:var(--g);letter-spacing:.06em;text-transform:uppercase">200 Assigned Shares</span>
+              <span style="font-size:10px;color:var(--dim)">basis <span style="color:var(--g);font-weight:800">$100.42</span> → gap <span style="color:var(--p);font-weight:800">$26.42/sh</span> → <span style="color:var(--g);font-weight:700">~51 wk · Mar '27</span></span>
+            </div>
+            <div style="position:relative;height:10px;border-radius:5px;background:rgba(255,255,255,.06)">
+              <div style="height:100%;border-radius:5px;background:linear-gradient(90deg,var(--g),var(--b));width:16.1%;box-shadow:0 0 8px rgba(0,255,135,.4)"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px">
+              <span style="font-size:9px;color:var(--dim)">$105.50 raw assign</span>
+              <span style="font-size:9px;font-weight:700;color:var(--g)">16.1% recovered</span>
+              <span style="font-size:9px;color:var(--dim)">$74.00 target</span>
+            </div>
+          </div>
+
+          <!-- Bar 2: 220 shares — odd lots drag the blended avg, 200sh must reach $72.80 -->
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:10px;font-weight:800;color:var(--b);letter-spacing:.06em;text-transform:uppercase">220 Shares incl. Odd Lots</span>
+                <span style="font-size:9px;background:rgba(255,45,135,.1);border:1px solid rgba(255,45,135,.2);color:var(--p);border-radius:4px;padding:1px 6px;font-weight:700">odd lots stuck at $86.03 · no call income</span>
+              </div>
+              <span style="font-size:10px;color:var(--dim)">200sh must reach <span style="color:var(--p);font-weight:800">$72.80</span> → <span style="color:var(--b);font-weight:700">~53 wk · Mar '27</span></span>
+            </div>
+            <div style="position:relative;height:10px;border-radius:5px;background:rgba(255,255,255,.06)">
+              <!-- range is $105.50 → $72.80 = $32.70. Progress = $105.50 - $100.42 = $5.08 → 15.5% -->
+              <div style="height:100%;border-radius:5px;background:linear-gradient(90deg,var(--b),var(--pu));width:15.5%;box-shadow:0 0 8px rgba(0,212,255,.4)"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px">
+              <span style="font-size:9px;color:var(--dim)">$105.50 raw assign</span>
+              <span style="font-size:9px;font-weight:700;color:var(--b)">15.5% recovered · blended avg $99.11 today</span>
+              <span style="font-size:9px;color:var(--dim)">$72.80 needed → <span style="color:var(--y);font-weight:700">$74 blended avg</span></span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Milestone markers — both scenarios -->
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px">
+          <div style="background:rgba(0,255,135,.06);border:1px solid rgba(0,255,135,.12);border-radius:8px;padding:10px 10px 8px;text-align:center">
+            <div style="font-size:9px;color:var(--dim);margin-bottom:6px;font-weight:700;letter-spacing:.06em">$95/SH</div>
+            <div style="font-size:13px;font-weight:900;color:var(--g);font-family:'JetBrains Mono',monospace">10 wk</div>
+            <div style="font-size:9px;color:var(--dim);margin-top:1px">May '26</div>
+            <div style="height:1px;background:var(--border);margin:6px 0"></div>
+            <div style="font-size:10px;color:var(--dim);margin-bottom:2px">blended $94.18</div>
+            <div style="font-size:12px;font-weight:800;color:var(--b);font-family:'JetBrains Mono',monospace">10 wk</div>
+            <div style="font-size:9px;color:var(--dim);margin-top:1px">May '26</div>
+          </div>
+          <div style="background:rgba(0,255,135,.06);border:1px solid rgba(0,255,135,.12);border-radius:8px;padding:10px 10px 8px;text-align:center">
+            <div style="font-size:9px;color:var(--dim);margin-bottom:6px;font-weight:700;letter-spacing:.06em">$90/SH</div>
+            <div style="font-size:13px;font-weight:900;color:var(--g);font-family:'JetBrains Mono',monospace">20 wk</div>
+            <div style="font-size:9px;color:var(--dim);margin-top:1px">Jul '26</div>
+            <div style="height:1px;background:var(--border);margin:6px 0"></div>
+            <div style="font-size:10px;color:var(--dim);margin-bottom:2px">blended $89.64</div>
+            <div style="font-size:12px;font-weight:800;color:var(--b);font-family:'JetBrains Mono',monospace">20 wk</div>
+            <div style="font-size:9px;color:var(--dim);margin-top:1px">Jul '26</div>
+          </div>
+          <div style="background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.12);border-radius:8px;padding:10px 10px 8px;text-align:center">
+            <div style="font-size:9px;color:var(--dim);margin-bottom:6px;font-weight:700;letter-spacing:.06em">$84/SH</div>
+            <div style="font-size:13px;font-weight:900;color:var(--g);font-family:'JetBrains Mono',monospace">32 wk</div>
+            <div style="font-size:9px;color:var(--dim);margin-top:1px">Oct '26</div>
+            <div style="height:1px;background:var(--border);margin:6px 0"></div>
+            <div style="font-size:10px;color:var(--dim);margin-bottom:2px">blended $84.18</div>
+            <div style="font-size:12px;font-weight:800;color:var(--b);font-family:'JetBrains Mono',monospace">32 wk</div>
+            <div style="font-size:9px;color:var(--dim);margin-top:1px">Oct '26</div>
+          </div>
+          <div style="background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.12);border-radius:8px;padding:10px 10px 8px;text-align:center">
+            <div style="font-size:9px;color:var(--dim);margin-bottom:6px;font-weight:700;letter-spacing:.06em">$78/SH</div>
+            <div style="font-size:13px;font-weight:900;color:var(--g);font-family:'JetBrains Mono',monospace">43 wk</div>
+            <div style="font-size:9px;color:var(--dim);margin-top:1px">Jan '27</div>
+            <div style="height:1px;background:var(--border);margin:6px 0"></div>
+            <div style="font-size:10px;color:var(--dim);margin-bottom:2px">blended $78.73</div>
+            <div style="font-size:12px;font-weight:800;color:var(--b);font-family:'JetBrains Mono',monospace">43 wk</div>
+            <div style="font-size:9px;color:var(--dim);margin-top:1px">Jan '27</div>
+          </div>
+          <div style="background:rgba(255,230,0,.05);border:1px solid rgba(255,230,0,.15);border-radius:8px;padding:10px 10px 8px;text-align:center">
+            <div style="font-size:9px;color:var(--dim);margin-bottom:6px;font-weight:700;letter-spacing:.06em">$74/SH</div>
+            <div style="font-size:13px;font-weight:900;color:var(--g);font-family:'JetBrains Mono',monospace">51 wk</div>
+            <div style="font-size:9px;color:var(--dim);margin-top:1px">Mar '27</div>
+            <div style="height:1px;background:rgba(255,230,0,.15);margin:6px 0"></div>
+            <div style="font-size:10px;color:var(--dim);margin-bottom:2px">blended $75.09</div>
+            <div style="font-size:12px;font-weight:800;color:var(--b);font-family:'JetBrains Mono',monospace">51 wk</div>
+            <div style="font-size:9px;color:var(--dim);margin-top:1px">Mar '27</div>
+          </div>
+          <div style="background:rgba(255,230,0,.09);border:1px solid rgba(255,230,0,.25);border-radius:8px;padding:10px 10px 8px;text-align:center;box-shadow:0 0 12px rgba(255,230,0,.08)">
+            <div style="font-size:9px;color:var(--y);margin-bottom:6px;font-weight:800;letter-spacing:.06em">🎯 $74 BLEND</div>
+            <div style="font-size:10px;color:var(--dim);margin-bottom:2px">200sh → $72.80</div>
+            <div style="font-size:13px;font-weight:900;color:var(--y);font-family:'JetBrains Mono',monospace">53 wk</div>
+            <div style="font-size:9px;color:var(--y);margin-top:1px;font-weight:700">Mar '27</div>
+          </div>
+        </div>
+        <!-- Legend -->
+        <div style="display:flex;gap:16px;margin-top:10px">
+          <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:3px;border-radius:2px;background:var(--g)"></div><span style="font-size:9px;color:var(--dim)">200 assigned shares — calls reduce basis directly</span></div>
+          <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:3px;border-radius:2px;background:var(--b)"></div><span style="font-size:9px;color:var(--dim)">220 shares — blended avg shown, odd lots drag 200sh target to $72.80</span></div>
+        </div>
       </div>
     </div>
   </div>
@@ -799,6 +943,7 @@ tr:hover td { background: rgba(0,212,255,.03); }
       </table>
     </div>
   </div>
+
 </div>
 
 
@@ -1651,43 +1796,63 @@ function renderTickers() {
 function renderProjection() {
   // ── Build monthly actuals by year ──────────────────────────────────────────
   const byYM = {};
-  MONTHS.forEach(m => { byYM['2024_'+m]=0; byYM['2025_'+m]=0; byYM['2026_'+m]=0; });
+  const MONTHS_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  MONTHS_LONG.forEach(m => { byYM['2024_'+m]=0; byYM['2025_'+m]=0; byYM['2026_'+m]=0; });
   minisumTrades.forEach(t => {
-    const k = t.year + '_' + mon(t.open);
+    // use long month name since t.open is e.g. "January 9"
+    const longMon = t.open.split(' ')[0];
+    const k = t.year + '_' + longMon;
     if (byYM[k] !== undefined) byYM[k] += t.profit;
   });
 
-  // ── Year totals (hardcoded from full analysis — won't change unless new years added)
   const y24total = 4876, y25total = 10469;
-  const y26actual = MONTHS.map(m => Math.round(byYM['2026_'+m]));
-  const y26ytd    = y26actual.reduce((s,v)=>s+v, 0);
-  const y26months = y26actual.filter(v=>v>0).length;
+  const y24monthly = MONTHS_LONG.map(m => Math.round(byYM['2024_'+m]));
+  const y25monthly = MONTHS_LONG.map(m => Math.round(byYM['2025_'+m]));
+  const y26actual  = MONTHS_LONG.map(m => Math.round(byYM['2026_'+m]));
+  const y26ytd     = y26actual.reduce((s,v)=>s+v, 0);
+  const y26months  = y26actual.filter(v=>v>0).length;
 
-  // 2025 monthly rhythm — the seasonal baseline
-  const y25monthly = MONTHS.map(m => Math.round(byYM['2025_'+m]));
-  // [724, 642, 859, 805, 714, 560, 644, 807, 1030, 1843, 1031, 810]
+  // ── Weighted multi-year baseline ───────────────────────────────────────────
+  // For months where 2026 actuals exist: weight 2024×15% + 2025×35% + 2026×50%
+  // For future months: weight 2024×30% + 2025×70%
+  // As more years accumulate, this auto-smooths — 2025's outlier months get diluted
+  const weightedBase = MONTHS_LONG.map((m, i) => {
+    const v24 = y24monthly[i], v25 = y25monthly[i], v26 = y26actual[i];
+    return v26 > 0
+      ? Math.round(v24*0.15 + v25*0.35 + v26*0.50)
+      : Math.round(v24*0.30 + v25*0.70);
+  });
 
-  // ── 3 Scenarios ────────────────────────────────────────────────────────────
-  // Conservative: flat 2025 (no growth) — achievable, already done it
-  // Base:         +15% over 2025 — modest growth, below historical trend
-  // Optimistic:   +30% over 2025 — aggressive but half the 2024→2025 growth rate
+  const wbAnnual = weightedBase.reduce((s,v)=>s+v, 0); // ~$8,723
+
+  // ── 3 Scenarios anchored to weighted base, not raw 2025 ───────────────────
+  // Conservative: weighted base pace — realistic given 2026 YTD tracking below 2025
+  // Base:         +10% over weighted base — modest improvement
+  // Optimistic:   +20% over weighted base — roughly matching 2025's best year
+  // For projected months: multiply weighted base by scenario multiplier
+  // For completed 2026 months: use actual (locked in)
   const scenarios = [
-    { key:'cons',  label:'Conservative', color:'#5a8090',  mult:1.00,
-      desc:'Flat 2025 pace',        detail:'Match your best full year. Zero growth required.',
-      annual: Math.round(y25total * 1.00) },
-    { key:'base',  label:'Base',         color:'var(--b)', mult:1.15,
-      desc:'+15% over 2025',        detail:'Modest growth. Add 1–2 higher-capital weeks/month.',
-      annual: Math.round(y25total * 1.15) },
-    { key:'opt',   label:'Optimistic',   color:'var(--g)', mult:1.30,
-      desc:'+30% over 2025',        detail:'Half the pace of last year\'s 115% growth.',
-      annual: Math.round(y25total * 1.30) },
+    { key:'cons', label:'Conservative', color:'#5a8090', mult:1.00,
+      desc:'Weighted avg pace',
+      detail:'Blends 2024 + 2025 + 2026 actuals. Realistic given current YTD tracking 31% below 2025 pace.',
+      annual: Math.round(y26ytd + MONTHS_LONG.slice(y26months).reduce((s,m,i) => s + weightedBase[y26months+i]*1.00, 0)) },
+    { key:'base', label:'Base',         color:'var(--b)', mult:1.10,
+      desc:'+10% over weighted avg',
+      detail:'Modest pickup in H2. Seasonal strength (Sep–Nov) has historically been your best stretch.',
+      annual: Math.round(y26ytd + MONTHS_LONG.slice(y26months).reduce((s,m,i) => s + weightedBase[y26months+i]*1.10, 0)) },
+    { key:'opt',  label:'Optimistic',   color:'var(--g)', mult:1.20,
+      desc:'+20% over weighted avg',
+      detail:'Would nearly match 2025\'s full-year total. Requires consistent H2 performance — achievable but not guaranteed.',
+      annual: Math.round(y26ytd + MONTHS_LONG.slice(y26months).reduce((s,m,i) => s + weightedBase[y26months+i]*1.20, 0)) },
   ];
 
   // ── YTD status card ────────────────────────────────────────────────────────
   const y25samePeriod = y25monthly.slice(0, y26months).reduce((s,v)=>s+v, 0);
+  const ytdVsWb = Math.round(weightedBase.slice(0, y26months).reduce((s,v)=>s+v, 0));
   const ytdPct = y25samePeriod > 0 ? Math.round(y26ytd / y25samePeriod * 100) : 0;
+  const ytdVsWbPct = ytdVsWb > 0 ? Math.round(y26ytd / ytdVsWb * 100) : 0;
   $('proj-ytd').textContent = '$' + y26ytd.toLocaleString();
-  $('proj-ytd-sub').textContent = ytdPct + '% of 2025 pace · ' + y26months + ' months';
+  $('proj-ytd-sub').textContent = ytdPct + '% of 2025 pace · ' + ytdVsWbPct + '% of wtd avg';
 
   // ── Scenario cards ─────────────────────────────────────────────────────────
   $('scenario-cards').innerHTML = scenarios.map(s => `
@@ -1704,15 +1869,14 @@ function renderProjection() {
     </div>`).join('');
 
   // ── Trajectory chart ───────────────────────────────────────────────────────
-  // Show: 2024 actuals, 2025 actuals, 2026 actuals so far, then 3 scenario lines
   const allActual = [
-    ...MONTHS.map(m => ({ label: m+' 24', val: Math.round(byYM['2024_'+m]), year: '2024' })),
-    ...MONTHS.map(m => ({ label: m+' 25', val: Math.round(byYM['2025_'+m]), year: '2025' })),
-    ...MONTHS.slice(0, y26months).map(m => ({ label: m+' 26', val: Math.round(byYM['2026_'+m]), year: '2026' })),
+    ...MONTHS_LONG.map(m => ({ label: m.slice(0,3)+' 24', val: Math.round(byYM['2024_'+m]), year: '2024' })),
+    ...MONTHS_LONG.map(m => ({ label: m.slice(0,3)+' 25', val: Math.round(byYM['2025_'+m]), year: '2025' })),
+    ...MONTHS_LONG.slice(0, y26months).map(m => ({ label: m.slice(0,3)+' 26', val: Math.round(byYM['2026_'+m]), year: '2026' })),
   ];
-  // Projection points: remaining 2026 months × 3 scenarios
-  const remainingMons = MONTHS.slice(y26months);
-  const projStartIdx  = allActual.length - 1; // connect from last actual
+  const remainingMons  = MONTHS_LONG.slice(y26months);
+  const remainingIdxs  = remainingMons.map((m,i) => y26months + i); // indices into weightedBase
+  const projStartIdx   = allActual.length - 1;
 
   const W = ($('proj-line').clientWidth || 820);
   const H = 280, padL=52, padR=24, padT=28, padB=36;
@@ -1722,7 +1886,7 @@ function renderProjection() {
 
   const allVals = [
     ...allActual.map(p => p.val),
-    ...remainingMons.flatMap(m => scenarios.map(s => Math.round(byYM['2025_'+m] * s.mult)))
+    ...remainingIdxs.flatMap(ri => scenarios.map(s => Math.round(weightedBase[ri] * s.mult)))
   ];
   const maxV = Math.max(...allVals, 1);
   const yS   = v => padT + chartH - (Math.max(v, 0) / maxV) * chartH;
@@ -1746,12 +1910,11 @@ function renderProjection() {
   ls.push(`<text x="${xS(18)}" y="${padT-8}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9" font-weight="800" fill="#3a5060">2025</text>`);
   ls.push(`<text x="${xS(24+remainingMons.length/2)}" y="${padT-8}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="9" font-weight="800" fill="#3a6050">2026</text>`);
 
-  // Scenario projected lines (draw first, under actual)
+  // Scenario projected lines
   scenarios.forEach(s => {
     const startPt = `${xS(projStartIdx)},${yS(allActual[projStartIdx].val)}`;
-    const projPts = remainingMons.map((m,i) => `${xS(allActual.length+i)},${yS(Math.round(byYM['2025_'+m]*s.mult))}`);
+    const projPts = remainingIdxs.map((ri,i) => `${xS(allActual.length+i)},${yS(Math.round(weightedBase[ri]*s.mult))}`);
     ls.push(`<polyline points="${startPt} ${projPts.join(' ')}" fill="none" stroke="${s.color}" stroke-width="2" stroke-dasharray="6,4" opacity="0.7"/>`);
-    // End dot
     if (projPts.length > 0) {
       const last = projPts[projPts.length-1].split(',');
       ls.push(`<circle cx="${last[0]}" cy="${last[1]}" r="3" fill="${s.color}" opacity="0.7"/>`);
@@ -1791,67 +1954,68 @@ function renderProjection() {
 
   // ── Milestones ─────────────────────────────────────────────────────────────
   const milestones = [
-    { target: 500,  label: '$500/mo',  note: 'Floor — never missed in 2025' },
+    { target: 500,  label: '$500/mo',  note: 'Floor — hit every month in 2025' },
     { target: 750,  label: '$750/mo',  note: 'Solid — hit 7 of 12 months in 2025' },
     { target: 1000, label: '$1,000/mo',note: 'Strong — hit 3 of 12 months in 2025' },
-    { target: 1200, label: '$1,200/mo',note: 'Stretch — October 2025 territory' },
-    { target: 1500, label: '$1,500/mo',note: 'Ambitious — only Oct 2025 came close' },
+    { target: 1200, label: '$1,200/mo',note: 'Stretch — Sep/Oct/Nov 2025 territory' },
+    { target: 1500, label: '$1,500/mo',note: 'Ambitious — Sep 2025 was your closest' },
     { target: 2000, label: '$2,000/mo',note: 'Peak — beyond any single month to date' },
   ];
   const hitColor = '#00ff87', partColor = '#ffe600', noColor = '#3a5060';
   $('proj-milestones').innerHTML = milestones.map(ms => {
+    const hits24 = y24monthly.filter(v => v >= ms.target).length;
     const hits25 = y25monthly.filter(v => v >= ms.target).length;
     const hits26 = y26actual.filter(v => v >= ms.target).length;
-    const pct    = Math.round(Math.min(y25total, ms.target * 12) / (ms.target * 12) * 100);
-    const barPct = Math.min(100, Math.round(Math.max(...y25monthly) / ms.target * 100));
+    const hitsWb = weightedBase.filter(v => v >= ms.target).length;
     const col    = hits25 >= 6 ? hitColor : hits25 >= 2 ? partColor : noColor;
     return `<div style="margin-bottom:16px">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
         <div style="font-size:13px;font-weight:800;color:${col}">${ms.label}</div>
-        <div style="font-size:10px;font-weight:700;color:var(--dim)">${hits25}/12 months in 2025 · ${hits26}/3 in 2026</div>
+        <div style="font-size:10px;font-weight:700;color:var(--dim)">${hits24}/12 in 2024 · ${hits25}/12 in 2025 · ${hits26}/${y26months} in 2026</div>
       </div>
       <div style="height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-bottom:5px">
         <div style="height:100%;width:${Math.min(100,hits25/12*100)}%;background:${col};border-radius:3px;box-shadow:0 0 6px ${col}66"></div>
       </div>
-      <div style="font-size:10px;color:var(--dim)">${ms.note}</div>
+      <div style="font-size:10px;color:var(--dim)">${ms.note} · weighted avg hits this ${hitsWb}/12 months</div>
     </div>`;
   }).join('');
 
   // ── Assumptions ────────────────────────────────────────────────────────────
-  const t6months = MONTHS.slice(-6).map(m=>byYM['2025_'+m]||0);
-  const trail6avg = Math.round(t6months.reduce((s,v)=>s+v,0)/6);
+  const wbMonthlyAvg = Math.round(wbAnnual / 12);
   $('proj-assumptions').innerHTML = `
     <div style="display:flex;flex-direction:column;gap:12px">
       <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px">
-        <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px">Growth Basis</div>
-        <div style="font-size:12px;color:var(--text);line-height:1.6">2025 monthly rhythm scaled by scenario multiplier. Seasonal highs (Oct–Nov) and lows (Jun) preserved.</div>
+        <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px">Projection Basis</div>
+        <div style="font-size:12px;color:var(--text);line-height:1.6">Weighted multi-year average: 2024 (30%) + 2025 (70%) for future months. Where 2026 actuals exist, those replace the blend at 50% weight. Automatically smooths as more years accumulate.</div>
       </div>
       <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px">
-        <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px">Why not model 2024→2025 growth again?</div>
-        <div style="font-size:12px;color:var(--text);line-height:1.6">2024→2025 grew +115%, largely from adding new tickers and increasing trade frequency. That step-change is unlikely to repeat from the same base.</div>
+        <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px">Weighted Avg Baseline</div>
+        <div style="font-size:26px;font-weight:900;color:var(--b)">${'$'+wbMonthlyAvg.toLocaleString()}<span style="font-size:12px;color:var(--dim)">/mo · $${wbAnnual.toLocaleString()}/yr</span></div>
+        <div style="font-size:11px;color:var(--dim);margin-top:4px">vs $${Math.round(y24total/12).toLocaleString()}/mo in 2024 · $${Math.round(y25total/12).toLocaleString()}/mo in 2025</div>
       </div>
       <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px">
-        <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px">2026 YTD pace</div>
-        <div style="font-size:12px;color:var(--text);line-height:1.6">Running at ${ytdPct}% of 2025's Jan–Mar. ${ytdPct >= 100 ? 'Ahead of pace.' : 'Behind pace — strong Q4 could recover the gap given seasonal tailwinds.'}</div>
+        <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px">2026 YTD vs Weighted Avg</div>
+        <div style="font-size:12px;color:var(--text);line-height:1.6">Running at <strong style="color:${ytdVsWbPct>=100?'var(--g)':'var(--p)'}">${ytdVsWbPct}%</strong> of the weighted average Jan–Mar. ${ytdVsWbPct >= 100 ? 'Tracking ahead — conservative scenario within reach.' : 'Tracking below — H2 seasonal strength (Sep–Nov) historically recovers early-year shortfalls.'}</div>
       </div>
       <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:14px">
-        <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px">Win rate (2024–2026)</div>
-        <div style="font-size:26px;font-weight:900;color:var(--g)">61.9% <span style="font-size:12px;color:var(--dim)">expired + rolled</span></div>
+        <div style="font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px">Why weighted avg beats YoY</div>
+        <div style="font-size:12px;color:var(--text);line-height:1.6">2025's +115% growth was a one-time step-change. Projecting +15–30% off that again assumes the same expansion repeats. The weighted avg anchors to what you've actually averaged across both years.</div>
       </div>
     </div>`;
 
   // ── Monthly table ──────────────────────────────────────────────────────────
-  $('proj-body').innerHTML = MONTHS.map((m, i) => {
-    const a25  = y25monthly[i];
-    const a26  = y26actual[i] || null;
-    const cons = Math.round(a25 * 1.00);
-    const base = Math.round(a25 * 1.15);
-    const opt  = Math.round(a25 * 1.30);
-    const hasFull = a26 !== null;
+  $('proj-body').innerHTML = MONTHS_LONG.map((m, i) => {
+    const a25   = y25monthly[i];
+    const a26   = y26actual[i] || null;
+    const wb    = weightedBase[i];
+    const cons  = Math.round(wb * 1.00);
+    const base  = Math.round(wb * 1.10);
+    const opt   = Math.round(wb * 1.20);
+    const hasFull = a26 !== null && a26 > 0;
     const statusColor = hasFull && a26 >= opt ? 'var(--g)' : hasFull && a26 >= base ? 'var(--b)' : hasFull && a26 >= cons ? 'var(--y)' : hasFull ? 'var(--p)' : 'var(--dim)';
     const statusText  = hasFull && a26 >= opt ? '🟢 Optimistic' : hasFull && a26 >= base ? '🔵 Base' : hasFull && a26 >= cons ? '🟡 Conservative' : hasFull ? '🔴 Below target' : '—';
     return `<tr>
-      <td><strong>${m}</strong></td>
+      <td><strong>${m.slice(0,3)}</strong></td>
       <td class="r dim">${fmt(a25)}</td>
       <td class="r" style="color:#5a8090">${fmt(cons)}</td>
       <td class="r" style="color:var(--b)">${fmt(base)}</td>
@@ -1861,11 +2025,11 @@ function renderProjection() {
     </tr>`;
   }).join('');
 
-  const totCons = Math.round(y25total * 1.00);
-  const totBase = Math.round(y25total * 1.15);
-  const totOpt  = Math.round(y25total * 1.30);
+  const totCons = scenarios.find(s=>s.key==='cons').annual;
+  const totBase = scenarios.find(s=>s.key==='base').annual;
+  const totOpt  = scenarios.find(s=>s.key==='opt').annual;
   $('proj-foot').innerHTML = `<tr style="background:rgba(0,255,135,.04);font-weight:900">
-    <td>Full Year Total</td>
+    <td>Full Year</td>
     <td class="r dim">${fmt(y25total)}</td>
     <td class="r" style="color:#5a8090">${fmt(totCons)}</td>
     <td class="r" style="color:var(--b)">${fmt(totBase)}</td>
@@ -2118,6 +2282,177 @@ function renderHouse() {
   }
 }
 
+// ════════════════════════════════ HOOD CALL TRACKER ════════════════════════════════
+function renderHoodCallTracker() {
+  // ── Accurate basis step-down ──
+  // History:
+  //   Nov 17 2025: put assigned 100sh @ $110, then Nov 24 call assigned → those shares CALLED AWAY, gone.
+  //   Current 200 shares came from two separate puts in Jan 2026:
+  //     ① Jan 9 open / Jan 16 exp: 100sh put @ $109 strike, $103 prem → effective basis $107.97/sh
+  //     ② Jan 26 open / Jan 30 exp: 100sh put @ $102 strike, $80 prem  → effective basis $101.20/sh
+  //   Calls only counted from Jan 16 2026 onward (first current assignment).
+
+  const RAW_ASSIGN = 105.50; // avg raw strike (100×$109 + 100×$102) / 200
+
+  const cycles = [
+    // ── Assignment 1: Jan 9 put → Jan 16 assigned ──
+    // effective basis = $109 − ($103/100) = $107.97/sh
+    { label:'Assign 1',   date:"Jan 16 '26",  basis:107.97, drop:0,     prem:103, note:'100sh · $109 put · $103 prem',        type:'assign', isStart:true },
+
+    // ── Cycle 1: Jan 20 rolled + Jan 23 expired — both on 100 shares ──
+    // profit $105 + $196 = $301 / 100sh = $3.01/sh drop
+    { label:'Cycle 1',    date:"Jan 23 '26",  basis:104.96, drop:-3.01, prem:301, note:'100sh · $110c rolled + $111c expired', type:'call'   },
+
+    // ── Assignment 2: Jan 26 put → Jan 30 assigned — 100 more shares ──
+    // new lot basis: $102 − ($80/100) = $101.20/sh
+    // blended: ($104.96×100 + $101.20×100) / 200 = $103.08/sh
+    { label:'Assign 2',   date:"Jan 30 '26",  basis:103.08, drop:-1.88, prem:80,  note:'+100sh · $102 put · $80 prem · blended 200sh', type:'assign' },
+
+    // ── Calls below — all on 200 shares ──
+    // Cycle 2: Feb 6 bought back — $78 / 200sh = $0.39/sh
+    { label:'Cycle 2',    date:"Feb 13 '26",  basis:102.69, drop:-0.39, prem:78,  note:'200sh · $104c bought back',            type:'call'   },
+
+    // Cycle 3: Feb 17 two trades ($80c BB $28 + $82c rolled $84) = $112 / 200sh = $0.56/sh
+    { label:'Cycle 3',    date:"Feb 20 '26",  basis:102.13, drop:-0.56, prem:112, note:'200sh · $80c + $82c · $112 total',     type:'call'   },
+
+    // Cycle 4: Feb 20 expired — $94 / 200sh = $0.47/sh
+    { label:'Cycle 4',    date:"Feb 27 '26",  basis:101.66, drop:-0.47, prem:94,  note:'200sh · $84c expired',                 type:'call'   },
+
+    // Cycle 5: Mar 2 expired — $104 / 200sh = $0.52/sh
+    { label:'Cycle 5',    date:"Mar 6 '26",   basis:101.14, drop:-0.52, prem:104, note:'200sh · $83c expired',                 type:'call'   },
+
+    // Cycle 6: Mar 9 expired — $144 / 200sh = $0.72/sh
+    { label:'Cycle 6',    date:"Mar 13 '26",  basis:100.42, drop:-0.72, prem:144, note:'200sh · $84c expired',                 type:'call'   },
+  ];
+
+  const callCycles   = cycles.filter(c => c.type === 'call');
+  const totalCallPrem = callCycles.reduce((s,c) => s+c.prem, 0);   // $833
+  const totalPutPrem  = cycles.filter(c=>c.type==='assign' && !c.isStart).reduce((s,c)=>s+c.prem,0) + (cycles[0].prem); // $103+$80
+  const finalBasis   = cycles[cycles.length-1].basis;
+  const totalReduc   = RAW_ASSIGN - finalBasis;
+  const numCallCycles = callCycles.length;
+
+  // ── Stats header ──
+  const statsEl = $('hood-call-stats');
+  if (statsEl) {
+    const sep  = `<div style="width:1px;height:30px;background:var(--border)"></div>`;
+    const stat = (lbl, val, col) =>
+      `<div style="text-align:right">
+        <div style="font-size:9px;color:var(--dim);font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px">${lbl}</div>
+        <div style="font-size:14px;font-weight:900;color:${col};font-family:'JetBrains Mono',monospace">${val}</div>
+      </div>`;
+    statsEl.innerHTML = [
+      stat('Raw Assign Avg',  '$'+RAW_ASSIGN.toFixed(2)+'/sh',       'var(--p)'),
+      sep,
+      stat('Call-Adj Basis',  '$'+finalBasis.toFixed(2)+'/sh',       'var(--g)'),
+      sep,
+      stat('Call Premium',    '$'+totalCallPrem.toLocaleString(),     'var(--b)'),
+      sep,
+      stat('Total Reduction', '−$'+totalReduc.toFixed(2)+'/sh',      'var(--g)'),
+    ].join('');
+  }
+
+  const subEl = $('hood-call-subhead');
+  if (subEl) {
+    subEl.innerHTML =
+      `<span style="color:var(--p);font-weight:700">2 assignments</span> Jan–Jan 2026 &nbsp;·&nbsp; `+
+      `<span style="color:var(--g);font-weight:700">${numCallCycles} call cycles</span> since Jan 16 &nbsp;·&nbsp; `+
+      `put premiums <span style="color:var(--b);font-weight:700">$${(103+80).toLocaleString()}</span> + `+
+      `call premiums <span style="color:var(--g);font-weight:700">$${totalCallPrem.toLocaleString()}</span> &nbsp;·&nbsp; `+
+      `basis stepped down <span style="color:var(--g);font-weight:700">$${totalReduc.toFixed(2)}/sh</span> from raw assign`;
+  }
+
+  // ── SVG Chart ──
+  const container = $('hood-call-chart');
+  if (!container) return;
+
+  const W  = container.clientWidth || 780;
+  const H  = 300;
+  const PL = 58, PR = 76, PT = 88, PB = 64;
+  const cW = W - PL - PR;
+  const cH = H - PT - PB;
+  const n  = cycles.length;
+  const xStep = cW / (n - 1);
+
+  const minV   = Math.min(...cycles.map(c=>c.basis)) - 0.6;
+  const maxV   = RAW_ASSIGN + 1.2;   // extra headroom so first dot labels don't clip
+  const vRange = maxV - minV;
+
+  const px = i => PL + i * xStep;
+  const py = v => PT + cH * (1 - (v - minV) / vRange);
+
+  let s = [`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:hidden">`];
+
+  s.push(`<defs>
+    <linearGradient id="hoodCG2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#00ff87" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#00ff87" stop-opacity="0.02"/>
+    </linearGradient>
+    <filter id="hoodGlow2"><feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>`);
+
+  // y gridlines
+  for (let v = Math.floor(minV)+1; v <= Math.ceil(maxV); v++) {
+    if (v <= maxV && v >= minV) {
+      const gy = py(v);
+      s.push(`<line x1="${PL}" y1="${gy}" x2="${W-PR}" y2="${gy}" stroke="rgba(26,37,53,.55)" stroke-width="1"/>`);
+      s.push(`<text x="${PL-7}" y="${gy+4}" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="9" font-weight="600" fill="#3a5060">$${v}</text>`);
+    }
+  }
+
+  // raw assign dashed reference line
+  const aY = py(RAW_ASSIGN);
+  s.push(`<line x1="${PL}" y1="${aY}" x2="${W-PR}" y2="${aY}" stroke="rgba(255,45,135,.4)" stroke-width="1.5" stroke-dasharray="5,4"/>`);
+  s.push(`<text x="${W-PR+6}" y="${aY+4}" font-family="Outfit,sans-serif" font-size="9" font-weight="900" fill="#ff2d87">$${RAW_ASSIGN.toFixed(2)}</text>`);
+  s.push(`<text x="${W-PR+6}" y="${aY+15}" font-family="Outfit,sans-serif" font-size="8" fill="#ff2d8780">RAW AVG</text>`);
+
+  // staircase path
+  let pathD = `M ${px(0)} ${py(cycles[0].basis)}`;
+  for (let i=1; i<n; i++) pathD += ` H ${px(i)} V ${py(cycles[i].basis)}`;
+  pathD += ` H ${W-PR}`;
+
+  s.push(`<path d="${pathD} V ${PT+cH} H ${PL} Z" fill="url(#hoodCG2)"/>`);
+  s.push(`<path d="${pathD}" fill="none" stroke="#00ff87" stroke-width="2.5" stroke-linejoin="miter" filter="url(#hoodGlow2)"/>`);
+
+  // dots + labels
+  for (let i=0; i<n; i++) {
+    const c   = cycles[i];
+    const x   = px(i);
+    const y   = py(c.basis);
+    const isA = c.type === 'assign';
+    const dotC = isA ? '#ff2d87' : '#00ff87';
+    const txtC = isA ? '#ff2d87' : '#00ff87';
+
+    // drop label — centered on the HORIZONTAL segment leading INTO this dot, just below the line
+    // This guarantees no overlap with basis labels (which sit above dots at segment ends)
+    if (i > 0 && c.drop !== 0 && c.type !== 'assign') {
+      const prevX = px(i - 1);
+      const midX  = (prevX + x) / 2;
+      const segY  = py(cycles[i-1].basis); // horizontal segment runs at previous basis y
+      const dropTxt = `${c.drop.toFixed(2)}/sh`;
+      // dark pill background
+      s.push(`<rect x="${midX-34}" y="${segY+6}" width="68" height="16" rx="3" fill="rgba(9,13,20,.9)"/>`);
+      s.push(`<text x="${midX}" y="${segY+18}" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" font-weight="800" fill="#00d4ff">${dropTxt}</text>`);
+    }
+
+    // glow ring
+    if (!isA) s.push(`<circle cx="${x}" cy="${y}" r="9" fill="rgba(0,255,135,.10)"/>`);
+    // dot
+    s.push(`<circle cx="${x}" cy="${y}" r="${isA?7:5}" fill="${dotC}" stroke="#050709" stroke-width="2.5"/>`);
+
+    // basis label above dot
+    s.push(`<text x="${x}" y="${y-14}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="${c.isStart?13:11}" font-weight="900" fill="${txtC}">$${c.basis.toFixed(2)}</text>`);
+
+    // x-axis labels
+    const ly1 = PT+cH+14, ly2 = PT+cH+27;
+    s.push(`<text transform="rotate(-38,${x},${ly1})" x="${x}" y="${ly1}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" font-weight="800" letter-spacing=".06em" fill="${isA?'#ff2d87':'#5a7080'}">${c.label.toUpperCase()}</text>`);
+    s.push(`<text transform="rotate(-38,${x},${ly2})" x="${x}" y="${ly2}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" font-weight="600" fill="#3a5060">${c.date}</text>`);
+  }
+
+  s.push('</svg>');
+  container.innerHTML = s.join('');
+}
+
 // ════════════════════════════════ HOOD TAB ════════════════════════════════
 function renderHood() {
   // ── Odd lot purchases ──
@@ -2214,6 +2549,9 @@ function renderHood() {
       <td colspan="2"></td>
     </tr>`;
   }
+
+  // ── Call basis step-down chart ──
+  setTimeout(renderHoodCallTracker, 50);
 }
 
 // ════════════════════════════════ SYNC FOOTER ════════════════════════════════
