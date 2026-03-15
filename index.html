@@ -672,7 +672,7 @@ tr:hover td { background: rgba(0,212,255,.03); }
     <div style="padding:4px 0 0">
       <div id="hood-call-subhead" style="padding:8px 20px 0;font-size:11px;color:var(--dim)"></div>
       <div style="padding:12px 20px 20px">
-        <div id="hood-call-chart" style="width:100%;height:300px;position:relative"></div>
+        <div id="hood-call-chart" style="width:100%;height:320px;position:relative"></div>
       </div>
       <!-- ── Basis-to-Market Projection ── -->
       <div style="border-top:1px solid var(--border);padding:20px">
@@ -697,105 +697,61 @@ tr:hover td { background: rgba(0,212,255,.03); }
             </div>
           </div>
         </div>
-        <!-- Progress bars — two scenarios -->
-        <div style="margin-bottom:16px;display:flex;flex-direction:column;gap:14px">
 
-          <!-- Bar 1: 200 assigned shares only -->
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
-              <span style="font-size:10px;font-weight:800;color:var(--g);letter-spacing:.06em;text-transform:uppercase">200 Assigned Shares</span>
-              <span style="font-size:10px;color:var(--dim)">basis <span style="color:var(--g);font-weight:800">$100.42</span> → gap <span style="color:var(--p);font-weight:800">$26.42/sh</span> → <span style="color:var(--g);font-weight:700">~51 wk · Mar '27</span></span>
-            </div>
-            <div style="position:relative;height:10px;border-radius:5px;background:rgba(255,255,255,.06)">
-              <div style="height:100%;border-radius:5px;background:linear-gradient(90deg,var(--g),var(--b));width:16.1%;box-shadow:0 0 8px rgba(0,255,135,.4)"></div>
-            </div>
-            <div style="display:flex;justify-content:space-between;margin-top:4px">
-              <span style="font-size:9px;color:var(--dim)">$105.50 raw assign</span>
-              <span style="font-size:9px;font-weight:700;color:var(--g)">16.1% recovered</span>
-              <span style="font-size:9px;color:var(--dim)">$74.00 target</span>
-            </div>
+        <!-- Single progress bar: 200 assigned shares -->
+        <div style="margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+            <span style="font-size:10px;font-weight:800;color:var(--g);letter-spacing:.06em;text-transform:uppercase">200 Assigned Shares · Call-Adj Basis</span>
+            <span style="font-size:10px;color:var(--dim)">basis <span style="color:var(--g);font-weight:800">$100.42</span> → gap <span style="color:var(--p);font-weight:800">$26.42/sh</span> → <span style="color:var(--g);font-weight:700">~51 wk · Mar '27</span></span>
           </div>
-
-          <!-- Bar 2: 220 shares — odd lots drag the blended avg, 200sh must reach $72.80 -->
-          <div>
-            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
-              <div style="display:flex;align-items:center;gap:8px">
-                <span style="font-size:10px;font-weight:800;color:var(--b);letter-spacing:.06em;text-transform:uppercase">220 Shares incl. Odd Lots</span>
-                <span style="font-size:9px;background:rgba(255,45,135,.1);border:1px solid rgba(255,45,135,.2);color:var(--p);border-radius:4px;padding:1px 6px;font-weight:700">odd lots stuck at $86.03 · no call income</span>
-              </div>
-              <span style="font-size:10px;color:var(--dim)">200sh must reach <span style="color:var(--p);font-weight:800">$72.80</span> → <span style="color:var(--b);font-weight:700">~53 wk · Mar '27</span></span>
-            </div>
-            <div style="position:relative;height:10px;border-radius:5px;background:rgba(255,255,255,.06)">
-              <!-- range is $105.50 → $72.80 = $32.70. Progress = $105.50 - $100.42 = $5.08 → 15.5% -->
-              <div style="height:100%;border-radius:5px;background:linear-gradient(90deg,var(--b),var(--pu));width:15.5%;box-shadow:0 0 8px rgba(0,212,255,.4)"></div>
-            </div>
-            <div style="display:flex;justify-content:space-between;margin-top:4px">
-              <span style="font-size:9px;color:var(--dim)">$105.50 raw assign</span>
-              <span style="font-size:9px;font-weight:700;color:var(--b)">15.5% recovered · blended avg $99.11 today</span>
-              <span style="font-size:9px;color:var(--dim)">$72.80 needed → <span style="color:var(--y);font-weight:700">$74 blended avg</span></span>
-            </div>
+          <div style="position:relative;height:10px;border-radius:5px;background:rgba(255,255,255,.06)">
+            <div style="height:100%;border-radius:5px;background:linear-gradient(90deg,var(--g),var(--b));width:16.1%;box-shadow:0 0 8px rgba(0,255,135,.4)"></div>
           </div>
-
+          <div style="display:flex;justify-content:space-between;margin-top:4px">
+            <span style="font-size:9px;color:var(--dim)">$105.50 raw assign</span>
+            <span style="font-size:9px;font-weight:700;color:var(--g)">16.1% recovered</span>
+            <span style="font-size:9px;color:var(--dim)">$74.00 target</span>
+          </div>
         </div>
 
-        <!-- Milestone markers — both scenarios -->
+        <!-- Odd lot callout -->
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;padding:8px 12px;background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.15);border-radius:6px">
+          <span style="font-size:11px;color:var(--dim)">💡 Odd lots (20sh @ $86.03) currently <span style="color:var(--g);font-weight:800">lower</span> your blended avg since $86.03 &lt; $100.42 — they're helping you today. But since $86.03 &gt; $74, as you approach the target they flip and pull the blended avg back up. The 200 assigned shares need to reach <span style="color:var(--p);font-weight:800">$72.80</span> to offset this and land the full portfolio avg at $74.</span>
+        </div>
+
+        <!-- Milestone markers — 200 assigned shares only -->
         <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px">
           <div style="background:rgba(0,255,135,.06);border:1px solid rgba(0,255,135,.12);border-radius:8px;padding:10px 10px 8px;text-align:center">
             <div style="font-size:9px;color:var(--dim);margin-bottom:6px;font-weight:700;letter-spacing:.06em">$95/SH</div>
-            <div style="font-size:13px;font-weight:900;color:var(--g);font-family:'JetBrains Mono',monospace">10 wk</div>
-            <div style="font-size:9px;color:var(--dim);margin-top:1px">May '26</div>
-            <div style="height:1px;background:var(--border);margin:6px 0"></div>
-            <div style="font-size:10px;color:var(--dim);margin-bottom:2px">blended $94.18</div>
-            <div style="font-size:12px;font-weight:800;color:var(--b);font-family:'JetBrains Mono',monospace">10 wk</div>
-            <div style="font-size:9px;color:var(--dim);margin-top:1px">May '26</div>
+            <div style="font-size:14px;font-weight:900;color:var(--g);font-family:'JetBrains Mono',monospace">10 wk</div>
+            <div style="font-size:9px;color:var(--dim);margin-top:3px">May '26</div>
           </div>
           <div style="background:rgba(0,255,135,.06);border:1px solid rgba(0,255,135,.12);border-radius:8px;padding:10px 10px 8px;text-align:center">
             <div style="font-size:9px;color:var(--dim);margin-bottom:6px;font-weight:700;letter-spacing:.06em">$90/SH</div>
-            <div style="font-size:13px;font-weight:900;color:var(--g);font-family:'JetBrains Mono',monospace">20 wk</div>
-            <div style="font-size:9px;color:var(--dim);margin-top:1px">Jul '26</div>
-            <div style="height:1px;background:var(--border);margin:6px 0"></div>
-            <div style="font-size:10px;color:var(--dim);margin-bottom:2px">blended $89.64</div>
-            <div style="font-size:12px;font-weight:800;color:var(--b);font-family:'JetBrains Mono',monospace">20 wk</div>
-            <div style="font-size:9px;color:var(--dim);margin-top:1px">Jul '26</div>
+            <div style="font-size:14px;font-weight:900;color:var(--g);font-family:'JetBrains Mono',monospace">20 wk</div>
+            <div style="font-size:9px;color:var(--dim);margin-top:3px">Jul '26</div>
           </div>
           <div style="background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.12);border-radius:8px;padding:10px 10px 8px;text-align:center">
             <div style="font-size:9px;color:var(--dim);margin-bottom:6px;font-weight:700;letter-spacing:.06em">$84/SH</div>
-            <div style="font-size:13px;font-weight:900;color:var(--g);font-family:'JetBrains Mono',monospace">32 wk</div>
-            <div style="font-size:9px;color:var(--dim);margin-top:1px">Oct '26</div>
-            <div style="height:1px;background:var(--border);margin:6px 0"></div>
-            <div style="font-size:10px;color:var(--dim);margin-bottom:2px">blended $84.18</div>
-            <div style="font-size:12px;font-weight:800;color:var(--b);font-family:'JetBrains Mono',monospace">32 wk</div>
-            <div style="font-size:9px;color:var(--dim);margin-top:1px">Oct '26</div>
+            <div style="font-size:14px;font-weight:900;color:var(--b);font-family:'JetBrains Mono',monospace">32 wk</div>
+            <div style="font-size:9px;color:var(--dim);margin-top:3px">Oct '26</div>
           </div>
           <div style="background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.12);border-radius:8px;padding:10px 10px 8px;text-align:center">
             <div style="font-size:9px;color:var(--dim);margin-bottom:6px;font-weight:700;letter-spacing:.06em">$78/SH</div>
-            <div style="font-size:13px;font-weight:900;color:var(--g);font-family:'JetBrains Mono',monospace">43 wk</div>
-            <div style="font-size:9px;color:var(--dim);margin-top:1px">Jan '27</div>
-            <div style="height:1px;background:var(--border);margin:6px 0"></div>
-            <div style="font-size:10px;color:var(--dim);margin-bottom:2px">blended $78.73</div>
-            <div style="font-size:12px;font-weight:800;color:var(--b);font-family:'JetBrains Mono',monospace">43 wk</div>
-            <div style="font-size:9px;color:var(--dim);margin-top:1px">Jan '27</div>
+            <div style="font-size:14px;font-weight:900;color:var(--b);font-family:'JetBrains Mono',monospace">43 wk</div>
+            <div style="font-size:9px;color:var(--dim);margin-top:3px">Jan '27</div>
           </div>
           <div style="background:rgba(255,230,0,.05);border:1px solid rgba(255,230,0,.15);border-radius:8px;padding:10px 10px 8px;text-align:center">
-            <div style="font-size:9px;color:var(--dim);margin-bottom:6px;font-weight:700;letter-spacing:.06em">$74/SH</div>
-            <div style="font-size:13px;font-weight:900;color:var(--g);font-family:'JetBrains Mono',monospace">51 wk</div>
-            <div style="font-size:9px;color:var(--dim);margin-top:1px">Mar '27</div>
-            <div style="height:1px;background:rgba(255,230,0,.15);margin:6px 0"></div>
-            <div style="font-size:10px;color:var(--dim);margin-bottom:2px">blended $75.09</div>
-            <div style="font-size:12px;font-weight:800;color:var(--b);font-family:'JetBrains Mono',monospace">51 wk</div>
-            <div style="font-size:9px;color:var(--dim);margin-top:1px">Mar '27</div>
+            <div style="font-size:9px;color:var(--y);margin-bottom:6px;font-weight:700;letter-spacing:.06em">🎯 $74/SH</div>
+            <div style="font-size:14px;font-weight:900;color:var(--y);font-family:'JetBrains Mono',monospace">51 wk</div>
+            <div style="font-size:9px;color:var(--y);margin-top:3px;font-weight:700">Mar '27</div>
           </div>
-          <div style="background:rgba(255,230,0,.09);border:1px solid rgba(255,230,0,.25);border-radius:8px;padding:10px 10px 8px;text-align:center;box-shadow:0 0 12px rgba(255,230,0,.08)">
-            <div style="font-size:9px;color:var(--y);margin-bottom:6px;font-weight:800;letter-spacing:.06em">🎯 $74 BLEND</div>
-            <div style="font-size:10px;color:var(--dim);margin-bottom:2px">200sh → $72.80</div>
-            <div style="font-size:13px;font-weight:900;color:var(--y);font-family:'JetBrains Mono',monospace">53 wk</div>
-            <div style="font-size:9px;color:var(--y);margin-top:1px;font-weight:700">Mar '27</div>
+          <div style="background:rgba(255,45,135,.05);border:1px solid rgba(255,45,135,.15);border-radius:8px;padding:10px 10px 8px;text-align:center">
+            <div style="font-size:9px;color:var(--p);margin-bottom:6px;font-weight:700;letter-spacing:.06em">$72.80/SH</div>
+            <div style="font-size:14px;font-weight:900;color:var(--p);font-family:'JetBrains Mono',monospace">53 wk</div>
+            <div style="font-size:9px;color:var(--dim);margin-top:3px">Mar '27</div>
+            <div style="font-size:8px;color:var(--p);margin-top:3px;font-weight:700">→ $74 blended avg</div>
           </div>
-        </div>
-        <!-- Legend -->
-        <div style="display:flex;gap:16px;margin-top:10px">
-          <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:3px;border-radius:2px;background:var(--g)"></div><span style="font-size:9px;color:var(--dim)">200 assigned shares — calls reduce basis directly</span></div>
-          <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:3px;border-radius:2px;background:var(--b)"></div><span style="font-size:9px;color:var(--dim)">220 shares — blended avg shown, odd lots drag 200sh target to $72.80</span></div>
         </div>
       </div>
     </div>
@@ -2122,42 +2078,55 @@ function renderHoodCallTracker() {
   if (!container) return;
 
   const W  = container.clientWidth || 780;
-  const H  = 300;
-  const PL = 58, PR = 76, PT = 88, PB = 64;
+  const H  = 320;
+  const PL = 62, PR = 80, PT = 52, PB = 68;
   const cW = W - PL - PR;
   const cH = H - PT - PB;
   const n  = cycles.length;
-  const xStep = cW / (n - 1);
 
-  const minV   = Math.min(...cycles.map(c=>c.basis)) - 0.6;
-  const maxV   = RAW_ASSIGN + 1.2;   // extra headroom so first dot labels don't clip
+  // ── Tight y-axis: zoom into actual data range so every drop is visible ──
+  const allBases = cycles.map(c => c.basis);
+  const minV = Math.min(...allBases) - 0.4;
+  const maxV = Math.max(...allBases) + 0.8;
   const vRange = maxV - minV;
 
-  const px = i => PL + i * xStep;
+  // ── Variable x-spacing: bigger drops get more horizontal room ──
+  const weights = cycles.map((c, i) => i === 0 ? 2.5 : Math.max(1, Math.abs(c.drop) * 2.2));
+  const totalW  = weights.reduce((s, w) => s + w, 0);
+  let cumW = 0;
+  const xPositions = weights.map(w => {
+    const x = PL + (cumW / totalW) * cW;
+    cumW += w;
+    return x;
+  });
+
+  const px = i => xPositions[i];
   const py = v => PT + cH * (1 - (v - minV) / vRange);
 
   let s = [`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="display:block;overflow:hidden">`];
 
   s.push(`<defs>
     <linearGradient id="hoodCG2" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#00ff87" stop-opacity="0.18"/>
+      <stop offset="0%" stop-color="#00ff87" stop-opacity="0.22"/>
       <stop offset="100%" stop-color="#00ff87" stop-opacity="0.02"/>
     </linearGradient>
-    <filter id="hoodGlow2"><feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="hoodGlow2"><feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
   </defs>`);
 
-  // y gridlines
-  for (let v = Math.floor(minV)+1; v <= Math.ceil(maxV); v++) {
-    if (v <= maxV && v >= minV) {
-      const gy = py(v);
-      s.push(`<line x1="${PL}" y1="${gy}" x2="${W-PR}" y2="${gy}" stroke="rgba(26,37,53,.55)" stroke-width="1"/>`);
-      s.push(`<text x="${PL-7}" y="${gy+4}" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="9" font-weight="600" fill="#3a5060">$${v}</text>`);
+  // y gridlines — every $0.50, major at whole dollars
+  const gridStep = 0.5;
+  for (let v = Math.ceil(minV * 2) / 2; v <= maxV; v = Math.round((v + gridStep) * 10) / 10) {
+    const gy = py(v);
+    const isMajor = Number.isInteger(Math.round(v * 10) / 10);
+    s.push(`<line x1="${PL}" y1="${gy}" x2="${W-PR}" y2="${gy}" stroke="${isMajor?'rgba(26,37,53,.7)':'rgba(26,37,53,.3)'}" stroke-width="${isMajor?1:.5}"/>`);
+    if (isMajor) {
+      s.push(`<text x="${PL-7}" y="${gy+4}" text-anchor="end" font-family="JetBrains Mono,monospace" font-size="9" font-weight="700" fill="#4a6070">$${Math.round(v)}</text>`);
     }
   }
 
-  // raw assign dashed reference line
+  // Raw assign reference line
   const aY = py(RAW_ASSIGN);
-  s.push(`<line x1="${PL}" y1="${aY}" x2="${W-PR}" y2="${aY}" stroke="rgba(255,45,135,.4)" stroke-width="1.5" stroke-dasharray="5,4"/>`);
+  s.push(`<line x1="${PL}" y1="${aY}" x2="${W-PR}" y2="${aY}" stroke="rgba(255,45,135,.45)" stroke-width="1.5" stroke-dasharray="5,4"/>`);
   s.push(`<text x="${W-PR+6}" y="${aY+4}" font-family="Outfit,sans-serif" font-size="9" font-weight="900" fill="#ff2d87">$${RAW_ASSIGN.toFixed(2)}</text>`);
   s.push(`<text x="${W-PR+6}" y="${aY+15}" font-family="Outfit,sans-serif" font-size="8" fill="#ff2d8780">RAW AVG</text>`);
 
@@ -2171,35 +2140,33 @@ function renderHoodCallTracker() {
 
   // dots + labels
   for (let i=0; i<n; i++) {
-    const c   = cycles[i];
-    const x   = px(i);
-    const y   = py(c.basis);
-    const isA = c.type === 'assign';
+    const c    = cycles[i];
+    const x    = px(i);
+    const y    = py(c.basis);
+    const isA  = c.type === 'assign';
     const dotC = isA ? '#ff2d87' : '#00ff87';
     const txtC = isA ? '#ff2d87' : '#00ff87';
 
-    // drop label — centered on the HORIZONTAL segment leading INTO this dot, just below the line
-    // This guarantees no overlap with basis labels (which sit above dots at segment ends)
+    // drop label on horizontal segment midpoint
     if (i > 0 && c.drop !== 0 && c.type !== 'assign') {
-      const prevX = px(i - 1);
-      const midX  = (prevX + x) / 2;
-      const segY  = py(cycles[i-1].basis); // horizontal segment runs at previous basis y
+      const prevX  = px(i - 1);
+      const midX   = (prevX + x) / 2;
+      const segY   = py(cycles[i-1].basis);
       const dropTxt = `${c.drop.toFixed(2)}/sh`;
-      // dark pill background
-      s.push(`<rect x="${midX-34}" y="${segY+6}" width="68" height="16" rx="3" fill="rgba(9,13,20,.9)"/>`);
+      s.push(`<rect x="${midX-34}" y="${segY+6}" width="68" height="16" rx="3" fill="rgba(9,13,20,.92)"/>`);
       s.push(`<text x="${midX}" y="${segY+18}" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" font-weight="800" fill="#00d4ff">${dropTxt}</text>`);
     }
 
-    // glow ring
-    if (!isA) s.push(`<circle cx="${x}" cy="${y}" r="9" fill="rgba(0,255,135,.10)"/>`);
+    // glow ring for call dots
+    if (!isA) s.push(`<circle cx="${x}" cy="${y}" r="10" fill="rgba(0,255,135,.08)"/>`);
     // dot
-    s.push(`<circle cx="${x}" cy="${y}" r="${isA?7:5}" fill="${dotC}" stroke="#050709" stroke-width="2.5"/>`);
+    s.push(`<circle cx="${x}" cy="${y}" r="${isA?7:5.5}" fill="${dotC}" stroke="#050709" stroke-width="2.5"/>`);
 
     // basis label above dot
-    s.push(`<text x="${x}" y="${y-14}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="${c.isStart?13:11}" font-weight="900" fill="${txtC}">$${c.basis.toFixed(2)}</text>`);
+    s.push(`<text x="${x}" y="${y-15}" text-anchor="middle" font-family="Outfit,sans-serif" font-size="${c.isStart?13:11}" font-weight="900" fill="${txtC}">$${c.basis.toFixed(2)}</text>`);
 
     // x-axis labels
-    const ly1 = PT+cH+14, ly2 = PT+cH+27;
+    const ly1 = PT+cH+16, ly2 = PT+cH+29;
     s.push(`<text transform="rotate(-38,${x},${ly1})" x="${x}" y="${ly1}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" font-weight="800" letter-spacing=".06em" fill="${isA?'#ff2d87':'#5a7080'}">${c.label.toUpperCase()}</text>`);
     s.push(`<text transform="rotate(-38,${x},${ly2})" x="${x}" y="${ly2}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" font-weight="600" fill="#3a5060">${c.date}</text>`);
   }
