@@ -316,7 +316,6 @@ tr:hover td { background: rgba(0,212,255,.03); }
     <button class="nt" onclick="showPage('tickers',this)">Tickers</button>
     <button class="nt" onclick="showPage('projection',this)">Projection</button>
     <button class="nt" onclick="showPage('hood',this)">HOOD</button>
-    <button class="nt" onclick="showPage('house',this)">House Money</button>
   </div>
   <div id="nav-badge" class="nav-badge">2026</div>
 </div>
@@ -946,91 +945,6 @@ tr:hover td { background: rgba(0,212,255,.03); }
 
 </div>
 
-
-<!-- ════════════════════════════════ HOUSE MONEY ════════════════════════════════ -->
-<div id="page-house" class="page">
-  <div class="ph">
-    <div class="ph-row">
-      <div>
-        <div class="ph-title" style="background:linear-gradient(120deg,var(--y),var(--o));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">House Money</div>
-        <div class="ph-sub">Dividend recovery tracker · how close are you to playing with the house's money</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Portfolio summary cards -->
-  <div class="cards cards-4" id="house-summary-cards">
-    <div class="card y">
-      <div class="card-label">Total Invested</div>
-      <div class="card-val y" id="house-total-cost">—</div>
-      <div class="card-sub">Across all positions</div>
-    </div>
-    <div class="card g">
-      <div class="card-label">Total Recovered</div>
-      <div class="card-val g" id="house-total-divs">—</div>
-      <div class="card-sub">Dividends received</div>
-    </div>
-    <div class="card b">
-      <div class="card-label">Still Owed</div>
-      <div class="card-val b" id="house-total-left">—</div>
-      <div class="card-sub">Until full house money</div>
-    </div>
-    <div class="card o">
-      <div class="card-label">Avg Monthly Income</div>
-      <div class="card-val o" id="house-total-pmt">—</div>
-      <div class="card-sub" id="house-months-sub">Across all positions</div>
-    </div>
-  </div>
-
-  <!-- Portfolio progress bar -->
-  <div class="panel" style="margin-bottom:16px">
-    <div class="panel-head"><div class="panel-title"><em>◈</em>Portfolio Recovery Progress</div></div>
-    <div style="padding:16px 20px 20px">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
-        <span style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)">Overall House Money Progress</span>
-        <span style="font-size:13px;font-weight:800;color:var(--y)" id="house-port-pct">—</span>
-      </div>
-      <div style="height:12px;border-radius:6px;background:rgba(255,230,0,.1);overflow:hidden;box-shadow:0 0 12px rgba(255,230,0,.08)">
-        <div id="house-port-bar" style="height:100%;border-radius:6px;background:linear-gradient(90deg,var(--y),var(--o));width:0%;transition:width 1s cubic-bezier(.4,0,.2,1);box-shadow:0 0 10px rgba(255,230,0,.4)"></div>
-      </div>
-      <div style="display:flex;justify-content:space-between;margin-top:8px">
-        <span style="font-size:10px;color:var(--dim)">$0 recovered</span>
-        <span style="font-size:10px;font-weight:700;color:var(--o)" id="house-port-eta">—</span>
-        <span style="font-size:10px;color:var(--dim)" id="house-port-goal">—</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Next-to-cross spotlight -->
-  <div id="house-spotlight" style="margin-bottom:16px"></div>
-
-  <!-- Per-ticker cards grid -->
-  <div id="house-ticker-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:16px"></div>
-
-  <!-- Detail table -->
-  <div class="panel">
-    <div class="panel-head"><div class="panel-title"><em>◈</em>Position Detail</div></div>
-    <div class="tbl-wrap">
-      <table>
-        <thead><tr>
-          <th>Ticker</th>
-          <th class="r">Shares</th>
-          <th class="r">Price</th>
-          <th class="r">Cost</th>
-          <th class="r">Divs Recv'd</th>
-          <th class="r">Left</th>
-          <th class="r">Recovered</th>
-          <th class="r">Avg Mo. PMT</th>
-          <th class="r">Proj. Date</th>
-        </tr></thead>
-        <tbody id="house-table-body"></tbody>
-        <tfoot id="house-table-foot"></tfoot>
-      </table>
-    </div>
-  </div>
-</div>
-
-
 <div id="footer">DIVIDEND EXECUTIVE · <span id="footer-year">2026</span> · <span id="footer-sync">—</span></div>
 
 <script>
@@ -1044,16 +958,16 @@ const minisumTrades = [{"stock":"TSLL","open":"January 2","exp":"Jan 5","shares"
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const NEON   = ['#00d4ff','#ff2d87','#b44dff','#ff7b00','#00ff87','#ff6b6b','#00ffcc','#ff00aa','#00aaff','#ffaa00','#aa00ff','#40e0ff'];
 const TICKER_COLORS = {
-  HOOD: '#00d4ff',   // cyan — top earner, stands out clean
+  HOOD: '#00d4ff',   // cyan
   MSTX: '#ff2d87',   // hot pink
   TSLL: '#00ff87',   // neon green
   MARA: '#b44dff',   // purple
   CLSK: '#ff7b00',   // orange
-  ETHU: '#40e0ff',   // sky blue
+  ETHU: '#ff7b00',   // orange  — was sky blue, changed: 2026 active, was too close to HOOD/SOXL
   RIVN: '#00ffcc',   // teal
   MSTU: '#ff6b6b',   // coral red
   RIOT: '#aa00ff',   // deep violet
-  SOXL: '#00aaff',   // steel blue
+  SOXL: '#ffe600',   // yellow  — was steel blue, changed: 2026 active, was too close to HOOD/ETHU
   EOSE: '#ffaa00',   // amber
   TQQQ: '#ff00aa',   // magenta
   ROBN: '#c8ff40',   // lime
@@ -1954,31 +1868,95 @@ function renderProjection() {
 
   // ── Milestones ─────────────────────────────────────────────────────────────
   const milestones = [
-    { target: 500,  label: '$500/mo',  note: 'Floor — hit every month in 2025' },
-    { target: 750,  label: '$750/mo',  note: 'Solid — hit 7 of 12 months in 2025' },
-    { target: 1000, label: '$1,000/mo',note: 'Strong — hit 3 of 12 months in 2025' },
-    { target: 1200, label: '$1,200/mo',note: 'Stretch — Sep/Oct/Nov 2025 territory' },
-    { target: 1500, label: '$1,500/mo',note: 'Ambitious — Sep 2025 was your closest' },
-    { target: 2000, label: '$2,000/mo',note: 'Peak — beyond any single month to date' },
+    { target: 500,  label: '$500/mo'  },
+    { target: 750,  label: '$750/mo'  },
+    { target: 1000, label: '$1,000/mo'},
+    { target: 1200, label: '$1,200/mo'},
+    { target: 1500, label: '$1,500/mo'},
+    { target: 2000, label: '$2,000/mo'},
   ];
-  const hitColor = '#00ff87', partColor = '#ffe600', noColor = '#3a5060';
+
+  // Best projected monthly for each scenario (peak month in remaining year)
+  const scenarioPeakMonth = scenarios.map(s => ({
+    key: s.key, label: s.label, color: s.color,
+    peak: Math.max(...weightedBase.slice(y26months).map(v => Math.round(v * s.mult)))
+  }));
+
   $('proj-milestones').innerHTML = milestones.map(ms => {
     const hits24 = y24monthly.filter(v => v >= ms.target).length;
     const hits25 = y25monthly.filter(v => v >= ms.target).length;
-    const hits26 = y26actual.filter(v => v >= ms.target).length;
-    const hitsWb = weightedBase.filter(v => v >= ms.target).length;
-    const col    = hits25 >= 6 ? hitColor : hits25 >= 2 ? partColor : noColor;
-    return `<div style="margin-bottom:16px">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
-        <div style="font-size:13px;font-weight:800;color:${col}">${ms.label}</div>
-        <div style="font-size:10px;font-weight:700;color:var(--dim)">${hits24}/12 in 2024 · ${hits25}/12 in 2025 · ${hits26}/${y26months} in 2026</div>
+    const hits26 = y26actual.filter((v,i) => v >= ms.target && i < y26months).length;
+
+    // Skip entirely if never hit in any year
+    if (hits24 + hits25 + hits26 === 0) return '';
+
+    const best26 = Math.max(...y26actual.slice(0, y26months));
+
+    // Which scenarios project hitting this milestone in any remaining month?
+    const reachable = scenarioPeakMonth.filter(s => s.peak >= ms.target);
+
+    // Progress bar: how close is the best 2026 month so far to this target?
+    const prog = Math.min(100, Math.round(best26 / ms.target * 100));
+
+    // Color: green if already hit in 2026, yellow if within reach on base, grey if unlikely
+    const alreadyHit = hits26 > 0;
+    const baseCanHit = reachable.some(s => s.key === 'base' || s.key === 'cons');
+    const col = alreadyHit ? '#00ff87' : baseCanHit ? '#ffe600' : reachable.length > 0 ? '#5a8090' : '#2a3540';
+    const textCol = alreadyHit ? '#00ff87' : baseCanHit ? '#ffe600' : reachable.length > 0 ? '#5a8090' : '#3a4550';
+
+    // Dot history rows — dots stretch full width
+    const dotRow = (vals, yr, dotCol) => vals.map((v,i) => {
+      const hit = v >= ms.target;
+      return `<div title="${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][i]} ${yr}: $${v.toLocaleString()}"
+        style="flex:1;height:12px;border-radius:3px;flex-shrink:0;
+               background:${hit ? dotCol : 'rgba(255,255,255,.06)'};
+               box-shadow:${hit ? '0 0 5px '+dotCol+'88' : 'none'};
+               cursor:default"></div>`;
+    }).join('');
+
+    // Scenario badges
+    const badges = reachable.length === 0
+      ? `<span style="font-size:9px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--dim2);border-radius:4px;padding:2px 7px;font-weight:700">Out of range</span>`
+      : reachable.map(s =>
+          `<span style="font-size:9px;background:${s.color}18;border:1px solid ${s.color}44;color:${s.color};border-radius:4px;padding:2px 7px;font-weight:700">${s.label}</span>`
+        ).join(' ');
+
+    return `
+    <div style="padding:14px 0;border-bottom:1px solid rgba(26,37,53,.6)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;gap:12px;flex-wrap:wrap">
+        <div style="font-size:15px;font-weight:900;color:${textCol};font-family:'JetBrains Mono',monospace;min-width:90px">${ms.label}</div>
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">${badges}</div>
       </div>
-      <div style="height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-bottom:5px">
-        <div style="height:100%;width:${Math.min(100,hits25/12*100)}%;background:${col};border-radius:3px;box-shadow:0 0 6px ${col}66"></div>
+
+        <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:9px;font-weight:700;color:var(--dim2);width:28px;flex-shrink:0">2024</span>
+          <div style="display:flex;gap:3px;flex:1">${dotRow(y24monthly, '2024', '#5a7080')}</div>
+          <span style="font-size:9px;color:var(--dim2);white-space:nowrap;width:52px;text-align:right">${hits24}/12</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:9px;font-weight:700;color:var(--dim2);width:28px;flex-shrink:0">2025</span>
+          <div style="display:flex;gap:3px;flex:1">${dotRow(y25monthly, '2025', '#00d4ff')}</div>
+          <span style="font-size:9px;color:var(--dim2);white-space:nowrap;width:52px;text-align:right">${hits25}/12</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:9px;font-weight:700;color:${alreadyHit?'#00ff87':'var(--dim2)'};width:28px;flex-shrink:0">2026</span>
+          <div style="display:flex;gap:3px;flex:1">${dotRow(y26actual.slice(0,y26months).concat(Array(12-y26months).fill(0)), '2026', '#00ff87')}</div>
+          <span style="font-size:9px;color:${alreadyHit?'#00ff87':'var(--dim2)'};white-space:nowrap;width:52px;text-align:right">${hits26}/${y26months} so far</span>
+        </div>
       </div>
-      <div style="font-size:10px;color:var(--dim)">${ms.note} · weighted avg hits this ${hitsWb}/12 months</div>
+
+      <!-- 2026 best-month progress bar toward this target -->
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,.06);overflow:hidden">
+          <div style="height:100%;width:${prog}%;background:${col};border-radius:3px;transition:width .6s ease;box-shadow:${prog>=100?'0 0 6px '+col+'88':'none'}"></div>
+        </div>
+        <span style="font-size:9px;font-weight:700;color:${textCol};white-space:nowrap;min-width:70px;text-align:right">
+          ${alreadyHit ? '✓ hit in 2026' : 'best ' + fmt(best26) + ' / ' + prog + '%'}
+        </span>
+      </div>
     </div>`;
-  }).join('');
+  }).join('') + `<div style="margin-top:8px;font-size:9px;color:var(--dim2)">Hover dots for month detail · scenario badges show projected reachability in remaining 2026 months</div>`;
 
   // ── Assumptions ────────────────────────────────────────────────────────────
   const wbMonthlyAvg = Math.round(wbAnnual / 12);
@@ -2053,235 +2031,12 @@ function showPage(name, btn) {
     if (name==='tickers')    renderTickers();
     if (name==='projection') renderProjection();
     if (name==='hood')       renderHood();
-    if (name==='house')      renderHouse();
   }
 }
 
 
 
 // ════════════════════════════════ HOUSE MONEY TAB ════════════════════════════════
-function renderHouse() {
-  const positions = [
-    {ticker:'CONY',  shares:10,     price:29.79,  cost:1597.00,  divs:1681.43, pmt:28.90},
-    {ticker:'BITO',  shares:100,    price:9.72,   cost:1654.00,  divs:2011.75, pmt:91.00},
-    {ticker:'NVDY',  shares:100,    price:13.69,  cost:2378.00,  divs:2322.52, pmt:73.00},
-    {ticker:'XDTE',  shares:250,    price:37.91,  cost:12070.00, divs:4580.33, pmt:302.50},
-    {ticker:'QDTE',  shares:250,    price:28.72,  cost:9802.50,  divs:5001.21, pmt:320.00},
-    {ticker:'JEPQ',  shares:58.9,   price:57.11,  cost:3019.21,  divs:566.46,  pmt:25.92},
-    {ticker:'WPAY',  shares:51.05,  price:35.44,  cost:2416.71,  divs:335.46,  pmt:93.93},
-    {ticker:'TSLW',  shares:50,     price:26.20,  cost:1961.50,  divs:1127.01, pmt:83.00},
-    {ticker:'SPYI',  shares:38.26,  price:51.06,  cost:2018.98,  divs:67.16,   pmt:19.51},
-    {ticker:'QQQI',  shares:38.923, price:51.91,  cost:2106.90,  divs:43.47,   pmt:22.96},
-  ];
-
-  const TICKER_COLORS = {
-    CONY:'#ff2d87', BITO:'#ff7b00', NVDY:'#00d4ff', XDTE:'#00ff87',
-    QDTE:'#ffe600', JEPQ:'#b44dff', WPAY:'#00ffcc', TSLW:'#ff6b6b',
-    SPYI:'#40e0ff', QQQI:'#c8ff40'
-  };
-
-  // Zone color based on recovery %
-  function zoneColor(pct) {
-    if (pct >= 100) return '#00ff87';
-    if (pct >= 75)  return '#aaff00';
-    if (pct >= 50)  return '#ffe600';
-    if (pct >= 25)  return '#ff7b00';
-    return '#ff2d87';
-  }
-
-  function zoneGlow(pct) {
-    if (pct >= 100) return 'rgba(0,255,135,.5)';
-    if (pct >= 75)  return 'rgba(170,255,0,.4)';
-    if (pct >= 50)  return 'rgba(255,230,0,.4)';
-    if (pct >= 25)  return 'rgba(255,123,0,.4)';
-    return 'rgba(255,45,135,.4)';
-  }
-
-  function projectedDate(monthsLeft) {
-    if (monthsLeft <= 0) return null;
-    const d = new Date();
-    d.setMonth(d.getMonth() + monthsLeft);
-    return d.toLocaleDateString('en-US', {month:'short', year:'numeric'});
-  }
-
-  // Derived fields
-  const data = positions.map(p => {
-    const recovered = Math.min(100, (p.divs / p.cost) * 100);
-    const left      = Math.max(0, p.cost - p.divs);
-    const monthsLeft = p.divs >= p.cost ? 0 : Math.ceil(left / p.pmt);
-    return {
-      ...p,
-      left, recovered,
-      houseMoneyReached: p.divs >= p.cost,
-      monthsLeft,
-      projDate: projectedDate(monthsLeft),
-      totalReturn: ((p.divs - p.cost) / p.cost * 100),
-      color: TICKER_COLORS[p.ticker] || '#00ff87',
-      zColor: zoneColor(recovered),
-      zGlow:  zoneGlow(recovered),
-    };
-  });
-
-  // Sort: completed first (by divs desc), then by % recovered desc
-  const sorted = [...data].sort((a,b) => {
-    if (a.houseMoneyReached && !b.houseMoneyReached) return -1;
-    if (!a.houseMoneyReached && b.houseMoneyReached) return 1;
-    return b.recovered - a.recovered;
-  });
-
-  // Next to cross (first non-completed sorted by % recovered)
-  const nextUp = sorted.find(d => !d.houseMoneyReached);
-
-  // ── Summary cards ──
-  const totCost = data.reduce((s,d)=>s+d.cost, 0);
-  const totDivs = data.reduce((s,d)=>s+d.divs, 0);
-  const totLeft = data.reduce((s,d)=>s+d.left, 0);
-  const totPmt  = data.reduce((s,d)=>s+d.pmt,  0);
-  const portPct = Math.min(100, (totDivs / totCost) * 100);
-  const portMos = totLeft > 0 ? Math.ceil(totLeft / totPmt) : 0;
-  const doneCount = data.filter(d=>d.houseMoneyReached).length;
-
-  const el = id => document.getElementById(id);
-  if (el('house-total-cost')) el('house-total-cost').textContent = fmt(totCost);
-  if (el('house-total-divs')) el('house-total-divs').textContent = fmt(totDivs);
-  if (el('house-total-left')) el('house-total-left').textContent = fmt(totLeft);
-  if (el('house-total-pmt'))  el('house-total-pmt').textContent  = fmt(totPmt);
-  if (el('house-months-sub')) el('house-months-sub').textContent =
-    portMos > 0 ? projectedDate(portMos) + ' · ' + portMos + ' months away' : '🏠 All positions free!';
-  if (el('house-port-pct'))   el('house-port-pct').textContent   = portPct.toFixed(1) + '% recovered';
-  if (el('house-port-eta'))   el('house-port-eta').textContent   =
-    portMos > 0 ? '~' + portMos + ' months · ' + projectedDate(portMos) : '🏠 Done!';
-  if (el('house-port-goal'))  el('house-port-goal').textContent  = fmt(totCost) + ' goal';
-
-  setTimeout(() => {
-    if (el('house-port-bar')) el('house-port-bar').style.width = portPct.toFixed(1) + '%';
-  }, 100);
-
-  // ── Next-to-cross spotlight ──
-  const spotlight = el('house-spotlight');
-  if (spotlight && nextUp) {
-    spotlight.innerHTML = `
-    <div style="background:var(--card);border:1px solid var(--pu);border-radius:12px;padding:20px 24px;
-                box-shadow:0 0 24px rgba(180,77,255,.4);display:flex;align-items:center;gap:24px;flex-wrap:wrap">
-      <div style="flex:0 0 auto">
-        <div style="font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:6px">🎯 Next to Cross</div>
-        <div style="font-size:32px;font-weight:900;font-family:'Outfit',sans-serif;color:var(--pu);line-height:1">${nextUp.ticker}</div>
-        <div style="font-size:11px;color:var(--pu);margin-top:4px;font-weight:700">${nextUp.recovered.toFixed(1)}% recovered</div>
-      </div>
-      <div style="flex:1;min-width:200px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
-          <span style="font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.08em">Recovery Progress</span>
-          <span style="font-size:12px;font-weight:800;color:var(--pu)">${nextUp.recovered.toFixed(1)}%</span>
-        </div>
-        <div style="height:10px;border-radius:5px;background:rgba(255,255,255,.06);overflow:hidden">
-          <div id="house-spotlight-bar" data-w="${nextUp.recovered.toFixed(1)}"
-               style="height:100%;border-radius:5px;width:0%;background:var(--pu);
-                      box-shadow:0 0 12px rgba(180,77,255,.5);transition:width 1s cubic-bezier(.4,0,.2,1)"></div>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-top:8px">
-          <span style="font-size:10px;color:var(--dim)">${fmt(nextUp.divs)} recovered of ${fmt(nextUp.cost)}</span>
-          <span style="font-size:10px;font-weight:800;color:var(--pu)">${fmt(nextUp.left)} to go</span>
-        </div>
-      </div>
-      <div style="flex:0 0 auto;text-align:right">
-        <div style="font-size:10px;color:var(--dim);margin-bottom:4px">Projected date</div>
-        <div style="font-size:20px;font-weight:900;font-family:'Outfit',sans-serif;color:var(--pu)">${nextUp.projDate}</div>
-        <div style="font-size:10px;color:var(--dim);margin-top:4px">${nextUp.monthsLeft} months · ${fmt(nextUp.pmt)}/mo</div>
-      </div>
-    </div>`;
-    setTimeout(() => {
-      const sb = document.getElementById('house-spotlight-bar');
-      if (sb) sb.style.width = sb.dataset.w + '%';
-    }, 200);
-  }
-
-  // ── Per-ticker cards (sorted) ──
-  const grid = el('house-ticker-grid');
-  if (grid) {
-    grid.innerHTML = sorted.map(d => {
-      const glowStyle = d.houseMoneyReached
-        ? `box-shadow:0 0 20px rgba(0,255,135,.2);border-color:rgba(0,255,135,.5);`
-        : '';
-      const topBorder = `border-top:3px solid ${d.zColor}`;
-      const statusBadge = d.houseMoneyReached
-        ? `<span style="background:rgba(0,255,135,.15);color:#00ff87;border:1px solid rgba(0,255,135,.4);
-                        border-radius:20px;padding:3px 10px;font-size:9px;font-weight:800;letter-spacing:.1em;
-                        box-shadow:0 0 10px rgba(0,255,135,.3)">🏠 HOUSE MONEY</span>`
-        : `<span style="color:var(--dim);font-size:10px;font-weight:700">${d.projDate}</span>`;
-
-      return `
-      <div style="background:var(--card);border:1px solid var(--border);${topBorder};border-radius:12px;padding:18px 20px;${glowStyle}transition:box-shadow .3s">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <span style="font-size:17px;font-weight:900;font-family:'Outfit',sans-serif;color:${d.color}">${d.ticker}</span>
-          ${statusBadge}
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">
-          <div>
-            <div style="font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em">Cost</div>
-            <div style="font-size:13px;font-weight:700;color:var(--fg)">${fmt(d.cost)}</div>
-          </div>
-          <div>
-            <div style="font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em">Recovered</div>
-            <div style="font-size:13px;font-weight:700;color:${d.zColor}">${fmt(d.divs)}</div>
-          </div>
-          <div>
-            <div style="font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em">Left</div>
-            <div style="font-size:13px;font-weight:700;color:var(--fg)">${d.houseMoneyReached ? '🏠' : fmt(d.left)}</div>
-          </div>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px">
-          <span style="font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)">Recovery Progress</span>
-          <span style="font-size:12px;font-weight:800;color:${d.zColor}">${d.recovered.toFixed(1)}%</span>
-        </div>
-        <div style="height:8px;border-radius:4px;background:rgba(255,255,255,.06);overflow:hidden">
-          <div class="house-bar" data-w="${d.recovered.toFixed(1)}"
-               style="height:100%;border-radius:4px;background:${d.zColor};width:0%;
-                      box-shadow:0 0 8px ${d.zGlow};transition:width .8s cubic-bezier(.4,0,.2,1)"></div>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-top:10px">
-          <span style="font-size:9px;color:var(--dim)">${fmt(d.pmt)}/mo</span>
-          <span style="font-size:9px;font-weight:700;color:${d.zColor}">${d.houseMoneyReached ? 'Free!' : d.monthsLeft + ' mo. left'}</span>
-        </div>
-      </div>`;
-    }).join('');
-
-    setTimeout(() => {
-      document.querySelectorAll('.house-bar').forEach(b => {
-        b.style.width = b.dataset.w + '%';
-      });
-    }, 150);
-  }
-
-  // ── Detail table (sorted by % recovered desc) ──
-  const tbody = el('house-table-body');
-  const tfoot = el('house-table-foot');
-  if (tbody) {
-    tbody.innerHTML = sorted.map((d,i) => `
-      <tr style="${i%2?'background:rgba(255,255,255,.02)':''}">
-        <td style="font-weight:800;color:${d.color}">${d.ticker}</td>
-        <td class="r">${d.shares.toLocaleString()}</td>
-        <td class="r">${fmt(d.price)}</td>
-        <td class="r">${fmt(d.cost)}</td>
-        <td class="r" style="color:var(--g)">${fmt(d.divs)}</td>
-        <td class="r" style="color:${d.houseMoneyReached?'#00ff87':'var(--fg)'}">${d.houseMoneyReached ? '🏠' : fmt(d.left)}</td>
-        <td class="r"><span style="color:${d.zColor};font-weight:800">${d.recovered.toFixed(1)}%</span></td>
-        <td class="r">${fmt(d.pmt)}</td>
-        <td class="r" style="color:${d.houseMoneyReached?'#00ff87':d.zColor}">${d.houseMoneyReached ? '—' : d.projDate}</td>
-      </tr>`).join('');
-
-    tfoot.innerHTML = `<tr style="border-top:1px solid var(--border);font-weight:700">
-      <td style="color:var(--y)">TOTAL · ${doneCount}/${data.length} free</td>
-      <td colspan="2"></td>
-      <td class="r" style="color:var(--y)">${fmt(totCost)}</td>
-      <td class="r" style="color:var(--g)">${fmt(totDivs)}</td>
-      <td class="r" style="color:var(--b)">${fmt(totLeft)}</td>
-      <td class="r" style="color:var(--y)">${portPct.toFixed(1)}%</td>
-      <td class="r" style="color:var(--o)">${fmt(totPmt)}</td>
-      <td class="r" style="color:var(--o)">${portMos > 0 ? projectedDate(portMos) : '🏠'}</td>
-    </tr>`;
-  }
-}
-
 // ════════════════════════════════ HOOD CALL TRACKER ════════════════════════════════
 function renderHoodCallTracker() {
   // ── Accurate basis step-down ──
