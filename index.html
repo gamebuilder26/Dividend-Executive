@@ -340,7 +340,7 @@ tr:hover td { background: rgba(0,212,255,.03); }
     <div class="card p"><div class="card-label">Wheel P&L</div><div class="card-val p" id="t-wheel">—</div><div class="card-sub">Net incl. cap gains</div></div>
     <div class="card b"><div class="card-label">Avg Capital / Trade</div><div class="card-val b" id="t-cap">—</div><div class="card-sub">Per trade deployed</div></div>
     <div class="card y"><div class="card-label">Weekly Income</div><div class="card-val y" id="t-weekly">—</div><div class="card-sub" id="t-weekly-sub">Avg weekly</div></div>
-    <div class="card o"><div class="card-label">Total Trades</div><div class="card-val o" id="t-count">—</div><div class="card-sub">All options</div></div>
+    <div class="card o"><div class="card-label">Total Trades</div><div class="card-val o" id="t-count">—</div><div class="card-sub"><span id="t-contracts" style="color:var(--o);font-weight:800">—</span> contracts</div></div>
   </div>
 
   <!-- Composition — full width horizontal -->
@@ -1028,8 +1028,8 @@ function svgStackedBars(containerId, weeks, tickers, tickerColors, opts = {}) {
     s.push(`<text x="${padL-5}" y="${y+3}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" fill="#3a5060">${v>=1000?(Math.round(v/100)/10)+'k':v>0?'$'+v:''}</text>`);
   });
   const avgY = yS(avgV);
-  s.push(`<line x1="${padL}" y1="${avgY}" x2="${W-padR}" y2="${avgY}" stroke="#ffffff44" stroke-width="1.5" stroke-dasharray="5,4"/>`);
-  s.push(`<text x="${W-padR-2}" y="${avgY-4}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" font-weight="700" fill="#ffffff88">avg ${fmt(avgV)}</text>`);
+  s.push(`<line x1="${padL}" y1="${avgY}" x2="${W-padR}" y2="${avgY}" stroke="#ffe600" stroke-width="1.5" stroke-dasharray="5,4"/>`);
+  s.push(`<text x="${W-padR-2}" y="${avgY-4}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" font-weight="700" fill="#ffe600">avg ${fmt(avgV)}</text>`);
   ordered.forEach((wk, i) => {
     const wkD = weeks[wk]; const total = wkD.total;
     const bx = padL + i*bGW + (bGW-bW)/2; let yOff = 0;
@@ -1148,11 +1148,13 @@ function renderTrades() {
   const wheelPnl    = base.reduce((s,t)=>s+(t.wheel||0), 0);
   const caps        = base.filter(t=>t.capital>0).map(t=>t.capital);
   const avgCap      = caps.length ? Math.round(caps.reduce((a,c)=>a+c,0)/caps.length) : 0;
-  const weekMap = {};
+  // Group by calendar week (matching booked premium chart logic) for weekly avg
+  const weekMapCard = {};
   base.filter(t=>t.result!=='In Progress').forEach(t => {
-    const wk = t.exp; weekMap[wk] = (weekMap[wk]||0) + t.profit;
+    const key = t.year + '-' + t.week;
+    weekMapCard[key] = (weekMapCard[key]||0) + t.profit;
   });
-  const weekVals  = Object.values(weekMap);
+  const weekVals  = Object.values(weekMapCard);
   const weeklyAvg = weekVals.length ? Math.round(weekVals.reduce((a,v)=>a+v,0)/weekVals.length) : 0;
 
   $('t-prem').textContent = fmt(totalProfit);
@@ -1161,6 +1163,8 @@ function renderTrades() {
   $('t-weekly').textContent = fmt(weeklyAvg);
   $('t-weekly-sub').textContent = `Avg over ${weekVals.length} expirations`;
   $('t-count').textContent = base.length;
+  const totalContracts = base.filter(t => t.type === 'Put' || t.type === 'Call').reduce((s,t) => s + Math.floor(t.shares/100), 0);
+  if ($('t-contracts')) $('t-contracts').textContent = totalContracts.toLocaleString();
   $('trades-sub').textContent = `${base.length} trades · ${tradesYear === 'all' ? 'all years' : tradesYear}`;
 
   // Donut
@@ -1407,7 +1411,7 @@ function renderTradesWeekBars() {
   svgStackedBars('tw-bars', weeksForChart, tickers, colors);
 
   $('tw-legend').innerHTML = legendEl(tickers, tickerTotals, colors) +
-    `<div style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--dim)"><svg width="16" height="8" style="overflow:visible"><line x1="0" y1="4" x2="16" y2="4" stroke="#ffffff44" stroke-width="1.5" stroke-dasharray="4,3"/></svg><span style="color:#ffffff88">Weekly avg</span></div>`;
+    `<div style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--dim)"><svg width="16" height="8" style="overflow:visible"><line x1="0" y1="4" x2="16" y2="4" stroke="#ffe600" stroke-width="1.5" stroke-dasharray="4,3"/></svg><span style="color:#ffe600">Weekly avg</span></div>`;
 }
 
 // ════════════════════════════════ PAGE: MONTHLY ════════════════════════════════
@@ -1472,7 +1476,7 @@ function renderMonthly() {
   let s=[`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;overflow:visible">`];
   gridVals.forEach(v=>{const y=yS(v);s.push(`<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#1a2535" stroke-width="1"/><text x="${padL-6}" y="${y+3}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" fill="#3a5060">${v>=1000?(Math.round(v/100)/10)+'k':'$'+v}</text>`);});
   const avgY=yS(avgV);
-  s.push(`<line x1="${padL}" y1="${avgY}" x2="${W-padR}" y2="${avgY}" stroke="#ffffff44" stroke-width="1.5" stroke-dasharray="5,4"/><text x="${W-padR-2}" y="${avgY-4}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" font-weight="700" fill="#ffffff88">avg ${fmt(avgV)}</text>`);
+  s.push(`<line x1="${padL}" y1="${avgY}" x2="${W-padR}" y2="${avgY}" stroke="#ffe600" stroke-width="1.5" stroke-dasharray="5,4"/><text x="${W-padR-2}" y="${avgY-4}" text-anchor="end" font-family="Outfit,sans-serif" font-size="9" font-weight="700" fill="#ffe600">avg ${fmt(avgV)}</text>`);
   activeMons.forEach((m,i)=>{
     const total=byMon[m].profit; const bx=padL+i*bGW+(bGW-bW)/2; let yOff=0;
     tickers.filter(tk=>(byMonTickers[m][tk]||0)>0).forEach((tk,si,arr)=>{
@@ -1495,7 +1499,7 @@ function renderMonthly() {
   wrap.innerHTML=s.join('');
 
   $('m-legend').innerHTML = legendEl(tickers, tickerTotals, colors) +
-    `<div style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--dim)"><svg width="16" height="8" style="overflow:visible"><line x1="0" y1="4" x2="16" y2="4" stroke="#ffffff44" stroke-width="1.5" stroke-dasharray="4,3"/></svg><span style="color:#ffffff88">Monthly avg</span></div>`;
+    `<div style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--dim)"><svg width="16" height="8" style="overflow:visible"><line x1="0" y1="4" x2="16" y2="4" stroke="#ffe600" stroke-width="1.5" stroke-dasharray="4,3"/></svg><span style="color:#ffe600">Monthly avg</span></div>`;
 
   $('monthly-body').innerHTML = activeMons.map(m=>{
     const d=byMon[m], avg=d.trades?Math.round(d.profit/d.trades):0;
@@ -1865,7 +1869,8 @@ function renderProjection() {
       const hit = v >= ms.target;
       return `<div title="${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][i]} ${yr}: $${v.toLocaleString()}"
         style="flex:1;height:12px;border-radius:3px;flex-shrink:0;
-               background:${hit ? dotCol : 'rgba(255,255,255,.06)'};
+               background:${hit ? dotCol : 'transparent'};
+               border:1px solid ${hit ? 'transparent' : 'rgba(255,255,255,.1)'};
                box-shadow:${hit ? '0 0 5px '+dotCol+'88' : 'none'};
                cursor:default"></div>`;
     }).join('');
